@@ -1,0 +1,20 @@
+.btn{
+    border: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0px 0px 0px 20px;
+    padding: 0px;
+    outline: none;
+    font-size: inherit;
+    font-weight: inherit;
+    transform: translate(0px, 0px);
+    position: relative;
+    height: 36px;
+    line-height: 36px;
+    min-width: 88px;
+    border-radius: 2px;
+    text-align: center;
+}

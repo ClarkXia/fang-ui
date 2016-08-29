@@ -1,0 +1,49 @@
+.treenode-switcher {
+    width: 10px;
+    height: 10px;
+    background-color: #bcbcbc;
+    display: inline-block;
+}
+.treenode-close ul {
+    display: none;
+}
+.treenode-checkbox {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #bbb;
+    display: inline-block;
+}
+.treenode-checkbox-checked {
+    background: #000;
+}
+.treenode-checkbox-halfChecked {
+    background: #aaa;
+}
+.treenode-node-select > a {
+    color: #2db7f5;
+}
+.treenode-node-disable {
+    color: #aaa;
+}
+.treenode-switcher-open {
+    width: 0;
+    height: 0;
+    border: 5px solid;
+    border-color: #000 #fff #fff #fff;
+}
+.treenode-switcher-close {
+    width: 0;
+    height: 0;
+    border: 5px solid;
+    border-color: #fff #fff #fff #000;
+}
+.treenode-icon{
+    width: 10px;
+    height: 10px;
+    background-color: #2db7f5;
+    display: inline-block;
+}
+
+.treenode-icon.treenode-icon-loading{
+    border-radius: 50%;
+}

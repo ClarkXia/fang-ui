@@ -1,0 +1,12 @@
+.context-menu,.sub-menu {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: #fff;
+    border-radius: 3px;
+}
+.menu-item,.sub-menu-item{
+    height: 30px;
+    padding: 0 10px;
+    line-height: 30px;
+}
