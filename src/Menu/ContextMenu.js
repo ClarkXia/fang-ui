@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import contextmenu from './contextmenu.css';
 
 const menuStyle = {
-    position: 'fixed'
+    position: 'fixed',
+    zIndex: 100
 }
 export default class ContextMenu extends React.Component {
     constructor(props) {
@@ -99,4 +99,5 @@ export default class ContextMenu extends React.Component {
 
     }
 }
+
 ContextMenu.isContextMenu = true;

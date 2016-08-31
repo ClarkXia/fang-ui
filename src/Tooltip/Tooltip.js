@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import {createChildFragment} from '../utils/childUtils';
 import RenderToLayer from '../internal/RenderToLayer';
+import tooltip from './tooltip.css';
 
 const defaultStyle = {
     position: 'absolute',
@@ -78,6 +79,7 @@ export default class Tooltip extends React.Component {
 
     componentDidMount() {
         this.setTooltipPosition();
+        window.addE
     }
 
     componentWillReceiveProps() {
@@ -97,6 +99,8 @@ export default class Tooltip extends React.Component {
         const baseElement = findDOMNode(this);
         const {placement} = this.props;
         const basePosition = baseElement.getBoundingClientRect();
+        const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+        const scrollLeft =  document.body.scrollLeft || document.documentElement.scrollLeft;
         const style = {};
         if (!show) {
             return style;
@@ -104,12 +108,12 @@ export default class Tooltip extends React.Component {
 
         if (placement === 'left' || placement === 'right'){
             style.left = placement === 'left' ?
-                            (basePosition.left - offsetWidth + 'px') : (basePosition.left + basePosition.width + 'px');
-            style.top = basePosition.top + (basePosition.height - offsetHeight) / 2 + 'px';
+                            (basePosition.left - offsetWidth + scrollLeft + 'px') : (basePosition.left + basePosition.width + scrollLeft + 'px');
+            style.top = basePosition.top + scrollTop + (basePosition.height - offsetHeight) / 2 + 'px';
         } else if (placement === 'top' || placement === 'bottom') {
             style.top = placement === 'top' ?
-                            (basePosition.top - offsetHeight + 'px') : (basePosition.top + basePosition.height + 'px');
-            style.left = basePosition.left + (basePosition.width - offsetWidth) /2 + 'px';
+                            (basePosition.top - offsetHeight + scrollTop + 'px') : (basePosition.top + basePosition.height + scrollTop + 'px');
+            style.left = basePosition.left + scrollLeft + (basePosition.width - offsetWidth) /2 + 'px';
         }
 
         style.opacity = '0.9';

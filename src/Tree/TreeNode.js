@@ -54,6 +54,15 @@ export default class TreeNode extends React.Component {
         }
     }
 
+    renderLevel() {
+        let posArray = this.props.pos.split('-');
+        if (posArray.length <= 2) return null;
+        posArray.splice(0, 2)
+        return posArray.map((v, i) => {
+            return <b key={i}></b>
+        });
+    }
+
     renderSwitcher(canRenderSwitcher, expandedState) {
         const {prefixCls, disabled} = this.props;
         if (!canRenderSwitcher) {
@@ -97,7 +106,7 @@ export default class TreeNode extends React.Component {
                         <span className={cls}></span> : null;
 
         return (
-            <a title={typeof name === 'string' ? name : ''} onClick={this.onSelect}>
+            <a title={typeof name === 'string' ? name : ''}>
                 {icon}
                 <span className={`${prefixCls}-title`}>{name}</span>
             </a>
@@ -122,7 +131,7 @@ export default class TreeNode extends React.Component {
     }
 
     render() {
-        const { NodeLabel, expanded, disabled, selected, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
+        const { expanded, disabled, selected, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
         const expandedState = expanded ? 'open' : 'close';
         const cls = classNames({
             [className]: !!className,
@@ -141,10 +150,13 @@ export default class TreeNode extends React.Component {
 
         return (
             <li className={cls}>
-                {this.renderSwitcher(canRenderSwitcher, expandedState)}
-                {checkable ? this.renderCheckbox() : null}
-                {this.renderContent(expandedState)}
-                {newChildren}
+                <div className={`${prefixCls}-node-item`}  onClick={this.onSelect}>
+                    {this.renderLevel()}
+                    {this.renderSwitcher(canRenderSwitcher, expandedState)}
+                    {checkable ? this.renderCheckbox() : null}
+                    {this.renderContent(expandedState)}
+                    {newChildren}
+                </div>
             </li>
         );
     }

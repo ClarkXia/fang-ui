@@ -1,0 +1,47 @@
+.tooltip-arrow, .tooltip-arrow:after{
+    border-width: 5px;
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.tooltip-arrow:after{
+    border-width: 4px;
+}
+.tooltip-arrow-left{
+
+}
+
+.tooltip-arrow-right{
+
+}
+
+.tooltip-arrow-top{
+    border-bottom-width: 0;
+    border-top-color: #aaa;
+    bottom: 2px;
+    left: 50%;
+    margin-left: -5px;
+}
+.tooltip-arrow-top:after{
+    content: " ";
+    bottom: 1px;
+    margin-left: -4px;
+    border-bottom-width: 0;
+    border-top-color: #fff;
+    left: 50%;
+}
+
+.tooltip-arrow-bottom{
+
+}
+
+.tooltip-content {
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding:2px 10px;
+    margin: 6px;
+}

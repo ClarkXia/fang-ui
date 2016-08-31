@@ -4,10 +4,10 @@ import classNames from 'classnames';
 import RenderToLayer from '../internal/RenderToLayer';
 
 const rootStyle = {
-    position: 'fixed'
+    position: 'absolute'
 };
 
-export default class Propover extends React.Component {
+export default class Popover extends React.Component {
     static propTypes = {
         basedEl: PropTypes.object,
         basedOrigin: PropTypes.shape({
@@ -25,7 +25,14 @@ export default class Propover extends React.Component {
         chidren: PropTypes.node,
         className: PropTypes.string,
         style: PropTypes.object,
-        canAutoPosition: PropTypes.bool
+        canAutoPosition: PropTypes.bool,
+        position: PropTypes.shape({
+            left: PropTypes.number,
+            top: PropTypes.number,
+            collision: PropTypes.oneOf(['flip', 'fit'])
+        }),
+        container: PropTypes.any
+
     };
 
     static defaultProps = {
@@ -33,7 +40,7 @@ export default class Propover extends React.Component {
             vertical: 'bottom',
             horizontal: 'left'
         },
-        autoCloseWhenOffScreen: true,
+        autoCloseWhenOffScreen: false,
         canAutoPosition: true,
         onRequestClose: () => {},
         open: false,
@@ -41,7 +48,8 @@ export default class Propover extends React.Component {
             vertical: 'top',
             horizontal: 'left'
         },
-        useLayerForClickAway: true
+        useLayerForClickAway: true,
+        inline: false
     };
 
     constructor(props) {
@@ -65,7 +73,7 @@ export default class Propover extends React.Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.setPlacement);
-        window.addEventListener('scroll', this.setPlacement);
+        //window.addEventListener('scroll', this.setPlacement);
     }
 
     componentDidUpdate() {
@@ -74,7 +82,7 @@ export default class Propover extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setPlacement);
-        window.removeEventListener('scroll', this.setPlacement);
+        //window.removeEventListener('scroll', this.setPlacement);
     }
 
     renderLayer = () => {
@@ -100,10 +108,6 @@ export default class Propover extends React.Component {
         this.requestClose('clickAway');
     };
 
-    _resizeAutoPosition() {
-
-    }
-
     getBasedPosition(el) {
         if (!el) {
             el = ReactDOM.findDOMNode(this);
@@ -119,6 +123,8 @@ export default class Propover extends React.Component {
 
         pos.right = rect.right || pos.left + pos.width;
         pos.bottom = rect.bottom || pos.top + pos.height;
+        pos.center = pos.left + (pos.right - pos.left) / 2;
+        pos.middle = pos.top + (pos.bottom - pos.top) / 2;
 
         return pos;
     }
@@ -127,43 +133,110 @@ export default class Propover extends React.Component {
         if (!this.state.open) {
             return;
         }
-
-        const basedEl = this.props.basedEl || this.basedEl;
-        if (!this.refs.layer.getLayer()) {
-            return;
-        }
-        const targetEl = this.refs.layer.getLayer().children[0];
+        const targetEl = this.props.container ? this.refs.popoverContainer : this.refs.layer.getLayer().children[0];
 
         if (!targetEl) {
             return;
         }
+        let targetPos;
+        const docST = document.body.scrollTop || document.documentElement.scrollTop,
+              docSL = document.body.scrollLeft || document.documentElement.scrollLeft,
+              docH = document.body.scrollHeight,
+              docW = document.body.scrollWidth,
+              winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+              winW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-        const {targetOrigin, basedOrigin} = this.props;
-        const basePos = this.getBasedPosition(basedEl);
-        const initPos = {
-            top: 0,
-            center: targetEl.offsetHeight / 2,
-            bottom: targetEl.offsetHeight,
-            left: 0,
-            middle: targetEl.offsetWidth / 2,
-            right: targetEl.offsetWidth
-        };
-        let targetPos = {
-            top: basePos[basedOrigin.vertical] - initPos[targetOrigin.vertical],
-            left: basePos[basedOrigin.horizontal] - initPos[targetOrigin.horizontal]
-        };
+        if (this.props.position) {
+            targetPos = {
+                top: this.props.position.top,
+                left: this.props.position.left
+            };
 
-        if (scrolling && this.props.autoCloseWhenOffScreen) {
-            this.autoCloseWhenOffScreen(basePos);
+            const {collision} = this.props.position;
+
+            if (collision) {
+                const docScroll = {
+                    top: docST,
+                    left: docSL
+                },docSize = {
+                    width: docW,
+                    height: docH
+                },winSize = {
+                    width: winW,
+                    height: winH
+                },targetSize = {
+                    width: targetEl.offsetWidth,
+                    height: targetEl.offsetHeight
+                };
+                //check vertical&horizontal
+                for (let pos in docScroll) {
+
+                    const sizeKey = pos === 'top' ? 'height' : 'width';
+                    if (targetPos[pos] < docScroll[pos]) {
+                        if (collision === 'fit') {
+                            targetPos[pos] = docScroll[pos];
+                        } else if (collision === 'flip') {
+                            targetPos[pos] = targetPos[pos] + targetSize[sizeKey];
+                            if (targetPos[pos] + targetSize[sizeKey] > docSize[sizeKey]){
+                                targetPos[pos] = docSize[sizeKey] - targetSize[sizeKey];
+                            }
+                        }
+                    } else if (targetPos[pos] + targetSize[sizeKey] - docScroll[pos] > Math.min(docSize[sizeKey],winSize[sizeKey])) {
+                        if (collision === 'fit') {
+                            targetPos[pos] = Math.min(docSize[sizeKey],winSize[sizeKey]) + docScroll[pos] - targetSize[sizeKey];
+                        } else if (collision === 'flip') {
+                            targetPos[pos] = targetPos[pos] - targetSize[sizeKey];
+                            if (targetPos[pos] < 0) {
+                                targetPos[pos] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            const basedEl = this.props.basedEl || this.basedEl;
+            if (!this.refs.layer.getLayer()) {
+                return;
+            }
+
+            const {targetOrigin, basedOrigin} = this.props;
+            const basedPos = this.getBasedPosition(basedEl);
+            const initPos = {
+                top: 0,
+                middle: targetEl.offsetHeight / 2,
+                bottom: targetEl.offsetHeight,
+                left: 0,
+                center: targetEl.offsetWidth / 2,
+                right: targetEl.offsetWidth
+            };
+            targetPos = {
+                top: basedPos[basedOrigin.vertical] - initPos[targetOrigin.vertical],
+                left: basedPos[basedOrigin.horizontal] - initPos[targetOrigin.horizontal]
+            };
+
+            if (scrolling && this.props.autoCloseWhenOffScreen) {
+                this.autoCloseWhenOffScreen(basedPos);
+            }
+
+            if (this.props.canAutoPosition) {
+                targetPos = this.autoPosition(basedPos, initPos, targetOrigin, basedOrigin, targetPos);
+            }
+            //position:absolute
+            targetPos.top += docST;
+            targetPos.left += docSL;
         }
 
-        if (this.props.canAutoPosition) {
 
+        if (this.props.container) {
+            const containerDOM = ReactDOM.findDOMNode(this.props.container);
+
+            targetPos.top -= containerDOM.offsetTop;
+            targetPos.left -= containerDOM.offsetLeft;
         }
 
         targetEl.style.top = `${Math.max(0, targetPos.top)}px`;
         targetEl.style.left = `${Math.max(0, targetPos.left)}px`;
-        //targetEl.style.maxHeight = `${window.innerHeight}px`;
+        targetEl.style.maxHeight = `${window.innerHeight}px`;
 
     };
 
@@ -176,19 +249,88 @@ export default class Propover extends React.Component {
         }
     }
 
-    autoPosition() {
+    autoPosition(based, target, basedOrigin, targetOrigin, targetPos) {
         //TODO
+        const {positions, basedPos} = this.getPositions(basedOrigin, targetOrigin);
+
+        if (targetPos.top < 0 || targetPos.top + target.bottom > window.innerHeight) {
+            let top = based[basedPos.vertical] - target[positions.y[0]];
+            if (top + target.bottom <= window.innerHeight) {
+                targetPos.top = Math.max(0, top);
+            } else {
+                top = based[basedPos.vertical] - target[positions.y[1]];
+                if (top + target.bottom <= window.innerHeight) {
+                    targetPos.top = Math.max(0, top);
+                }
+                //TODO if cannot to meet the conditions
+            }
+        }
+
+        if (targetPos.left < 0 || targetPos.left + target.right > window.innerWidth) {
+            let left = based[basedPos.horizontal] - target[positions.x[0]];
+            if (left + target.right <= window.innerWidth) {
+                targetPos.left = Math.max(0, left);
+            } else {
+                left = based[basedPos.horizontal] - target[positions.x[1]];
+                if (left + target.right <= window.innerWidth) {
+                    targetPos.left = Math.max(0, left);
+                }
+            }
+        }
+        return targetPos;
     }
 
-    /*getOverlapMode(based, target, median) {
-
+    getOverlapMode(based, target, median) {
+        if ([based, target].indexOf(median) > -1) return 'auto';
+        if (based === target) return 'inclusive';
+        return 'exclusive';
     }
 
     getPositions(basedOrigin, targetOrigin) {
+        const b = {...basedOrigin};
+        const t = {...targetOrigin};
 
-    }*/
+        const positions = {
+            x: ['left', 'right'].filter((p) => p !== t.horizontal),
+            y: ['top', 'bottom'].filter((p) => p !== t.vertical)
+        };
+
+        const overlap = {
+            x: this.getOverlapMode(b.horizontal, t.horizontal, 'center'),
+            y: this.getOverlapMode(b.vertical, t.vertical, 'middle')
+        };
+
+        positions.x.splice(overlap.x === 'auto' ? 0 : 1, 0, 'center');
+        positions.y.splice(overlap.y === 'auto' ? 0 : 1, 0, 'middle');
+        if (overlap.y !== 'auto') {
+            b.vertical = b.vertical === 'top' ? 'bottom' : 'top';
+        }
+
+        if (overlap.x !== 'auto') {
+            b.horizontal = b.horizontal === 'left' ? 'right' : 'left';
+        }
+
+        return {
+            positions,
+            basedPos: b
+        };
+    }
 
     render() {
+        if (this.props.container) {
+            const {children, style, className = ''} = this.props;
+            const display = this.state.open ? {} : {display: 'none'};
+
+            return (
+                <div
+                    style={Object.assign({}, rootStyle, style, display)}
+                    className={className}
+                    ref="popoverContainer"
+                >
+                    {children}
+                </div>
+            );
+        }
         return (
             <RenderToLayer
                 ref="layer"

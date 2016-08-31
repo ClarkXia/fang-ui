@@ -20,8 +20,20 @@ import ContextMenu from './Menu/ContextMenu'
 import MenuItem from './Menu/MenuItem'
 import SubMenu from './Menu/SubMenu'
 import Menu from './Menu/Menu'
-import EableContextMenu from './Menu/EableContextMenu'
+import EnableContextMenu from './Menu/EnableContextMenu'
 import Popover from './Popover/Popover';
+import Select from './Select/Select';
+import Input from './Input/Input';
+
+
+import SampleAvatar from './example/avatar';
+import SampleBadge from './example/badge';
+import SampleButton from './example/button';
+import SampleCheckbox from './example/checkbox';
+import SampleDialog from './example/dialog';
+import SampleIcon from './example/icon';
+import SampleInput from './example/input';
+import SampleContextMenu from './example/contextmenu';
 
 import * as A from './utils/treeUtils'
 
@@ -62,7 +74,7 @@ const Item = (props) => {
     return props.connectContextMenu(<div style={{width:100, height:100, background:'#aaa', margin:'10px 10px 0 0', float:'left'}}>{props.text}</div>)
 }
 
-const Target = EableContextMenu(CMenu)(Item)
+const Target = EnableContextMenu(CMenu)(Item)
 /*notification.notice({
     content: (
         <div className="some-content">
@@ -97,28 +109,32 @@ const message = Notification.newInstance({
 })
 message.notice({
     content: 'message message message',
-    duration: 5.5
+    duration: 1.5
 })
 
 class TestMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 8,
+            value: 7,
             open: false
         }
     }
 
-    handleOnChange = (e, value) => {
-        console.log(value)
-        this.setState({
-            value,
-            open: false
+    handleOnChange = (e, item, index) => {
+        e.stopPropagation();
+        //fix Uncaught Invariant Violation: React DOM tree root should always have a node reference.
+        setTimeout(() => {
+            this.setState({
+                open: false,
+                value: item.props.value
+            })
         })
     };
 
     handleClick = (e) => {
-        e.preventDefault();
+        //e.preventDefault();
+        e.stopPropagation();
         this.setState({
             basedEl: e.currentTarget,
             open: true
@@ -126,7 +142,8 @@ class TestMenu extends React.Component {
         console.log('open');
     };
 
-    handleRequestClose = () => {
+    handleRequestClose = (...args) => {
+        console.log(args);
         this.setState({
             open: false
         });
@@ -135,26 +152,242 @@ class TestMenu extends React.Component {
     render() {
         const data = ['选项－','选项二','选项三','选项四','选项五','选项六','选项七','选项八','选项九','选项十'];
         return (
-            <div>
-                <span onClick={this.handleClick}>{data[this.state.value]}</span>
+            <div style={{display:'inline-block', marginLeft: 20, position:'relative', 'top':200}}>
+                <span onClick={this.handleClick} >{data[this.state.value - 1]}</span>
                 <Popover
                     open={this.state.open}
-                    basedEl={this.state.basedEl}
+                    //basedEl={this.state.basedEl}
                     onRequestClose={this.handleRequestClose}
                     useLayerForClickAway={false}
+                    canAutoPosition={false}
+                    //basedOrigin={{vertical: 'middle', horizontal: 'center'}}
+                    //targetOrigin={{vertical: 'middle', horizontal: 'center'}}
+                    //basedOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                    position={{left:700,top:100,collision:'fit'}}
+                    container={this}
                 >
                     <Menu
                         value={this.state.value}
-                        onChange={this.handleOnChange}
+                        onItemClick={this.handleOnChange}
                         show={this.state.open}
                     >
                         {data.map((v, i) => {
-                            return <MenuItem key={i} value={i}>{v}</MenuItem>
+                            return <MenuItem key={i} value={i + 1}>{v}</MenuItem>
                         })}
                     </Menu>
                 </Popover>
             </div>
         );
+    }
+}
+
+
+class AutoCompleteExampleSimple extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            dataSource: [],
+            open: false,
+            checked: []
+        };
+    }
+
+    handleUpdateInput = (e) => {
+        const value = e.currentTarget.value;
+        if (value == '') return;
+        this.setState({
+            dataSource: [
+                value,
+                value + value,
+                value + value + value
+            ],
+            basedEl: e.currentTarget,
+            open: true
+        });
+    };
+
+    handleRequestClose = () => {
+        this.setState({
+            open: false
+        });
+    };
+
+    hanldCheck = (check) => {
+        this.setState({
+            checked: [...check.checked]
+        })
+    }
+
+  render() {
+    return (
+      <div>
+            <input onChange={this.handleUpdateInput} style={{margin: 20}}/>
+            <Popover
+                open={this.state.open}
+                basedEl={this.state.basedEl}
+                onRequestClose={this.handleRequestClose}
+                useLayerForClickAway={false}
+            >
+                <Tabs initIndex={0} onChange={()=> {console.log('onChange')}} className="auto-complete">
+                    <Tab label="人员" onActive={()=> {console.log('active1')}}>
+                        <Menu
+                            disableAutoFocus
+                            onChange={this.handleOnChange}
+                            show={this.state.open}
+                        >
+                            {this.state.dataSource.map((v, i) => {
+                                return <MenuItem key={i} value={i}>{v}</MenuItem>
+                            })}
+                        </Menu>
+                    </Tab>
+                    <Tab label="部门">
+                        <Tree checkable selectable={false} defaultExpandAll checkStrictly onCheck={this.hanldCheck} checkedKeys={{checked:this.state.checked,halfChecked:[]}}>
+                            <TreeNode name="部门1" key={1} >
+                                <TreeNode name="部门-1" isLeaf key={2}></TreeNode>
+                                <TreeNode name="部门-2" isLeaf key={7}>
+                                    <TreeNode name="部门-2-1" isLeaf key={8}></TreeNode>
+                                    <TreeNode name="部门-2-2" isLeaf key={9}>
+                                        <TreeNode name="部门-2-2-1" isLeaf key={10}></TreeNode>
+                                        <TreeNode name="部门-2-2-2" isLeaf key={11}></TreeNode>
+                                    </TreeNode>
+                                </TreeNode>
+                            </TreeNode>
+                            <TreeNode name="部门2" key={3}>
+                                <TreeNode name="部门2-1" key={4}></TreeNode>
+                            </TreeNode>
+                            <TreeNode name="部门c" key={5}>
+
+                            </TreeNode>
+                        </Tree>
+                    </Tab>
+                </Tabs>
+            </Popover>
+      </div>
+    );
+  }
+}
+
+const list = [
+    { label: 'option1', value: '1',disabled: true},
+    { label: 'option2', value: '2'},
+    { label: 'option3', value: '3' },
+    { label: 'option4', value: '4' },
+    { label: 'option5', value: '5' },
+    { label: 'option6', value: '6' }
+];
+
+class Search extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false
+        };
+    }
+    handleUpdateInput = (e) => {
+        const value = e.currentTarget.value;
+        if (value == '') return;
+        this.setState({
+            basedEl: e.currentTarget,
+            open: true
+        });
+    };
+
+    handleRequestClose = () => {
+        this.setState({
+            open: false
+        });
+    };
+
+    handleOnChange = (...args) => {
+        console.log(args)
+        setTimeout(() => {
+            this.setState({
+                open: false
+            });
+        });
+    }
+    render() {
+        return (<div>
+        <input onChange={this.handleUpdateInput} style={{margin: 20}}/>
+            <Popover
+                open={this.state.open}
+                basedEl={this.state.basedEl}
+                onRequestClose={this.handleRequestClose}
+                useLayerForClickAway={false}
+            >
+                <Menu
+                    disableAutoFocus
+                    onChange={this.handleOnChange}
+                    show={this.state.open}
+                    className="search-menu"
+                >
+                    {list.map((v, i) => {
+                        return <MenuItem key={i} value={i}><Avatar>{v.value}</Avatar>{v.label}</MenuItem>
+                    })}
+                </Menu>
+            </Popover>
+        </div>);
+    }
+}
+
+
+const MultiSelectField = React.createClass({
+    displayName: 'MultiSelectField',
+    propTypes: {
+        label: React.PropTypes.string
+    },
+    getInitialState () {
+        return {
+            disabled: false,
+            options: list,
+            value: []
+        };
+    },
+    handleSelectChange (value) {
+        console.log('You\'ve selected:', value);
+        this.setState({ value });
+    },
+    toggleDisabled (e) {
+        this.setState({ disabled: e.target.checked });
+    },
+
+    render () {
+        return (
+            <div className="section">
+                <Select multi simpleValue disabled={this.state.disabled} value={this.state.value} filterOptions={false} placeholder="Multiselect" options={this.state.options} onChange={this.handleSelectChange} />
+            </div>
+        );
+    }
+});
+
+class AutoSizeInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value : ''
+        };
+    }
+
+    handleOnChange = (e) => {
+        this.setState({
+            value: e.currentTarget.value
+        })
+    }
+
+    render() {
+        return <Input type="text" placeholder="请输入内容auto size" value={this.state.value} maxWidth={150} onChange={this.handleOnChange} autoSize={true}/>
+    }
+}
+
+class AutoSizeTextarea extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <Input type="textarea" placeholder="auto size placeholder auto size placeholder" defaultValue="" minRows="2" maxRows="4" autoSize={true}/>
     }
 }
 
@@ -185,14 +418,14 @@ class TestComponent extends React.Component {
     };
 
     hideMenu = () => {
-        console.log('window click')
+        //console.log('window click')
         this.setState({
             menuVisible: false
         })
     };
 
     handleClick = (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         this.setState({
             basedEl: e.currentTarget,
             open: true
@@ -202,6 +435,12 @@ class TestComponent extends React.Component {
     handleRequestClose = () => {
         this.setState({
             open: false
+        });
+    };
+
+    handleDialogClose = () => {
+        this.setState({
+            dialogOpen: false
         });
     };
 
@@ -216,6 +455,14 @@ class TestComponent extends React.Component {
         ];
         return (
             <div>
+                <SampleAvatar />
+                <SampleBadge />
+                <SampleButton />
+                <SampleCheckbox />
+                <SampleDialog />
+                <SampleIcon />
+                <SampleInput />
+                <SampleContextMenu />
                 <Button
                 onClick={()=>{
                     layer.alert({
@@ -259,17 +506,23 @@ class TestComponent extends React.Component {
                     <MenuItem onClick={()=>{}}>menuitem4</MenuItem>
                 </Popover>
                 <TestMenu />
+                <Search />
+                <MultiSelectField/>
+                <AutoCompleteExampleSimple />
+
+
                 <Dialog
                     open={this.state.dialogOpen}
                     title="this is a dialog"
                     actions={actions}
                     autoDetectWindowHeight={true}
                     repositionOnUpdate={true}
+                    onClose={this.handleDialogClose}
                 >
                     content
                 </Dialog>
 
-                <Tooltip placement="right" title="提示文字" trigger="hover">
+                <Tooltip placement="top" title="提示文字" trigger="hover">
                     <div style={{
                         width: '100px',
                         height: '30px',
@@ -279,27 +532,11 @@ class TestComponent extends React.Component {
                         }}
                         onClick={()=>{console.log('div click')}}
                     >
-                    title
+                    Tooltip
                     </div>
                 </Tooltip>
 
-                <Avatar>A</Avatar>
-                <Avatar src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/89d11e0ejw1e8qgp5bmzyj2050050aa8.jpg" size={50}/>
-                <Badge badgeContent={3} >
-                    <div style={{width:50,height:50,backgroundColor:'#aaa',position:'relative'}}>
-                    </div>
-                </Badge>
-                <Badge badgeContent={101}>
-                    <div style={{width:50,height:50,backgroundColor:'#aaa',position:'relative'}}>
-                    </div>
-                </Badge>
-                <Badge badgeContent={101} dot={true}>
-                    <div style={{width:50,height:50,backgroundColor:'#aaa',position:'relative'}}>
-                    </div>
-                </Badge>
-                <Badge dot={true}>
-                    text
-                </Badge>
+
 
                 <Tag>
                     标签1
@@ -328,8 +565,7 @@ class TestComponent extends React.Component {
                 </Tabs>
                 <Pagination total={100} pageSize={5}/>
                 <Pagination total={50} pageSize={5} current={10} onChange={(page) => console.log('onChange', page)}/>
-                <Checkbox onChange={()=>{console.log('uncontrolled')}}/>
-                <Checkbox onChange={(...args)=>{console.log('Checkbox onChange',args)}} checked={true}/>
+
 
                 <Tree checkable>
                     <TreeNode name="a" key={1} >

@@ -17,8 +17,22 @@ export default class MenuItem extends React.Component {
         className: ''
     };
 
+    handleMouseEnter = (event) => {
+        this.onFocus(event);
+    };
+
+    handleMouseMove = (event) => {
+        this.onFocus(event);
+    };
+
+    onFocus = (event) => {
+        if (!this.props.focusState && this.props.onFocus) {
+            this.props.onFocus(this.props.index, event);
+        }
+    }
+
     render() {
-        const {disabled, children, className, prefixCls, focusState, selected, ...other} = this.props;
+        const {disabled, children, className, prefixCls, focusState, selected, index, onFocus, ...other} = this.props;
 
         const cls = classNames({
             [`${prefixCls}`]: true,
@@ -29,7 +43,12 @@ export default class MenuItem extends React.Component {
         })
 
         return (
-            <div className={cls} {...other}>
+            <div
+                className={cls}
+                {...other}
+                /*onMouseEnter={this.handleMouseEnter}*/
+                onMouseMove={this.handleMouseMove}
+            >
                 <a href="javascript:;">
                     {children}
                 </a>

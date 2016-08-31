@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import classNames from 'classnames';
-import badge from './badge.css';
 
 const defaultStyle = {
     root: {
@@ -75,6 +74,6 @@ export default class Badge extends React.Component {
                     </span>
                 }
             </div>
-        )
+        );
     }
 }

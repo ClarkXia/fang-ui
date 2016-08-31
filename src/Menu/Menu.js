@@ -20,11 +20,13 @@ export default class Menu extends React.Component {
         onKeyDown: PropTypes.func,
         selectedMenuItemStyle: PropTypes.object,
         style: PropTypes.object,
+        disableKeyEvent: PropTypes.bool,
         value: PropTypes.any
     };
 
     static defaultProps = {
         disableAutoFocus: false,
+        disableKeyEvent: false,
         maxHeight: null,
         multiple: false,
         onChange: noop,
@@ -38,7 +40,6 @@ export default class Menu extends React.Component {
         super(props);
         const filteredChildren = this.getFilteredChildren(props.children);
         const selectedIndex = this.getSelectedIndex(props, filteredChildren);
-
         this.state = {
             focusIndex: props.disableAutoFocus ? -1 : selectedIndex >= 0 ? selectedIndex : 0,
             isKeyboardFocused: props.initiallyKeyboardFocused
@@ -48,10 +49,12 @@ export default class Menu extends React.Component {
     componentDidMount() {
         this.setScrollPosition();
         window.addEventListener('keydown', this.handleKeyDown);
+        window.addEventListener('mousemove', this.unlockEvent);
     }
 
-    componentWillUnmout() {
+    componentWillUnmount() {
         window.removeEventListener('keydown', this.handleKeyDown);
+        window.removeEventListener('mousemove', this.unlockEvent);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -75,23 +78,24 @@ export default class Menu extends React.Component {
 
         if (this.props.scrollMenuIntoView && this.refs.menuContainer) {
             const menuContainerRect = this.refs.menuContainer.getBoundingClientRect();
-            if (window.innerHeight < menuContainerRect.bottom /* + this.props.menuBuffer*/) {
-                window.scrollBy(0, menuContainerRect.bottom /* + this.props.menuBuffer*/ - window.innerHeight);
+            const winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            if (winH < menuContainerRect.bottom /* + this.props.menuBuffer*/) {
+                window.scrollBy(0, menuContainerRect.bottom /* + this.props.menuBuffer*/ - winH);
             }
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    /*shouldComponentUpdate(nextProps, nextState) {
         return true;
-    }
+    }*/
 
-    handleClickAway = (event) => {
+    /*handleClickAway = (event) => {
         if (event.defaultPrevented) {
             return;
         }
 
         this.setFocusIndex(-1, false);
-    };
+    };*/
 
     getFilteredChildren(children) {
         const filteredChildren = [];
@@ -120,11 +124,17 @@ export default class Menu extends React.Component {
                 this.handleMenuItemClick(event, child, index);
                 if (child.props.onClick) child.props.onClick(event);
             },
+            onFocus : this.focusItem,
+            index,
             ref: isFocused ? 'focusedMenuItem' : null
         };
 
         return React.cloneElement(child, props);
     }
+
+    focusItem = (index, event) => {
+        !this.hoverLock && this.setFocusIndex(index, true);
+    };
 
     decrementFocusIndex() {
         let index = this.state.focusIndex;
@@ -184,7 +194,9 @@ export default class Menu extends React.Component {
     }
 
     handleKeyDown = (event) => {
+        if (this.props.disableKeyEvent) return;
         const filteredChildren = this.getFilteredChildren(this.props.children);
+        this.hoverLock = true;
         switch(event.keyCode) {
             case 9: //tab
                 event.preventDefault();
@@ -195,7 +207,15 @@ export default class Menu extends React.Component {
                 }
                 return;
             case 13: //enter
-                return;
+                //get focused child
+                const {children} = this.props;
+                if (Array.isArray(children)) {
+                    const child = children[this.state.focusIndex];
+                    this.handleMenuItemClick(event, child, this.state.focusIndex);
+                    if (child.props.onClick) child.props.onClick(event);
+                }
+                this.props.onEscKeyDown(event);
+                break;
             case 27: //escape
                 this.props.onEscKeyDown(event);
                 break;
@@ -217,6 +237,10 @@ export default class Menu extends React.Component {
 
         this.props.onKeyDown(event);
     };
+
+    unlockEvent = (event) => {
+        this.hoverLock = false;
+    }
 
     setFocusIndexStartsWith(keys) {
         let foundIndex = -1;
@@ -293,6 +317,7 @@ export default class Menu extends React.Component {
             style,
             value,
             onChange,
+            disableKeyEvent,
             prefixCls = 'menu',
             className,
             show,

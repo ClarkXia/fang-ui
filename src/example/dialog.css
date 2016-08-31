@@ -38,3 +38,10 @@
     margin-top: 0px;
     border-top-style: none;
 }
+.dialog-close{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 24px;
+    cursor: pointer;
+}

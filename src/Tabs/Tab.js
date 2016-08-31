@@ -2,9 +2,14 @@ import React, {PropTypes} from 'react';
 import classNames from 'classnames';
 
 function getStyles(props) {
-    return {
-        width: props.width
-    };
+    if (props.width) {
+        return {
+            width: props.width
+            //TODO other default styles
+        };
+    } else {
+        return {};
+    }
 }
 
 export default class Tab extends React.Component {

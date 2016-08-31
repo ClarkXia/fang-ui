@@ -1,4 +1,4 @@
-.btn{
+.btn {
     border: 10px;
     box-sizing: border-box;
     display: inline-block;
@@ -15,6 +15,11 @@
     height: 36px;
     line-height: 36px;
     min-width: 88px;
-    border-radius: 2px;
+    border-radius: 5px;
+    background: #2db7f5;
     text-align: center;
+    padding: 0 5px;
+}
+.btn span, .btn a {
+    color: #fff;
 }

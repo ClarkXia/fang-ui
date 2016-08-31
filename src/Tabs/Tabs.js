@@ -47,12 +47,14 @@ export default class Tabs extends React.Component {
         style: PropTypes.object,
         tabContainerStyle: PropTypes.object,
         tabTemplate: PropTypes.func,
+        useInkBar: PropTypes.bool,
         value: PropTypes.any
     };
 
     static defaultProps = {
         prefixCls: 'tabs',
         initIndex: 0,
+        useInkBar: true,
         onChange: () => {}
     };
 
@@ -128,6 +130,7 @@ export default class Tabs extends React.Component {
             contentStyle,
             initIndex,
             inkBarStyle,
+            useInkBar,
             style,
             tabContainerStyle,
             tabTemplate,
@@ -146,34 +149,44 @@ export default class Tabs extends React.Component {
                 }, tab.props.children) : undefined
             );
             if (selected) selectedIndex = index;
-            return React.cloneElement(tab, {
+            let tabProps = {
                 key: index,
                 index: index,
                 selected: selected,
-                width: `${width}%`,
                 onClick: this.handleClick,
                 prefixCls
-            });
+            };
+
+            if (useInkBar) {
+                tabProps.width = `${width}%`;
+            }
+            return React.cloneElement(tab, tabProps);
         })
+        let inkBar;
+        let inkBarContainerWidth;
+        if (useInkBar) {
+            inkBar = selectedIndex !== -1 ? (
+                <InkBar
+                    left={`${width * selectedIndex}%`}
+                    width={`${width}%`}
+                    style={inkBarStyle}
+                />
+            ) : null;
 
-        const inkBar = selectedIndex !== -1 ? (
-            <InkBar
-                left={`${width * selectedIndex}%`}
-                width={`${width}%`}
-                style={inkBarStyle}
-            />
-        ) : null;
+            inkBarContainerWidth = tabContainerStyle ? tabContainerStyle.width : '100%';
+        }
 
-        const inkBarContainerWidth = tabContainerStyle ? tabContainerStyle.width : '100%';
+
 
         return (
             <div {...other} className={`${className} ${prefixCls}-wrapper`} style={Object.assign({}, style)}>
                 <div className={`${prefixCls}-tab-container`} style={Object.assign({}, tabContainerStyle)}>
                     {tabs}
                 </div>
-                <div className={`${prefixCls}-inkbar-container`} style={{width: inkBarContainerWidth}}>
-                    {inkBar}
-                </div>
+                {useInkBar ?
+                    <div className={`${prefixCls}-inkbar-container`} style={{width: inkBarContainerWidth}}>
+                        {inkBar}
+                    </div> : null}
                 <div style={Object.assign({}, contentStyle)} className={`${contentClassName} ${prefixCls}-content`}>
                     {tabContent}
                 </div>

@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { findDOMNode } from 'react-dom';
 
 import Icon from '../Icon/Icon';
-import button from './button.css';
 
 export default class ButtonArea extends React.Component {
     static propTypes = {

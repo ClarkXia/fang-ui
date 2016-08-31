@@ -8,14 +8,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 <style>
-.keyborad-focused{background: #aaa}
+body{margin: 0;padding: 0;}
+a{text-decoration: none;}
+.keyborad-focused{background: #eee}
 .menu-container{background: #fff}
 .menu-content{max-height: 150px;width: 100px;overflow: auto;}
+.search-menu.menu-content{max-height: 150px;width: 300px;}
+.search-menu.menu-content .menu-item{height: 50px;}
+.auto-complete{background: #fff;width: 300px;height: 300px;border: 1px solid #aaa;z-index: 1000}
+.menu-item a{color:#000;}
+.menu-item.menu-item-selected a{color: #2db7f5}
+
+.auto-complete.menu-content{height: 100%;width: 100%;}
+.select-option.disabled{color:#ddd;}
+.select-option.focused{background:#eee;}
+.select-option.selected{color:#2db7f5;}
 </style>
 <body>
   <div id="app">APPLICATION CONTENT</div>
 
-  <script>__REACT_DEVTOOLS_GLOBAL_HOOK__ = parent.__REACT_DEVTOOLS_GLOBAL_HOOK__</script>
   <script type="text/javascript" src="http://127.0.0.1:8000/assets/app.js"></script>
   <input type="hidden" name="oc" id="oc" value="abcdef">
 </body>

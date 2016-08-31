@@ -11,7 +11,7 @@
     transform: translateX(50%);
     top: -10px;
     right: 0px;
-    height: 20px;
+    height: 18px;
     border-radius: 10px;
     background: #f50;
     border: 1px solid transparent;
@@ -23,8 +23,6 @@
     white-space: nowrap;
     -webkit-transform-origin: -10% center;
     transform-origin: -10% center;
-    z-index: 10;
-    font-family: tahoma;
     box-shadow: 0 0 0 1px #fff;
 }
 
@@ -40,7 +38,6 @@
     border-radius: 100%;
     background: #f50;
     right: 0px;
-    z-index: 10;
     box-shadow: 0 0 0 1px #fff;
 }
 

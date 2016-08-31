@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import Overlay from '../internal/Overlay';
 import RenderToLayer from '../internal/RenderToLayer';
-import dialog from './dialog.css';
 
 const noop = () => {};
 
@@ -37,11 +36,13 @@ export class DialogInline extends React.Component {
         modal: PropTypes.bool,
         title: PropTypes.node,
         titleClassName: PropTypes.string,
-        titleStyle: PropTypes.object
+        titleStyle: PropTypes.object,
+        closable: PropTypes.bool
     };
 
     static defaultProps = {
-        prefixCls: 'dialog'
+        prefixCls: 'dialog',
+        closable: true
     };
 
     componentDidMount() {
@@ -123,6 +124,10 @@ export class DialogInline extends React.Component {
         this.requestClose(false);
     };
 
+    handleClose = () => {
+        this.requestClose(true);
+    }
+
     render() {
         const {
             prefixCls,
@@ -133,6 +138,7 @@ export class DialogInline extends React.Component {
             titleClassName,
             titleStyle,
             overlayStyle,
+            closable,
             overlayClassName} = this.props;
 
         const actionsContainer = React.Children.count(actions) > 0 && (
@@ -147,14 +153,23 @@ export class DialogInline extends React.Component {
                 style: Object.assign(titleStyle, title.props.style)
             });
         } else if (typeof title === 'string') {
-            //TODO add default close icon
             titleElement = <div className={`${prefixCls}-header`}>
                                 <div className={`${prefixCls}-title`}>
                                     {title}
                                 </div>
                             </div>;
         }
-
+        let closer = null;
+        if (closable) {
+            closer = (
+                <div
+                    onClick={this.handleClose}
+                    className={`${prefixCls}-close`}
+                >
+                    <span className={`${prefixCls}-close-x`} dangerouslySetInnerHTML={{ __html: '&times;' }} />
+                </div>
+            )
+        }
         return (
             <div className={className} style={rootStyle(open)}>
                 <Overlay
@@ -166,6 +181,7 @@ export class DialogInline extends React.Component {
                 {open &&
                     <div className={`${prefixCls}-wrap`} ref="dialogWrap">
                         <div className={`${prefixCls}-content`} ref="dialogContent">
+                            {closer}
                             {titleElement}
                             <div className={`${prefixCls}-body`} ref="dialogBody">
                                 {this.props.children}

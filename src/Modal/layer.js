@@ -50,6 +50,7 @@ export default function layer(config) {
             okCancel={props.okCancel}
             onOk={(e) => callFn(props.onOk)}
             onCancel={(e) => callFn(props.onCancel)}
+            closable={!!props.closable}
 
         >
             {props.content}
@@ -65,7 +66,8 @@ export default function layer(config) {
 layer.alert = function (props) {
     const config = Object.assign({}, {
         okCancel: false,
-        modal: true
+        modal: true,
+        closable: false
     }, props);
     return layer(config);
 }
@@ -73,7 +75,8 @@ layer.alert = function (props) {
 layer.confirm = function (props) {
     const config = Object.assign({}, {
         okCancel: true,
-        modal: true
+        modal: true,
+        closable: false
     }, props);
     return layer(config);
 }
