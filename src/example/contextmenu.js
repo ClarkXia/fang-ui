@@ -72,16 +72,15 @@ export default class Sample extends React.Component {
 
     render() {
         const listData = [{text: 'A', menu: 'sub'},{text: 'B'},{text: 'C', menu: 'sub'}];
-
+        console.log(this.state)
         return (
             <div>
                 {listData.map((v, i) => {
                    return <Target {...v} key={i}/>
                 })}
-
                 <div style={divStyle} onContextMenu={this.handleContextMenu}>ContextMenu</div>
-                {/*can use Popover instead of ContextMenu*/}
-                <ContextMenu x={this.state.x} y={this.state.y} visible={this.state.visible}>
+                {/*can container to render inline*/}
+                <ContextMenu x={this.state.x} y={this.state.y} visible={this.state.visible} container={this}>
                     <MenuItem onClick={()=>{}}>MenuItem1</MenuItem>
                     <MenuItem onClick={()=>{}}>MenuItem2</MenuItem>
                     <MenuItem onClick={()=>{}}>MenuItem3</MenuItem>

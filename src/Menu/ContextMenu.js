@@ -1,10 +1,7 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import Popover from '../Popover';
 
-const menuStyle = {
-    position: 'fixed',
-    zIndex: 100
-}
 export default class ContextMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +14,8 @@ export default class ContextMenu extends React.Component {
 
     static propTypes = {
         prefixCls: PropTypes.string,
-        visible: PropTypes.bool
+        visible: PropTypes.bool,
+        container: PropTypes.node
     };
 
     static defaultProps = {
@@ -65,36 +63,38 @@ export default class ContextMenu extends React.Component {
     };
 
     getMenuPosition = (x, y) => {
-        let scrollX = document.documentElement.scrollTop,
-            scrollY = document.documentElement.scrollLeft,
-            {innerWidth, innerHeight} = window,
-            rect = this.menu.getBoundingClientRect(),
-            position = {
-                top: y + scrollY,
-                left: x + scrollX
-            };
-        if (y + rect.height > innerHeight) {
-            position.top -= rect.height;
-        }
-
-        if (x + rect.width > innerWidth) {
-            position.left -= rect.width;
-        }
-        return position;
+        let docST = document.body.scrollTop || document.documentElement.scrollTop,
+            docSL = document.body.scrollLeft || document.documentElement.scrollLeft;
+        return {left: x + docSL, top: y + docST};
     };
 
     render() {
         const {visible, children, prefixCls, style} = this.props;
-        const measureStyle = {
+        const displayStyle = {
             display: visible ? 'block' : 'none',
-            opacity: this._display ? 1 : 0,
-            ...this.state
+            opacity: this._display ? 1 : 0
+        }
+
+        let popProps = {
+            open: this.props.visible,
+            useLayerForClickAway: false,
+            canAutoPosition: false,
+            position : {
+                ...this.state,
+                collision: 'flip'
+            },
+            style: Object.assign({}, displayStyle)
+        };
+        if (this.props.container) {
+            popProps.container = this.props.container;
         }
 
         return (
-            <ul ref={(c) => (this.menu = c)} style={Object.assign({}, menuStyle, measureStyle, style)} className={prefixCls}>
-                {children}
-            </ul>
+            <Popover {...popProps}>
+                <ul ref={(c) => (this.menu = c)} style={Object.assign({}, style)} className={prefixCls}>
+                    {children}
+                </ul>
+            </Popover>
         );
 
     }
