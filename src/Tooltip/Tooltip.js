@@ -1,34 +1,23 @@
 import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
+import classNames from 'classnames';
 import {createChildFragment} from '../utils/childUtils';
 import RenderToLayer from '../internal/RenderToLayer';
-import tooltip from './tooltip.css';
-
-const defaultStyle = {
-    position: 'absolute',
-    fontSize: '12px',
-    lineHeight: '22px',
-    padding: '0 8px',
-    overflow: 'hidden',
-    borderRadius: 2,
-    userSelect: 'none',
-    opacity: 0,
-    top: -10000
-}
+import getPlacements from './placements';
+import Popover from '../Popover';
 
 class TooltipInline extends React.Component {
-    static propTypes = {
-        className: PropTypes.node,
-        prefixCls: PropTypes.string,
-        placement: PropTypes.oneOf(['left', 'right', 'top', 'bottom']),
-        style: PropTypes.object,
-        show: PropTypes.bool,
-        title: PropTypes.string.isRequired
-    };
+    componentDidMount() {
+        console.log('--tooltip inline did mount--');
+    }
 
-    static defaultProps = {
-        prefixCls: 'tooltip'
-    };
+    componentDidUpdate() {
+        console.log('--tooltip inline did update--');
+    }
+
+    componentWillUnmount() {
+        console.log('--tooltip inline did unmount--');
+    }
 
     render() {
         const {
@@ -38,87 +27,85 @@ class TooltipInline extends React.Component {
             prefixCls,
             className = '',
             trigger,
-            title,
-            style,
+            content,
             ...other
         } = this.props;
+
+        const cls = classNames({
+            [`${prefixCls}-container`]: true,
+            [className]: !!className
+        })
+
+        console.log('render tooltip inline');
+
         return (
-            <div {...other} className={className} ref="tooltip" style={Object.assign({}, defaultStyle, style)}>
+            <div {...other} className={cls} ref="tooltip">
                 <div className={`${prefixCls}-arrow ${prefixCls}-arrow-${placement}`}></div>
                 <div className={`${prefixCls}-content`}>
-                    <span>{title}</span>
+                {typeof content === 'string' ? <span>{content}</span> : React.cloneElement(content)}
                 </div>
             </div>
         );
-
     }
 }
 
+
 export default class Tooltip extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            show: false,
-            offsetWidth: null,
-            offsetHeight: null
+            show: 'show' in props ? !!props.show : false
         };
     }
 
     static propTypes = {
-        trigger: PropTypes.oneOf(['hover', 'focus', 'click'])
+        trigger: PropTypes.oneOf(['hover', 'focus', 'click']),
+        className: PropTypes.node,
+        prefixCls: PropTypes.string,
+        placement: PropTypes.oneOf(
+            ['left', 'left-top', 'left-bottom',
+             'right', 'right-top', 'right-bottom',
+             'top', 'top-left', 'top-right',
+             'bottom', 'bottom-left', 'bottom-right']),
+        style: PropTypes.object,
+        show: PropTypes.bool,
+        content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+        onRequestClose: PropTypes.func
     };
 
     static defaultProps = {
-        trigger: 'hover'
-    };
-
-    renderLayer = () => {
-        const {style, ...other} = this.props;
-        return <TooltipInline {...other} show={this.state.show} style={Object.assign({}, style, this.setTooltipStyle())}/>
+        trigger: 'hover',
+        prefixCls: 'tooltip'
     };
 
     componentDidMount() {
-        this.setTooltipPosition();
-        window.addE
-    }
-
-    componentWillReceiveProps() {
-        this.setTooltipPosition();
-    }
-
-    setTooltipPosition() {
-        const tooltip = findDOMNode(this.refs.layer.layerElement);
+        //this.setTooltipPosition();
+        console.log('tooltip did mount');
         this.setState({
-            offsetWidth: tooltip.offsetWidth,
-            offsetHeight: tooltip.offsetHeight
+            baseElement: findDOMNode(this.refs.baseElement)
         })
     }
 
-    setTooltipStyle(){
-        const {offsetHeight, offsetWidth, show} = this.state;
-        const baseElement = findDOMNode(this);
-        const {placement} = this.props;
-        const basePosition = baseElement.getBoundingClientRect();
-        const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-        const scrollLeft =  document.body.scrollLeft || document.documentElement.scrollLeft;
-        const style = {};
-        if (!show) {
-            return style;
+    componentDidUpdate() {
+        console.log('tooltip did update');
+        /*if (this.renderAgain) {
+            //the component in Popover did update will later than Popover ?
+            this.forceUpdate();
+            this.renderAgain = false;
+        }*/
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if ('show' in nextProps && this.props.show !== nextProps.show){
+            this.setState({
+                show: !!nextProps.show
+            });
         }
+        //basedEl is parentNode of popover
+        //this.renderAgain = true;
 
-        if (placement === 'left' || placement === 'right'){
-            style.left = placement === 'left' ?
-                            (basePosition.left - offsetWidth + scrollLeft + 'px') : (basePosition.left + basePosition.width + scrollLeft + 'px');
-            style.top = basePosition.top + scrollTop + (basePosition.height - offsetHeight) / 2 + 'px';
-        } else if (placement === 'top' || placement === 'bottom') {
-            style.top = placement === 'top' ?
-                            (basePosition.top - offsetHeight + scrollTop + 'px') : (basePosition.top + basePosition.height + scrollTop + 'px');
-            style.left = basePosition.left + scrollLeft + (basePosition.width - offsetWidth) /2 + 'px';
-        }
-
-        style.opacity = '0.9';
-
-        return style;
+        //this.setTooltipPosition();
     }
 
     toggleDisplay = (flag) => {
@@ -126,11 +113,24 @@ export default class Tooltip extends React.Component {
             if (!flag) {
                 flag = !this.state.show;
             }
-            this.setState({
-                show: flag
-            })
+            if ('show' in this.props){
+                if (this.props.onTrigger) {
+                    this.props.onTrigger(flag);
+                }
+            } else {
+                this.setState({
+                    show: flag
+                })
+            }
+
         }
     };
+
+    handleRequestClose = (reason) => {
+        if (this.props.onRequestClose) {
+            this.props.onRequestClose(reason);
+        }
+    }
 
     createTowChains(event, fn) {
         const childProps = this.props.children.props;
@@ -146,9 +146,11 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger} = this.props;
+        console.log('render tooltip');
+        const {trigger, onTrigger, onRequestClose, ...other} = this.props;
+
         const child = React.Children.only(this.props.children);
-        const newChildProps = {};
+        const newChildProps = {ref: 'baseElement'};
         if (trigger === 'hover') {
             newChildProps.onMouseEnter = this.createTowChains('onMouseEnter', this.toggleDisplay(true));
             newChildProps.onMouseLeave = this.createTowChains('onMouseLeave', this.toggleDisplay(false));
@@ -159,9 +161,24 @@ export default class Tooltip extends React.Component {
             newChildProps.onClick = this.createTowChains('onClick', this.toggleDisplay());
         }
 
+        const {basedOrigin, targetOrigin, offset} = getPlacements(this.props.placement);
+
         return React.cloneElement(child, newChildProps, createChildFragment({
             children: child.props.children,
-            layer: <RenderToLayer render={this.renderLayer} open={true} useLayerForClickAway={false} ref="layer"/>
-        }));
+            layer:
+            <Popover
+                canAutoPosition={false}
+                basedOrigin={basedOrigin}
+                targetOrigin={targetOrigin}
+                useLayerForClickAway={false}
+                onRequestClose={this.handleRequestClose}
+                basedEl={this.state.baseElement}
+                open={this.state.baseElement && this.state.show ? true : false}
+                offset={offset}
+            >
+                <TooltipInline {...other}/>
+            </Popover>
+        }))
+
     }
 }

@@ -16,15 +16,6 @@ function stringifyValue (value) {
     }
 }
 
-//TODO add to element utils
-function getStyle (el, prop) {
-    if (getComputedStyle !== 'undefined') {
-        return getComputedStyle(el, null).getPropertyValue(prop);
-    } else {
-        return el.currentStyle[prop];
-    }
-}
-
 let instanceId = 1;
 
 class Value extends React.Component {
@@ -98,7 +89,7 @@ class Value extends React.Component {
                 {this.props.children}
             </a>
         ) : (
-            <span className={className} role="option" id={this.props.id}>
+            <span className={className} role="option" aria-selected="true" id={this.props.id}>
                 {this.props.children}
             </span>
         );
@@ -220,7 +211,6 @@ export default class Select extends React.Component {
         autoBlur: PropTypes.bool,
         autofocus: PropTypes.bool,
         autosize: PropTypes.bool,
-        inputMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         backspaceRemoves: PropTypes.bool,
         className: PropTypes.string,
         clearAllText: stringOrNode,
@@ -252,7 +242,6 @@ export default class Select extends React.Component {
         onClose: PropTypes.func,
         onFocus: PropTypes.func,
         onInputChange: PropTypes.func,
-        onInputEnter: PropTypes.func,
         onMenuScrollToBottom: PropTypes.func,
         onOpen: PropTypes.func,
         onValueClick: PropTypes.func,
@@ -277,17 +266,14 @@ export default class Select extends React.Component {
         valueKey: PropTypes.string,
         valueRenderer: PropTypes.func,
         wrapperStyle: PropTypes.object,
-        prefixCls: PropTypes.string,
-        showArrow: PropTypes.bool
+        prefixCls: PropTypes.string
     };
 
     static defaultProps = {
         autosize: true,
         allowCreate: false,
         backspaceRemoves: true,
-        inputMaxWidth: '100%',
-        clearable: false,
-        showArrow: false,
+        clearable: true,
         clearAllText: 'clear all',
         clearValueText: 'clear value',
         delimiter: ',',
@@ -302,11 +288,12 @@ export default class Select extends React.Component {
         matchProp: 'any',
         menuBuffer: 0,
         multi: false,
+        noResultsText: 'No results found',
         onBlurResetsInput: true,
         openAfterFocus: false,
         optionComponent: Option,
         pageSize: 5,
-        placeholder: '',
+        placeholder: 'Select...',
         required: false,
         scrollMenuIntoView: true,
         searchable: true,
@@ -344,7 +331,6 @@ export default class Select extends React.Component {
         if (this.props.autofocus) {
             this.focus();
         }
-        this.calculateInputMaxWidth();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -395,27 +381,6 @@ export default class Select extends React.Component {
         if (prevProps.disabled !== this.props.disabled) {
             this.setState({ isFocused: false }); // eslint-disable-line react/no-did-update-set-state
             this.closeMenu();
-        }
-        //this.calculateInputMaxWidth();
-    }
-
-    calculateInputMaxWidth() {
-        const input = ReactDOM.findDOMNode(this.refs.input);
-        if (!input) return;
-        const {inputMaxWidth} = this.props;
-
-
-        if (inputMaxWidth) {
-            const element = this.refs.control;
-            //TODO border-box content-box
-            const inputMarginSize = parseInt(getStyle(input, 'margin-left')) + parseInt(getStyle(input, 'margin-right'));
-            const controlWidth = element.offsetWidth - parseInt(getStyle(element, 'padding-left')) - parseInt(getStyle(element, 'padding-right'))
-                                - parseInt(getStyle(element, 'border-left-width')) - parseInt(getStyle(element, 'border-left-width'));
-            if (inputMaxWidth.toString().indexOf('%') > -1) {
-                this.inputMaxWidth = controlWidth * parseInt(inputMaxWidth) / 100 - inputMarginSize;
-            } else {
-                this.inputMaxWidth = inputMaxWidth;
-            }
         }
     }
 
@@ -583,15 +548,6 @@ export default class Select extends React.Component {
         });
     };
 
-    handleInputEnter = (event) => {
-        if (this.props.onInputEnter && this.state.inputValue !== '') {
-            this.props.onInputEnter(this.state.inputValue, event);
-            this.setState({
-                inputValue: ''
-            })
-        }
-    };
-
     handleKeyDown = (event) => {
         if (this.props.disabled) return;
         switch (event.keyCode) {
@@ -608,7 +564,6 @@ export default class Select extends React.Component {
                 this.selectFocusedOption();
             return;
             case 13: // enter
-                this.handleInputEnter(event);
                 if (!this.state.isOpen) return;
                 event.stopPropagation();
                 this.selectFocusedOption();
@@ -684,10 +639,8 @@ export default class Select extends React.Component {
                 if (value === null || value === undefined) return [];
                 value = [value];
             }
-
             return value.map(value => this.expandValue(value, props)).filter(i => i);
         }
-
         var expandedValue = this.expandValue(value, props);
         return expandedValue ? [expandedValue] : [];
     }
@@ -695,14 +648,10 @@ export default class Select extends React.Component {
     expandValue (value, props) {
         if (typeof value !== 'string' && typeof value !== 'number') return value;
         let { options, valueKey } = props;
-        if (options) {
-            for (var i = 0; i < options.length; i++) {
-                if (options[i][valueKey] === value) return options[i];
-            }
-        } else {
-            return value;
+        if (!options) return;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i][valueKey] === value) return options[i];
         }
-
     }
 
     setValue (value) {
@@ -722,6 +671,7 @@ export default class Select extends React.Component {
 
     selectValue = (value) => {
         //NOTE: update value in the callback to make sure the input value is empty so that there are no sttyling issues (Chrome had issue otherwise)
+
         //checkvlaue
         const valueArray = this.getValueArray(this.props.value);
         if (valueArray && valueArray.indexOf(value) > -1){
@@ -761,7 +711,9 @@ export default class Select extends React.Component {
     }
 
     removeValue = (value) => {
+        console.log(value)
         var valueArray = this.getValueArray(this.props.value);
+        console.log(valueArray);
         this.setValue(valueArray.filter(i => i !== value));
         this.focus();
     }
@@ -944,6 +896,14 @@ export default class Select extends React.Component {
             var className = classNames(`${this.props.prefixCls}-input`, this.props.inputProps.className);
             const isOpen = !!this.state.isOpen;
 
+            const ariaOwns = classNames({
+                [this._instancePrefix + '-list']: isOpen,
+                [this._instancePrefix + '-backspace-remove-message']: this.props.multi
+                    && !this.props.disabled
+                    && this.state.isFocused
+                    && !this.state.inputValue
+            });
+
             // TODO: Check how this project includes Object.assign()
             const inputProps = Object.assign({}, this.props.inputProps, {
                 role: 'combobox',
@@ -963,20 +923,20 @@ export default class Select extends React.Component {
                     <div
                         {...divProps}
                         role="combobox"
+                        aria-expanded={isOpen}
+                        aria-owns={isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value'}
+                        aria-activedescendant={isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value'}
                         className={className}
                         tabIndex={this.props.tabIndex || 0}
                         onBlur={this.handleInputBlur}
                         onFocus={this.handleInputFocus}
                         ref="input"
+                        aria-readonly={'' + !!this.props.disabled}
                         style={{ border: 0, width: 1, display:'inline-block' }}/>
                 );
             }
 
             if (this.props.autosize) {
-                if (this.inputMaxWidth) {
-                    inputProps.maxWidth = this.inputMaxWidth;
-                    console.log(this.inputMaxWidth, inputProps);
-                }
                 return (
                     <Input {...inputProps} minWidth="5px" autoSize={true}/>
                 );
@@ -1212,7 +1172,7 @@ export default class Select extends React.Component {
                     </span>
                     {this.renderLoading()}
                     {this.renderClear()}
-                    {this.props.showArrow ? this.renderArrow() : null}
+                    {this.renderArrow()}
                 </div>
                 {isOpen ? this.renderOuter(options, valueArray, focusedOption) : null}
             </div>

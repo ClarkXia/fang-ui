@@ -47,7 +47,6 @@ export class DialogInline extends React.Component {
 
     componentDidMount() {
         this.positionDialog();
-
         window.addEventListener('resize', this.handleResize);
     }
 

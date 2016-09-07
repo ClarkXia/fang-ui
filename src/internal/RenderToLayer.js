@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {unstable_renderSubtreeIntoContainer, unmountComponentAtNode} from 'react-dom';
+import ReactDOM, {unstable_renderSubtreeIntoContainer, unmountComponentAtNode} from 'react-dom';
 
 function isDescendant(parent, child) {
     let node = child.parentNode;
@@ -86,7 +86,10 @@ export default class RenderToLayer extends React.Component {
             }
 
             const layerElement = render();
+            //this.layerElement = ReactDOM.render(layerElement, this.layer);
+
             this.layerElement = unstable_renderSubtreeIntoContainer(this, layerElement, this.layer);
+
         } else {
             this.unrenderLayer();
         }

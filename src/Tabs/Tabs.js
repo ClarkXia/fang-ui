@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import InkBar from './InkBar';
-import tabs from './tabs.css';
 
 class TabTemplate extends React.Component {
     static propTypes = {
@@ -111,7 +110,8 @@ export default class Tabs extends React.Component {
 
         if ((this.props.value && this.props.value !== value) ||
             this.state.selectedIndex !== index) {
-            this.props.onChange(value, event, tab);
+            const changeValue = value === undefined ? index : value;
+            this.props.onChange(changeValue, event, tab);
         }
 
         this.setState({selectedIndex: index});

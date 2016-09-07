@@ -29,7 +29,7 @@ export default function layer(config) {
             //return promise
             if (ret && ret.then) {
                 promiseLock = true;
-                d.setState({confirmLoading: true})
+                d.setState({confirmLoading: true});
                 ret.then(close);
             }
         } else {
@@ -43,6 +43,7 @@ export default function layer(config) {
 
     ReactDOM.render(
         <Modal
+            {...props}
             open={true}
             modal={props.modal}
             title={props.title}
@@ -51,7 +52,6 @@ export default function layer(config) {
             onOk={(e) => callFn(props.onOk)}
             onCancel={(e) => callFn(props.onCancel)}
             closable={!!props.closable}
-
         >
             {props.content}
         </Modal>,
@@ -78,5 +78,15 @@ layer.confirm = function (props) {
         modal: true,
         closable: false
     }, props);
+    return layer(config);
+}
+
+layer.dialog = function (props) {
+    const config = Object.assign({}, {
+        prefixCls: 'dialog',
+        closable: true,
+        modal: true
+    }, props);
+
     return layer(config);
 }

@@ -125,7 +125,7 @@ export default class Menu extends React.Component {
                 if (child.props.onClick) child.props.onClick(event);
             },
             onFocus : this.focusItem,
-            index,
+            index: childIndex,
             ref: isFocused ? 'focusedMenuItem' : null
         };
 
@@ -133,7 +133,9 @@ export default class Menu extends React.Component {
     }
 
     focusItem = (index, event) => {
-        !this.hoverLock && this.setFocusIndex(index, true);
+        if (!this.hoverLock) {
+            this.setFocusIndex(index, true);
+        }
     };
 
     decrementFocusIndex() {
@@ -149,6 +151,7 @@ export default class Menu extends React.Component {
         const maxIndex = this.getMenuItemCount(filteredChildren) - 1;
 
         index++;
+
         if (index > maxIndex) index = maxIndex;
         this.setFocusIndex(index, true);
     }
@@ -175,7 +178,8 @@ export default class Menu extends React.Component {
         let menuItemCount = 0;
         filteredChildren.forEach((child) => {
             const isDisable = child.props.disabled;
-            if (!isDisable) menuItemCount++;
+            const isDivider = child.type && child.type.isDivider;
+            if (!isDisable && !isDivider) menuItemCount++;
         });
 
         return menuItemCount;
@@ -214,7 +218,7 @@ export default class Menu extends React.Component {
                     this.handleMenuItemClick(event, child, this.state.focusIndex);
                     if (child.props.onClick) child.props.onClick(event);
                 }
-                this.props.onEscKeyDown(event);
+                //this.props.onEscKeyDown(event);
                 break;
             case 27: //escape
                 this.props.onEscKeyDown(event);
@@ -271,8 +275,6 @@ export default class Menu extends React.Component {
         const itemValue = item.props.value;
         const focusIndex = React.isValidElement(children) ? 0 : children.indexOf(item);
 
-
-        console.log(focusIndex);
         this.setFocusIndex(focusIndex, false);
 
         if (multiple) {
@@ -334,6 +336,7 @@ export default class Menu extends React.Component {
             const childIsDisabled = child.props.disabled;
 
             const cloneChild = childIsDivider ? React.cloneElement(child) :
+                childIsDisabled ? React.cloneElement(child) :
                 this.cloneMenuItem(child, menuItemIndex, /*style,*/ index);
             if (!childIsDisabled && !childIsDivider) menuItemIndex++;
 

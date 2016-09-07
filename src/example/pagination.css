@@ -1,6 +1,9 @@
 ul{
     list-style: none;
 }
+.pagination {
+    overflow: hidden;
+}
 .pagination li{
     min-width: 28px;
     height: 28px;

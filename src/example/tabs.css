@@ -1,0 +1,19 @@
+.tabs-wrapper{
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+.tabs-content{
+    margin: 10px 0;
+}
+.tabs-tab{
+    display: inline-block;
+    width: 100px;
+}
+.tabs-tab.tabs-tab-acitve{
+    color: #2db7f5;
+}
+.tabs-inkbar-container > div {
+    background-color: #000;
+}

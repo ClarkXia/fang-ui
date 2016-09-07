@@ -63,7 +63,6 @@ export default class Modal extends React.Component {
                 {cancelText || 'cancel'}
             </Button>)
         }
-        console.log(other)
 
         return (
             <DialogInline

@@ -15,11 +15,14 @@ export default class ContextMenu extends React.Component {
     static propTypes = {
         prefixCls: PropTypes.string,
         visible: PropTypes.bool,
-        container: PropTypes.node
+        container: PropTypes.any
     };
 
     static defaultProps = {
-        prefixCls: 'context-menu'
+        prefixCls: 'context-menu',
+        onContextMenu: (e) => {
+            e.preventDefault();
+        }
     };
 
     componentWillReceiveProps(nextProps) {
@@ -33,7 +36,6 @@ export default class ContextMenu extends React.Component {
                 } else {
                     this._display = true;
                 }
-
             } else {
                 this._display = false;
             }
@@ -47,19 +49,30 @@ export default class ContextMenu extends React.Component {
     }
 
     componentWillUnmount() {
-        this.menu.parentNode.removeEventListener('contextmenu', this.hideMenu);
         if (this.timer) clearTimeout(this.timer);
+
+        /*if (this.menu && this.menu.parentNode) {
+            this.menu.parentNode.removeEventListener('contextmenu', this.hideMenu);
+        }*/
     }
 
-    hideMenu = (e) => {
+    /*hideMenu = (e) => {
         e.preventDefault();
-        this.menu.parentNode.removeEventListener('contextmenu', this.hideMenu);
-    };
+        if (this.menu && this.menu.parentNode) {
+            this.menu.parentNode.removeEventListener('contextmenu', this.hideMenu);
+        }
+    };*/
 
     showMenu = (props) => {
         this._display = true;
         this.setState(this.getMenuPosition(props.x, props.y));
-        this.menu.parentNode.addEventListener('contextmenu', this.hideMenu);
+        /*if (this.menu && this.menu.parentNode) {
+            this.menu.parentNode.addEventListener('contextmenu', this.hideMenu);
+        }*/
+    };
+
+    handleContextMenu = (e) => {
+        this.props.onContextMenu(e);
     };
 
     getMenuPosition = (x, y) => {
@@ -88,15 +101,13 @@ export default class ContextMenu extends React.Component {
         if (this.props.container) {
             popProps.container = this.props.container;
         }
-
         return (
             <Popover {...popProps}>
-                <ul ref={(c) => (this.menu = c)} style={Object.assign({}, style)} className={prefixCls}>
+                <ul ref={(c) => (this.menu = c)} style={Object.assign({}, style)} className={prefixCls} onContextMenu={this.handleContextMenu}>
                     {children}
                 </ul>
             </Popover>
         );
-
     }
 }
 

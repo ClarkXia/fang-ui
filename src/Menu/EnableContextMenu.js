@@ -70,7 +70,7 @@ export default function(contextmenu, _options = {}) {
                 window.removeEventListener('click', this.forceHide, false);
                 window.removeEventListener('contextmenu', this.hide, false);
 
-                this.clickableElements.forEach((ele) => ele.removeEventListener('contextmenu', this.show, false));
+                this.clickableElements.forEach((ele) => { ele && ele.removeEventListener('contextmenu', this.show, false);});
                 this._mounted = false;
             }
 
@@ -109,7 +109,7 @@ export default function(contextmenu, _options = {}) {
             }
 
             _renderLayer() {
-                //if (this.state.showContextMenu) {
+                if (this.state.showContextMenu) {
                     const element = typeof contextmenu === 'function' ? contextmenu(this.props) : contextmenu;
 
                     if (element.type && element.type.isContextMenu) {
@@ -120,9 +120,9 @@ export default function(contextmenu, _options = {}) {
                         }), this.container);
                     }
 
-                //} else {
-                //    ReactDOM.unmountComponentAtNode(this.container);
-                //}
+                } else {
+                    ReactDOM.unmountComponentAtNode(this.container);
+                }
             }
 
             show = (event) => {
@@ -133,7 +133,6 @@ export default function(contextmenu, _options = {}) {
                     y = event.clientY;
 
                 const newSt = {x, y, showContextMenu: true};
-                console.log(this._mounted);
                 this._mounted && this.setState(newSt);
             };
 

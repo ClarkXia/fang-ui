@@ -20,16 +20,20 @@ export class SubMenuWrapper extends React.Component {
         super(props);
         this.state = {
             position
-        }
+        };
+        this.timer = null;
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.visible) {
             this._display = false;
-            setTimeout(() => {
+            this.timer = setTimeout(() => {
                 this._display = true;
-                this.setState(this.getMenuPosition());
-                this.forceUpdate();
+                const menuPosition = this.getMenuPosition();
+                if (menuPosition) {
+                    this.setState(menuPosition);
+                    this.forceUpdate();
+                }
             })
         } else {
             //rest state
@@ -44,7 +48,16 @@ export class SubMenuWrapper extends React.Component {
         return this.props.visible !== nextProps.visible;
     }
 
+    componentWillUnmount() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+
+    }
+
     getMenuPosition() {
+        if (!this.menu) return;
         const {innerWidth, innerHeight} = window,
             rect = this.menu.getBoundingClientRect(),
             position = {};
@@ -127,7 +140,7 @@ export default class SubMenu extends React.Component {
 
     }
 
-    componetWillUnmount() {
+    componentWillUnmount() {
         if (this.openTimer) clearTimeout(this.openTimer);
         if (this.closeTimer) clearTimeout(this.closeTimer);
         this.enter = false;

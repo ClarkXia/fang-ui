@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import notification from './notification.css';
-import Icon from '../Icon/Icon'
+import Icon from '../Icon';
 
 let count = 0;
 const now = Date.now();
@@ -21,9 +20,8 @@ class Notice extends React.Component {
     };
 
     static defaultProps = {
-        //duration: 1.5,
+        duration: 1.5,
         onClose: noop,
-        onEnd: noop,
         style: {}
     };
 
@@ -64,8 +62,8 @@ class Notice extends React.Component {
             <div className={cls} style={style}>
                 <div className={`${componentCls}-content`}>
                     {children}
+                    {closable ? <Icon type="close" className={`${componentCls}-close`} onClick={this.close} /> : null}
                 </div>
-                {closable ? <Icon type="close" className={`${componentCls}-close`} onClick={this.close}/> : null}
             </div>
         );
     }
@@ -98,6 +96,8 @@ class Notification extends React.Component {
                 };
             }
         });
+
+        return key;
     }
 
     remove(key) {
@@ -115,7 +115,7 @@ class Notification extends React.Component {
             const closeFunc = () => {
                 this.remove(notice.key);
                 if (onClose){
-                    onClose();
+                    onClose(notice.key);
                 }
             }
 
@@ -150,7 +150,7 @@ Notification.newInstance = function (props = {}){
 
     return {
         notice(noticeProps) {
-            notification.add(noticeProps);
+            return notification.add(noticeProps);
         },
         removeNotice(key) {
             notification.remove(key);

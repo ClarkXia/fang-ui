@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import classNames from 'classnames';
 import {loopChildren, filterParentPosition, handleCheck, getCheck, isInclude, arrayEqual} from '../utils/treeUtils'
 import TreeNode from './TreeNode';
-import tree from './tree.css';
 
 const getCheckedValue = (checkedKeys, halfChecked) => halfChecked ? {
     checked: checkedKeys,
@@ -161,6 +160,8 @@ export default class Tree extends React.Component {
             return this.props.loadData(treeNode).then(() => {
                 if (!controlled) {
                     this.setState({expandKeys});
+                } else {
+                    this.props.onExpand(expandKeys, {node: treeNode, expanded});
                 }
             });
         } else {

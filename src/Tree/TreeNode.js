@@ -8,7 +8,11 @@ export default class TreeNode extends React.Component {
         disableCheckbox: PropTypes.bool,
         expanded: PropTypes.bool,
         isLeaf: PropTypes.bool,
-        root: PropTypes.object
+        root: PropTypes.object,
+        label: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.string
+        ])
     };
 
     constructor(props) {
@@ -23,7 +27,8 @@ export default class TreeNode extends React.Component {
         //TODO store instance in tree root
     }
 
-    onExpand = () => {
+    onExpand = (e) => {
+        //e.stopPropagation();
         if (this.state.dataLoading || this.props.disabled) return
         const callbackPromise = this.props.root.onExpand(this, this.loaded);
         if (callbackPromise && typeof callbackPromise === 'object') {
@@ -42,13 +47,15 @@ export default class TreeNode extends React.Component {
         }
     };
 
-    onCheck = () => {
+    onCheck = (e) => {
+        //e.stopPropagation();
         if (!this.props.disabled && !this.props.disableCheckbox) {
             this.props.root.onCheck(this);
         }
     };
 
-    onSelect = () => {
+    onSelect = (e) => {
+        //e.stopPropagation();
         if (this.props.selectable && !this.props.disabled) {
             this.props.root.onSelect(this);
         }
@@ -94,7 +101,7 @@ export default class TreeNode extends React.Component {
     }
 
     renderContent(expandedState) {
-        const {prefixCls, iconSkin, loadData, name} = this.props;
+        const {prefixCls, iconSkin, loadData, label} = this.props;
         const cls = classNames({
             [`${prefixCls}-icon`]: true,
             [`${prefixCls}-icon-loading`]: this.state.dataLoading,
@@ -106,9 +113,9 @@ export default class TreeNode extends React.Component {
                         <span className={cls}></span> : null;
 
         return (
-            <a title={typeof name === 'string' ? name : ''}>
+            <a title={typeof label === 'string' ? label : ''} onClick={this.onSelect}>
                 {icon}
-                <span className={`${prefixCls}-title`}>{name}</span>
+                <span className={`${prefixCls}-title`}>{typeof label === 'function' ? label(this.props) : label}</span>
             </a>
         )
     }
@@ -136,9 +143,12 @@ export default class TreeNode extends React.Component {
         const cls = classNames({
             [className]: !!className,
             [`${prefixCls}-node-disable`]: disabled,
-            [`${prefixCls}-node-select`]: selected,
             [`${prefixCls}-${expandedState}`]: true
-        })
+        });
+        const nodeCls = classNames({
+            [`${prefixCls}-node-item`]: true,
+            [`${prefixCls}-node-select`]: selected
+        });
         let newChildren = this.renderChildren();
         let canRenderSwitcher = true;
         if (!newChildren  || newChildren === children) {
@@ -150,7 +160,7 @@ export default class TreeNode extends React.Component {
 
         return (
             <li className={cls}>
-                <div className={`${prefixCls}-node-item`}  onClick={this.onSelect}>
+                <div className={nodeCls}>
                     {this.renderLevel()}
                     {this.renderSwitcher(canRenderSwitcher, expandedState)}
                     {checkable ? this.renderCheckbox() : null}

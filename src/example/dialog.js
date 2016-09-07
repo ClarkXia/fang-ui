@@ -7,7 +7,8 @@ export default class Sample extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            content: 'content'
         }
     }
 
@@ -21,26 +22,33 @@ export default class Sample extends React.Component {
         this.setState({
             open: true
         })
-    }
+    };
+
+    handleConfirm = () => {
+        this.setState({
+            content: this.state.content + ' content'
+        });
+    };
 
     render() {
         const actions = [
             <Button onClick={this.handleDialogClose}>cancel</Button>,
-            <Button>confirm</Button>
+            <Button onClick={this.handleConfirm}>confirm</Button>
         ]
         return (
             <div>
                 <a href="javascript:;" onClick={this.handleDialogOpen}>open dialog</a>
                 <Dialog
                     open={this.state.open}
+                    modal={true}
                     title="this is a dialog title"
                     actions={actions}
-                    autoDetectWindowHeight={true}
+                    autoDetectWindowHeight={false}
                     repositionOnUpdate={true}
                     onClose={this.handleDialogClose}
                 >
                     <div>
-                        content content
+                        {this.state.content}
                     </div>
                 </Dialog>
             </div>

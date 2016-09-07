@@ -19,7 +19,7 @@
 .treenode-checkbox-halfChecked {
     background: #aaa;
 }
-.treenode-node-select > a {
+.treenode-node-select > a{
     color: #2db7f5;
 }
 .treenode-node-disable {
@@ -46,4 +46,8 @@
 
 .treenode-icon.treenode-icon-loading{
     border-radius: 50%;
+}
+
+.node-label{
+    display: inline-block;
 }

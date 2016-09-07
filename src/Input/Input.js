@@ -75,7 +75,9 @@ export default class Input extends React.Component {
                 });
             } else if (type === 'text') {
                 let inputWidth = calculateInputWidth(this.refs.input);
-                inputWidth = this.props.maxWidth ? Math.min(inputWidth, this.props.maxWidth) : inputWidth;
+                inputWidth = this.props.maxWidth ? Math.min(inputWidth, parseInt(this.props.maxWidth)) : inputWidth;
+                inputWidth = this.props.minWidth ? Math.max(inputWidth, parseInt(this.props.minWidth)) : inputWidth;
+
                 this.setState({
                     inputStyle: {
                         width: inputWidth
@@ -232,5 +234,5 @@ function calculateInputWidth(inputNode) {
         width = width - paddingSize;
     }
 
-    return Math.max(width, 1);
+    return Math.max(width, 1) + 2;
 }

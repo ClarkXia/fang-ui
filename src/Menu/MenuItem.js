@@ -18,11 +18,11 @@ export default class MenuItem extends React.Component {
     };
 
     handleMouseEnter = (event) => {
-        this.onFocus(event);
+        if (!this.props.disabled) this.onFocus(event);
     };
 
     handleMouseMove = (event) => {
-        this.onFocus(event);
+        if (!this.props.disabled) this.onFocus(event);
     };
 
     onFocus = (event) => {

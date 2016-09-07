@@ -7,6 +7,10 @@ const rootStyle = {
     position: 'absolute'
 };
 
+const invisibleStyle = {
+    display: 'none'
+};
+
 export default class Popover extends React.Component {
     static propTypes = {
         basedEl: PropTypes.object,
@@ -31,6 +35,7 @@ export default class Popover extends React.Component {
             top: PropTypes.number,
             collision: PropTypes.oneOf(['flip', 'fit'])
         }),
+        offset: PropTypes.array,
         container: PropTypes.any
 
     };
@@ -48,6 +53,7 @@ export default class Popover extends React.Component {
             vertical: 'top',
             horizontal: 'left'
         },
+        offset: [0, 0],
         useLayerForClickAway: true,
         inline: false
     };
@@ -73,29 +79,36 @@ export default class Popover extends React.Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.setPlacement);
-        //window.addEventListener('scroll', this.setPlacement);
+        window.addEventListener('scroll', this.setPlacement);
     }
 
     componentDidUpdate() {
-        this.setPlacement();
+        //wait for RenderToLayer did update
+        if (this.state.open) {
+            this.timer = setTimeout(() => {
+                this.setPlacement();
+            })
+        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setPlacement);
-        //window.removeEventListener('scroll', this.setPlacement);
+        window.removeEventListener('scroll', this.setPlacement);
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
     }
 
     renderLayer = () => {
         if (!this.state.open) return null;
 
         const {children, style, className = ''} = this.props;
-
         return (
             <div style={Object.assign({}, rootStyle, style)} className={className}>
                 {children}
             </div>
         );
-
     };
 
     requestClose(reason) {
@@ -133,11 +146,12 @@ export default class Popover extends React.Component {
         if (!this.state.open) {
             return;
         }
-        const targetEl = this.props.container ? this.refs.popoverContainer : this.refs.layer.getLayer().children[0];
-
+        const targetEl = this.props.container ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
+        //console.log('popover did update', targetEl);
         if (!targetEl) {
             return;
         }
+
         let targetPos;
         const docST = document.body.scrollTop || document.documentElement.scrollTop,
               docSL = document.body.scrollLeft || document.documentElement.scrollLeft,
@@ -148,8 +162,8 @@ export default class Popover extends React.Component {
 
         if (this.props.position) {
             targetPos = {
-                top: this.props.position.top,
-                left: this.props.position.left
+                top: this.props.position.top + parseInt(this.props.offset[0]),
+                left: this.props.position.left + parseInt(this.props.offset[1])
             };
 
             const {collision} = this.props.position;
@@ -168,24 +182,25 @@ export default class Popover extends React.Component {
                     width: targetEl.offsetWidth,
                     height: targetEl.offsetHeight
                 };
+
                 //check vertical&horizontal
                 for (let pos in docScroll) {
-
                     const sizeKey = pos === 'top' ? 'height' : 'width';
                     if (targetPos[pos] < docScroll[pos]) {
                         if (collision === 'fit') {
                             targetPos[pos] = docScroll[pos];
-                        } else if (collision === 'flip') {
+                        } /*else if (collision === 'flip') {
                             targetPos[pos] = targetPos[pos] + targetSize[sizeKey];
                             if (targetPos[pos] + targetSize[sizeKey] > docSize[sizeKey]){
                                 targetPos[pos] = docSize[sizeKey] - targetSize[sizeKey];
                             }
-                        }
+                        }*/
                     } else if (targetPos[pos] + targetSize[sizeKey] - docScroll[pos] > Math.min(docSize[sizeKey],winSize[sizeKey])) {
                         if (collision === 'fit') {
                             targetPos[pos] = Math.min(docSize[sizeKey],winSize[sizeKey]) + docScroll[pos] - targetSize[sizeKey];
                         } else if (collision === 'flip') {
                             targetPos[pos] = targetPos[pos] - targetSize[sizeKey];
+                            //console.log(targetPos[pos], targetSize[sizeKey]);
                             if (targetPos[pos] < 0) {
                                 targetPos[pos] = 0;
                             }
@@ -209,9 +224,10 @@ export default class Popover extends React.Component {
                 center: targetEl.offsetWidth / 2,
                 right: targetEl.offsetWidth
             };
+
             targetPos = {
-                top: basedPos[basedOrigin.vertical] - initPos[targetOrigin.vertical],
-                left: basedPos[basedOrigin.horizontal] - initPos[targetOrigin.horizontal]
+                top: basedPos[basedOrigin.vertical] - initPos[targetOrigin.vertical] + parseInt(this.props.offset[0]),
+                left: basedPos[basedOrigin.horizontal] - initPos[targetOrigin.horizontal] + parseInt(this.props.offset[1])
             };
 
             if (scrolling && this.props.autoCloseWhenOffScreen) {
@@ -226,6 +242,8 @@ export default class Popover extends React.Component {
             targetPos.left += docSL;
         }
 
+        targetPos.top = Math.max(0, targetPos.top);
+        targetPos.left = Math.max(0, targetPos.left);
 
         if (this.props.container) {
             const containerDOM = ReactDOM.findDOMNode(this.props.container);
@@ -234,9 +252,10 @@ export default class Popover extends React.Component {
             targetPos.left -= containerDOM.offsetLeft;
         }
 
-        targetEl.style.top = `${Math.max(0, targetPos.top)}px`;
-        targetEl.style.left = `${Math.max(0, targetPos.left)}px`;
-        targetEl.style.maxHeight = `${window.innerHeight}px`;
+
+        targetEl.style.top = `${targetPos.top}px`;
+        targetEl.style.left = `${targetPos.left}px`;
+        //targetEl.style.maxHeight = `${window.innerHeight}px`;
 
     };
 
@@ -250,33 +269,48 @@ export default class Popover extends React.Component {
     }
 
     autoPosition(based, target, basedOrigin, targetOrigin, targetPos) {
-        //TODO
         const {positions, basedPos} = this.getPositions(basedOrigin, targetOrigin);
 
-        if (targetPos.top < 0 || targetPos.top + target.bottom > window.innerHeight) {
+        const winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+              winW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+        if (targetPos.top < 0 || targetPos.top + target.bottom > winH) {
             let top = based[basedPos.vertical] - target[positions.y[0]];
-            if (top + target.bottom <= window.innerHeight) {
+            if (top + target.bottom <= winH) {
                 targetPos.top = Math.max(0, top);
             } else {
                 top = based[basedPos.vertical] - target[positions.y[1]];
-                if (top + target.bottom <= window.innerHeight) {
+                if (top + target.bottom <= winH) {
                     targetPos.top = Math.max(0, top);
+                } else {
+                    targetPos.top = Math.max(0, winH - target.bottom);
                 }
-                //TODO if cannot to meet the conditions
             }
         }
 
-        if (targetPos.left < 0 || targetPos.left + target.right > window.innerWidth) {
+        //pin to baseElement
+        if (targetPos.top > based.bottom) targetPos.top = based.bottom;
+        if (targetPos.top + target.bottom < based.top) targetPos.top = based.top - target.bottom;
+
+
+        if (targetPos.left < 0 || targetPos.left + target.right > winW) {
             let left = based[basedPos.horizontal] - target[positions.x[0]];
-            if (left + target.right <= window.innerWidth) {
+            if (left + target.right <= winW) {
                 targetPos.left = Math.max(0, left);
             } else {
                 left = based[basedPos.horizontal] - target[positions.x[1]];
-                if (left + target.right <= window.innerWidth) {
+                if (left + target.right <= winW) {
                     targetPos.left = Math.max(0, left);
+                } else {
+                    targetPos.left = Math.max(0, winW - target.right);
                 }
             }
         }
+
+        //pin to baseElement
+        if (targetPos.left > based.right) targetPos.left = based.right;
+        if (targetPos.left + target.right < based.left) targetPos.left = based.left - target.right;
+
         return targetPos;
     }
 
@@ -332,13 +366,15 @@ export default class Popover extends React.Component {
             );
         }
         return (
-            <RenderToLayer
-                ref="layer"
-                open={this.state.open}
-                componentClickAway={this.componentClickAway}
-                useLayerForClickAway={this.props.useLayerForClickAway}
-                render={this.renderLayer}
-            />
+            <div style={invisibleStyle}>
+                <RenderToLayer
+                    ref="layer"
+                    open={this.state.open}
+                    componentClickAway={this.componentClickAway}
+                    useLayerForClickAway={this.props.useLayerForClickAway}
+                    render={this.renderLayer}
+                />
+            </div>
         );
     }
 }

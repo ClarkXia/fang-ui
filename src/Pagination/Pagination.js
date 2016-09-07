@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import pagination from './pagination.css';
 
 const noop = () => {};
 
@@ -29,8 +28,6 @@ const Ellipsis = (props) => {
 export default class Pagination extends React.Component {
     constructor(props) {
         super(props);
-
-
         this.state = {
             current: props.current ? props.current : props.defaultCurrent,
             pageSize: props.pageSize ? props.pageSize : props.defaultPageSize
@@ -45,7 +42,9 @@ export default class Pagination extends React.Component {
         defaultPageSize: PropTypes.number,
         onChange: PropTypes.func,
         showTotal: PropTypes.func,
-        prefixCls: PropTypes.string
+        prefixCls: PropTypes.string,
+        nextBtn: PropTypes.any,
+        prevBtn: PropTypes.any
     };
 
     static defaultProps = {
@@ -53,7 +52,9 @@ export default class Pagination extends React.Component {
         total: 0,
         defaultPageSize: 10,
         onChange: noop,
-        prefixCls: 'pagination'
+        prefixCls: 'pagination',
+        btnNext: 'next',
+        btnPrev: 'prev'
     };
 
     componentWillReceiveProps(nextProps) {
@@ -141,7 +142,7 @@ export default class Pagination extends React.Component {
     }
 
     render() {
-        const {prefixCls, showTotal, total, className=''} = this.props;
+        const {prefixCls, showTotal, total, className='', btnNext, btnPrev} = this.props;
         const allPages = this.calcPage();
         const pagerList = [];
         let omission =null;
@@ -224,11 +225,11 @@ export default class Pagination extends React.Component {
             <ul className={`${prefixCls} ${className}`}>
                 {totalText}
                 <li onClick={this.prev} className={(this.hasPrev() ? '' : `${prefixCls}-disabled `) + `${prefixCls}-prev`}>
-                    <a>prev</a>
+                    <a>{btnPrev}</a>
                 </li>
                 {pagerList}
                 <li onClick={this.next} className={(this.hasNext() ? '' : `${prefixCls}-disabled `) + `${prefixCls}-next`}>
-                    <a>next</a>
+                    <a>{btnNext}</a>
                 </li>
             </ul>
         );
