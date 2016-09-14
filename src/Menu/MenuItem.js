@@ -43,16 +43,15 @@ export default class MenuItem extends React.Component {
         })
 
         return (
-            <div
+            <li
                 className={cls}
                 {...other}
                 /*onMouseEnter={this.handleMouseEnter}*/
                 onMouseMove={this.handleMouseMove}
             >
-                <a href="javascript:;">
-                    {children}
-                </a>
-            </div>
+                {children}
+
+            </li>
         );
     }
 }

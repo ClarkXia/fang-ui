@@ -30,7 +30,7 @@ export default class Menu extends React.Component {
         maxHeight: null,
         multiple: false,
         onChange: noop,
-        show: false,
+        //show: false,
         onEscKeyDown: noop,
         onItemClick: noop,
         onKeyDown: noop
@@ -322,7 +322,7 @@ export default class Menu extends React.Component {
             disableKeyEvent,
             prefixCls = 'menu',
             className,
-            show,
+            //show,
             ...other
         } = this.props;
 
@@ -353,9 +353,9 @@ export default class Menu extends React.Component {
                 ref="menuContainer"
                 className={`${prefixCls}-container`}
             >
-                <div {...other}  className={cls} ref="menu" style={Object.assign({}, defaultStyle, style)}>
+                <ul {...other}  className={cls} ref="menu" style={Object.assign({}, defaultStyle, style)}>
                     {newChildren}
-                </div>
+                </ul>
             </div>
         );
     }
