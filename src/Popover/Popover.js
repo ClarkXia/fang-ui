@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import RenderToLayer from '../internal/RenderToLayer';
 
 const rootStyle = {
-    position: 'absolute'
+    position: 'absolute',
+    opacity: 0
 };
 
 const invisibleStyle = {
@@ -70,6 +71,8 @@ export default class Popover extends React.Component {
         if (nextProps.open !== this.state.open) {
             if (nextProps.open) {
                 this.basedEl = nextProps.basedEl || this.props.basedEl;
+
+
                 this.setState({open: true});
             } else {
                 this.setState({open: false});
@@ -87,7 +90,7 @@ export default class Popover extends React.Component {
         if (this.state.open) {
             this.timer = setTimeout(() => {
                 this.setPlacement();
-            })
+            });
         }
     }
 
@@ -146,7 +149,8 @@ export default class Popover extends React.Component {
         if (!this.state.open) {
             return;
         }
-        const targetEl = this.props.container ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
+        this.targetEl = this.props.container ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
+        const targetEl = this.targetEl;
         //console.log('popover did update', targetEl);
         if (!targetEl) {
             return;
@@ -238,8 +242,10 @@ export default class Popover extends React.Component {
                 targetPos = this.autoPosition(basedPos, initPos, targetOrigin, basedOrigin, targetPos);
             }
             //position:absolute
-            targetPos.top += docST;
-            targetPos.left += docSL;
+            if (!this.props.useLayerForClickAway) {
+                targetPos.top += docST;
+                targetPos.left += docSL;
+            }
         }
 
         targetPos.top = Math.max(0, targetPos.top);
@@ -256,6 +262,8 @@ export default class Popover extends React.Component {
         targetEl.style.top = `${targetPos.top}px`;
         targetEl.style.left = `${targetPos.left}px`;
         //targetEl.style.maxHeight = `${window.innerHeight}px`;
+        //TODO: fix the delay of setPlacement
+        targetEl.style.opacity = 1;
 
     };
 

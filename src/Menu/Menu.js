@@ -116,7 +116,6 @@ export default class Menu extends React.Component {
             focusState = this.state.isKeyboardFocused ?
                 'keyborad-focused': 'focused';
         }
-
         const props = {
             focusState,
             selected,
@@ -159,7 +158,6 @@ export default class Menu extends React.Component {
     isChildSelected(child, props) {
         const value = props.value;
         const childValue = child.props.value;
-
         if (props.multiple) {
             return value.length && value.indexOf(childValue) !== -1;
         } else {
@@ -322,7 +320,7 @@ export default class Menu extends React.Component {
             disableKeyEvent,
             prefixCls = 'menu',
             className,
-            //show,
+            show,
             ...other
         } = this.props;
 

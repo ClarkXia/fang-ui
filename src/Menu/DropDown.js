@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Propover from './Propover';
+import Popover from '../Popover';
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import classNames from 'classnames';
@@ -48,16 +48,21 @@ export default class DropDown extends React.Component {
     }
 
     handleOnChange = (event, itemValue) => {
-        this.setState({
-            open: false
-        }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(event, itemValue);
-            }
-        })
+        event.persist();
+        //setTimeout to fix "React DOM tree root should always have a node reference" issue
+        setTimeout(() => {
+            this.setState({
+                open: false
+            }, () => {
+                if (this.props.onChange) {
+                    this.props.onChange(event, itemValue);
+                }
+            });
+        });
     };
 
     handleRequestClose = () => {
+
         this.setState({
             open: false,
             basedEl: null
@@ -79,10 +84,11 @@ export default class DropDown extends React.Component {
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
-        React.children.forEach(children, (child) => {
+        React.Children.forEach(children, (child) => {
             if (i === 0 || value === child.props.value) {
                 selectedChild = child;
             }
+            i++;
         });
 
         const displayValue = valueComponent ? <ValueComponent {...selectedChild.props} /> : (selectedChild.props.label || selectedChild.props.primaryText);
@@ -103,20 +109,21 @@ export default class DropDown extends React.Component {
                 ref="root"
             >
                 <div className={valueCls} onClick={this.handleValueClick}>{displayValue}</div>
-                <Propover
+                <Popover
                     basedOrigin={basedOrigin}
                     basedEl={this.state.basedEl}
                     open={this.state.open}
                     onRequestClose={this.handleRequestClose}
+                    useLayerForClickAway={false}
                 >
                     <Menu
-                        value={this.state.value}
+                        value={value}
                         onItemClick={this.props.onSelect}
                         onChange={this.handleOnChange}
                     >
                         {children}
                     </Menu>
-                </Propover>
+                </Popover>
             </div>
         );
     }

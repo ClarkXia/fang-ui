@@ -44,6 +44,7 @@ import SamplePagination from './example/pagination';
 import SampleMessage from './example/notification';
 import SampleModal from './example/modal';
 import SampleMention from './example/mention';
+import SampleDropDown from './example/dropdown';
 
 import * as A from './utils/treeUtils'
 
@@ -176,6 +177,7 @@ class TestComponent extends React.Component {
                 <SampleMention />
                 <SampleContextMenu />
                 <SampleMenu />
+                <SampleDropDown />
                 <SampleSearch />
                 <SampleTab />
                 <SampleTree />
