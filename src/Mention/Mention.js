@@ -37,7 +37,7 @@ const Suggestion = (props) => {
         return (
             <Menu
                 onItemSelect={handleSelect}
-                disableAutoFocus={true}
+                disableAutoFocus={false}
                 className={`${prefixCls}-suggestions`}
             >
                 {data.map((item, index) => {
@@ -135,7 +135,7 @@ class MentionsInput extends React.Component {
         if (!openSuggestion) return;
         const el = ReactDOM.findDOMNode(this.refs.input);
 
-        const caretPosition = getCaretPosition(el);
+        const caretPosition = getCaretPosition(el, this.props.type === 'input');
         const position = {
             left: caretPosition.left + el.offsetLeft,
             top: caretPosition.top + el.offsetTop
@@ -267,7 +267,6 @@ class MentionsInput extends React.Component {
         }
 
         setTimeout(() => {
-
             this.clearSuggestions();
         })
 
@@ -316,7 +315,6 @@ class MentionsInput extends React.Component {
                 return;
             }
         }
-
     };
 
     handleBlur = (e) => {

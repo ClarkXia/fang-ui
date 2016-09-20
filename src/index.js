@@ -46,6 +46,7 @@ import SampleModal from './example/modal';
 import SampleMention from './example/mention';
 import SampleDropDown from './example/dropdown';
 import SyncMention from './example/mention-sync';
+import SampleTextField from './example/text-field';
 
 import * as A from './utils/treeUtils'
 
@@ -177,6 +178,7 @@ class TestComponent extends React.Component {
                 <SampleInput />
                 <SampleMention />
                 <SyncMention />
+                <SampleTextField />
                 <SampleContextMenu />
                 <SampleMenu />
                 <SampleDropDown />

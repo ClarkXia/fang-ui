@@ -7,18 +7,6 @@ import getPlacements from './placements';
 import Popover from '../Popover';
 
 class TooltipInline extends React.Component {
-    componentDidMount() {
-        console.log('--tooltip inline did mount--');
-    }
-
-    componentDidUpdate() {
-        console.log('--tooltip inline did update--');
-    }
-
-    componentWillUnmount() {
-        console.log('--tooltip inline did unmount--');
-    }
-
     render() {
         const {
             show,
@@ -35,8 +23,6 @@ class TooltipInline extends React.Component {
             [`${prefixCls}-container`]: true,
             [className]: !!className
         })
-
-        console.log('render tooltip inline');
 
         return (
             <div {...other} className={cls} ref="tooltip">
@@ -81,14 +67,12 @@ export default class Tooltip extends React.Component {
 
     componentDidMount() {
         //this.setTooltipPosition();
-        console.log('tooltip did mount');
         this.setState({
             baseElement: findDOMNode(this.refs.baseElement)
         })
     }
 
     componentDidUpdate() {
-        console.log('tooltip did update');
         /*if (this.renderAgain) {
             //the component in Popover did update will later than Popover ?
             this.forceUpdate();
@@ -146,7 +130,6 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        console.log('render tooltip');
         const {trigger, onTrigger, onRequestClose, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);

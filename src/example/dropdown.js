@@ -10,12 +10,14 @@ export default class Sample extends React.Component {
     }
 
     handleOnChange = (e, value) => {
-        console.log(value);
+        this.setState({
+            value
+        });
     }
 
     render() {
         return (
-            <DropDown onChange={this.handleOnChange} value={this.state.value} defaultOpen={true}>
+            <DropDown onChange={this.handleOnChange} value={this.state.value} defaultOpen={false}>
                 <MenuItem value={1} label="xxx1">xxx</MenuItem>
                 <MenuItem value={2} label="yyy2">yyy</MenuItem>
             </DropDown>

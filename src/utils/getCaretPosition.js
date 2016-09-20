@@ -13,6 +13,12 @@ const specificStyle = {
     'overflow-y': 'auto'
 };
 
+const inputSpecificStyle = {
+    'whiteSpace': 'nowrap',
+    'overflow-x': 'auto',
+    'overflow-y': 'hidden'
+}
+
 const browser = function(){
     let b = {};
     const ua = navigator.userAgent.toLowerCase();
@@ -27,14 +33,15 @@ const browser = function(){
 
 let simulator;
 
-function getCaretPosition(element) {
+function getCaretPosition(element, inputFlag) {
     if (!simulator) {
         simulator = document.createElement('div');
         simulator.style.position = 'absolute';
         simulator.style.top = '-9999px';
+        //simulator.style.top = '100px';
         simulator.style.left = '0px';
         simulator.style.visibility = 'hidden';
-        
+
         document.body.appendChild(simulator);
     }
     var elementOffset = element.getBoundingClientRect();
@@ -70,11 +77,13 @@ function getCaretPosition(element) {
 
     }*/
 
-    specificStyle.width = eleWidth + 'px';
-    specificStyle.height = eleHeight + 'px';
-    //fouce box-sizing
-    for (var styleKey in specificStyle) {
-        simulator.style[styleKey] = specificStyle[styleKey];
+
+    let spStyle = inputFlag ? inputSpecificStyle : specificStyle;
+    spStyle.width = eleWidth + 'px';
+    spStyle.height = eleHeight + 'px';
+
+    for (var styleKey in spStyle) {
+        simulator.style[styleKey] = spStyle[styleKey];
     }
 
     var value = element.value, cursorPosition = getCursorPosition(element).start;
@@ -85,8 +94,8 @@ function getCaretPosition(element) {
         focus = document.createElement('span'),
         after = document.createElement('span');
 
-    before.innerHTML = toHTML(beforeText);
-    after.innerHTML = toHTML(afterText);
+    before.innerHTML = toHTML(beforeText, inputFlag);
+    after.innerHTML = toHTML(afterText, inputFlag);
 
     simulator.appendChild(before);
     simulator.appendChild(focus);
@@ -161,10 +170,12 @@ function cloneStyle(element, target, styleName) {
     }
 }
 
-function toHTML(text) {
+function toHTML(text, replaceWhiteSpace) {
+    if (replaceWhiteSpace){
+        return text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>')
+                   .split(' ').join('<span style="white-space:prev-wrap">&nbsp;</span>');
+    }
     return text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    //return text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>')
-    //            .split(' ').join('<span style="white-space:prev-wrap">&nbsp;</span>');
 }
 
 

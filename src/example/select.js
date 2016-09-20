@@ -56,6 +56,7 @@ export default class MultiSelect extends React.Component {
                     filterOptions={false}
                     options={this.state.options}
                     onChange={this.handleSelectChange}
+                    clearable={true}
                 />
             </div>
         )

@@ -1,0 +1,39 @@
+.text-field-wrapper{
+    border: 1px solid #666;
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+
+.text-field-wrapper input, .text-field-wrapper textarea{
+    border: none;
+    position: relative;
+    background: none;
+    float: left;
+    height: 32px;
+    outline: none;
+}
+.text-field-wrapper textarea{
+    resize: none;
+}
+
+.btn.text-field-btn{
+    margin: 0;
+}
+.btn-disabled{
+    background-color: #f7f7f7;
+    border-color: #d9d9d9;
+}
+.btn-disabled span{
+    color: #ccc;
+}
+
+.text-field-wrapper .text-field-clear-zone{
+    color: #999;
+    cursor: pointer;
+    display: table-cell;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 17px;
+}

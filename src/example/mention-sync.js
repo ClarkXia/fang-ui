@@ -9,20 +9,21 @@ const syncData = {
         {id: 11231, name: 'fengzeyu', mail: 'fengzeyu@yifangyun.com'},
         {id: 298, name: 'huangwenping', mail: 'huangwenping@yifangyun.com'},
         {id:42340, name: 'liaohui', mail: 'liaohui@yifangyun.com'},
-        {id: 298, name: 'huangwenping', mail: 'huangwenping@yifangyun.com'},
-        {id:42340, name: 'liaohui', mail: 'liaohui@yifangyun.com'},
-        {id: 298, name: 'huangwenping', mail: 'huangwenping@yifangyun.com'},
-        {id:42340, name: 'liaohui', mail: 'liaohui@yifangyun.com'},
-        {id: 298, name: 'huangwenping', mail: 'huangwenping@yifangyun.com'},
-        {id:42340, name: 'liaohui', mail: 'liaohui@yifangyun.com'},
-        {id: 298, name: 'huangwenping', mail: 'huangwenping@yifangyun.com'},
-        {id:42340, name: 'liaohui', mail: 'liaohui@yifangyun.com'},
+        {id: 298, name: 'xww', mail: 'xww@yifangyun.com'},
+        {id:42340, name: 'zzzz', mail: 'zzzz@yifangyun.com'},
+        {id: 298, name: 'cccc', mail: 'cccc@yifangyun.com'},
+        {id:42340, name: 'qqqq', mail: 'qqqq@yifangyun.com'},
+        {id: 298, name: '中文', mail: '中文@yifangyun.com'},
+        {id:42340, name: 'rrrr', mail: 'rrr@yifangyun.com'},
+        {id: 298, name: 'werwer', mail: 'werwer@yifangyun.com'},
+        {id:42340, name: 'czcz', mail: 'czxcz@yifangyun.com'},
         {id: 361, name: 'luoshuai', mail: 'luoshuai@yifangyun.com'}
     ],
     contacts_count: 4,
     departments: [],
     groups: [
-        {id:14110, name:'qianduan'}
+        {id:14110, name:'qianduan'},
+        {id:14112, name:'houduan'}
     ],
     success: true
 };

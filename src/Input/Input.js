@@ -26,7 +26,7 @@ export default class Input extends React.Component {
 
     constructor(props) {
         super(props);
-        if (props.type === 'text') {
+        if (props.type === 'text' && props.autoSize) {
             this.state = {
                 inputStyle: {
                     width: props.minWidth

@@ -5,7 +5,7 @@ export default class Sample extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 'default'
+            value: 'Mention'
         }
     }
 
@@ -16,6 +16,8 @@ export default class Sample extends React.Component {
     }
 
     render() {
-        return <Mention data={['1','2']} value={this.state.value} onChange={this.handleChange}/>
+        return (
+            <Mention data={['1','2']} type="input" autoSize={false} value={this.state.value} onChange={this.handleChange}/>
+        );
     }
 }
