@@ -1,0 +1,18 @@
+.mention-input{
+    resize: none;
+}
+.mention-container.tabs-wrapper{
+    margin: 0;
+    background-color: #fff;
+}
+.mention-container .menu-content, .menu-container .mention-menu{
+    width: 100%;
+    font-size: 12px;
+    overflow-x: hidden;
+}
+
+.menu-item .keyborad-focused,.menu-item.focused{
+    background-color: #eee;
+}
+
+.mention-input {width: 200px}

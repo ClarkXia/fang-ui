@@ -16,7 +16,7 @@ export default class Menu extends React.Component {
         multiple: PropTypes.bool,
         onChange: PropTypes.func,
         onEscKeyDown: PropTypes.func,
-        onItemClick: PropTypes.func,
+        onItemSelect: PropTypes.func,
         onKeyDown: PropTypes.func,
         selectedMenuItemStyle: PropTypes.object,
         style: PropTypes.object,
@@ -32,7 +32,7 @@ export default class Menu extends React.Component {
         onChange: noop,
         //show: false,
         onEscKeyDown: noop,
-        onItemClick: noop,
+        onItemSelect: noop,
         onKeyDown: noop
     };
 
@@ -40,6 +40,7 @@ export default class Menu extends React.Component {
         super(props);
         const filteredChildren = this.getFilteredChildren(props.children);
         const selectedIndex = this.getSelectedIndex(props, filteredChildren);
+
         this.state = {
             focusIndex: props.disableAutoFocus ? -1 : selectedIndex >= 0 ? selectedIndex : 0,
             isKeyboardFocused: props.initiallyKeyboardFocused
@@ -120,7 +121,7 @@ export default class Menu extends React.Component {
             focusState,
             selected,
             onClick: (event) => {
-                this.handleMenuItemClick(event, child, index);
+                this.handleMenuItemSelect(event, child, index);
                 if (child.props.onClick) child.props.onClick(event);
             },
             onFocus : this.focusItem,
@@ -166,10 +167,14 @@ export default class Menu extends React.Component {
     }
 
     setFocusIndex(newIndex, isKeyboardFocused) {
-        this.setState({
-            focusIndex: newIndex,
-            isKeyboardFocused: isKeyboardFocused
-        });
+        if (this.state.focusIndex !== newIndex || this.state.isKeyboardFocused !== isKeyboardFocused) {
+            this._scrollToFocusedOption = true;
+            this.setState({
+                focusIndex: newIndex,
+                isKeyboardFocused: isKeyboardFocused
+            });
+        }
+
     }
 
     getMenuItemCount(filteredChildren) {
@@ -189,8 +194,9 @@ export default class Menu extends React.Component {
 
         filteredChildren.forEach((child) => {
             const childIsDivider = child.type && child.type.isDivider;
+            const childIsDisabled = child.props.disabled;
             if (this.isChildSelected(child, props)) selectedIndex = menuItemIndex;
-            if (!childIsDivider) menuItemIndex ++;
+            if (!childIsDivider && !childIsDisabled) menuItemIndex ++;
         });
         return selectedIndex;
     }
@@ -210,13 +216,16 @@ export default class Menu extends React.Component {
                 return;
             case 13: //enter
                 //get focused child
-                const {children} = this.props;
-                if (Array.isArray(children)) {
-                    const child = children[this.state.focusIndex];
-                    this.handleMenuItemClick(event, child, this.state.focusIndex);
-                    if (child.props.onClick) child.props.onClick(event);
-                }
-                //this.props.onEscKeyDown(event);
+                    let focusedChild, menuItemIndex = 0;
+                    filteredChildren.forEach((child) => {
+                        const childIsDivider = child.type && child.type.isDivider;
+                        const childIsDisabled = child.props.disabled;
+                        if (menuItemIndex == this.state.focusIndex) focusedChild = child;
+                        if (!childIsDivider && !childIsDisabled) menuItemIndex ++;
+                    });
+
+                    this.handleMenuItemSelect(event, focusedChild, this.state.focusIndex);
+                    if (focusedChild.props.onClick) focusedChild.props.onClick(event);
                 break;
             case 27: //escape
                 this.props.onEscKeyDown(event);
@@ -268,7 +277,7 @@ export default class Menu extends React.Component {
         return false;
     }
 
-    handleMenuItemClick(event, item, index) {
+    handleMenuItemSelect(event, item, index) {
         const {children, multiple, value} = this.props;
         const itemValue = item.props.value;
         const focusIndex = React.isValidElement(children) ? 0 : children.indexOf(item);
@@ -289,7 +298,7 @@ export default class Menu extends React.Component {
             this.props.onChange(event, itemValue);
         }
 
-        this.props.onItemClick(event, item, index);
+        this.props.onItemSelect(event, item, index);
     }
 
     setScrollPosition() {
@@ -298,9 +307,16 @@ export default class Menu extends React.Component {
             const menuDOM = this.refs.menu;
             const focusedRect = focusedDOM.getBoundingClientRect();
             const menuRect = menuDOM.getBoundingClientRect();
+            if (!this._scrollToOption) {
+                menuDOM.scrollTop = focusedDOM.offsetTop;
+                this._scrollToOption = true;
+            }
 
-            if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
-                menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+            if (this._scrollToFocusedOption) {
+                this._scrollToFocusedOption = false;
+                if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+                    menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+                }
             }
         }
     }
@@ -312,7 +328,7 @@ export default class Menu extends React.Component {
             maxHeight,
             multiple,
             openDirection = 'bottom-left',
-            onItemClick,
+            onItemSelect,
             onEscKeyDown,
             style,
             value,

@@ -53,9 +53,9 @@ export default class Input extends React.Component {
         }
     }
 
-    handleKeyDown = (e) => {
+    /*handleKeyDown = (e) => {
 
-    };
+    };*/
 
     handleTextChange = (e) => {
         this.resizeInput();

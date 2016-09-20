@@ -359,8 +359,9 @@ export default class Popover extends React.Component {
     }
 
     render() {
-        if (this.props.container) {
-            const {children, style, className = ''} = this.props;
+        const {children, style, className = ''} = this.props;
+        if (!children) return null;
+        if (this.props.container) {    
             const display = this.state.open ? {} : {display: 'none'};
 
             return (

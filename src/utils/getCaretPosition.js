@@ -7,7 +7,8 @@ const primaryStyle = ['fontFamily', 'fontSize', 'fontWeight', 'fontVariant', 'fo
     'line-height', 'outline', 'box-sizing'];
 
 const specificStyle = {
-    'word-wrap': 'break-word',
+    'wordWrap': 'break-word',
+    'whiteSpace': 'pre-wrap',
     'overflow-x': 'hidden',
     'overflow-y': 'auto'
 };
@@ -30,9 +31,10 @@ function getCaretPosition(element) {
     if (!simulator) {
         simulator = document.createElement('div');
         simulator.style.position = 'absolute';
-        simulator.style.top = '0px';
+        simulator.style.top = '-9999px';
         simulator.style.left = '0px';
-        //simulator.style.visibility = 'hidden';
+        simulator.style.visibility = 'hidden';
+        
         document.body.appendChild(simulator);
     }
     var elementOffset = element.getBoundingClientRect();
@@ -57,7 +59,7 @@ function getCaretPosition(element) {
     let eleWidth = element.offsetWidth,
         eleHeight = element.offsetHeight;
     const boxSizing = getComputedStyle(element, 'box-sizing');
-    console.log(boxSizing);
+
     if (boxSizing === 'content-box') {
         eleWidth = eleWidth - parseInt(getComputedStyle(element, 'padding-left')) - parseInt(getComputedStyle(element, 'padding-right'))
                             - parseInt(getComputedStyle(element, 'border-left-width')) - parseInt(getComputedStyle(element, 'border-right-width'));
@@ -71,14 +73,11 @@ function getCaretPosition(element) {
     specificStyle.width = eleWidth + 'px';
     specificStyle.height = eleHeight + 'px';
     //fouce box-sizing
-
-
-
     for (var styleKey in specificStyle) {
         simulator.style[styleKey] = specificStyle[styleKey];
     }
 
-    var value = element.value, cursorPosition = getCursorPosition(element);
+    var value = element.value, cursorPosition = getCursorPosition(element).start;
     var beforeText = value.substring(0, cursorPosition),
         afterText = value.substring(cursorPosition);
 
@@ -95,7 +94,7 @@ function getCaretPosition(element) {
 
     var focusOffset = focus.getBoundingClientRect(),
         simulatorOffset = simulator.getBoundingClientRect();
-    console.log(focusOffset)
+
     return {
         top: focusOffset.top - simulatorOffset.top - element.scrollTop
              // calculate and add the font height except Firefox
@@ -104,35 +103,50 @@ function getCaretPosition(element) {
     };
 }
 
-export function getCursorPosition(element) {
-    var result = 0;
-    if ('selectionStart' in element) {
-        result = element.selectionStart;
-    } else if ('selection' in document) {
-        var range = document.selection.createRange();
-        if (browser.ie && parseInt(browser.ie) > 6) {
-            element.focus();
-            var length = document.selection.createRange.text.length;
-            range.moveStart('character', - element.value.length);
-            result = range.text.length - length;
-        } else {
-            /*IE 6*/
-            var bodyRange = document.body.createTextRange();
-            bodyRange.moveToElementText(element);
-            for (; bodyRange.compareEndPoints('StartToStart', range) < 0; result++)
-                bodyRange.moveStart('character', 1);
-            for (var i = 0; i <= result; i ++){
-                if (element.value.charAt(i) == '\n')
-                    result++;
+export function getCursorPosition(el) {
+    var start = 0, end = 0, normalizedValue, range,
+        textInputRange, len, endRange;
+
+    if (typeof el.selectionStart == 'number' && typeof el.selectionEnd == 'number') {
+        start = el.selectionStart;
+        end = el.selectionEnd;
+    } else {
+        range = document.selection.createRange();
+
+        if (range && range.parentElement() == el) {
+            len = el.value.length;
+            normalizedValue = el.value.replace(/\r\n/g, '\n');
+
+            // Create a working TextRange that lives only in the input
+            textInputRange = el.createTextRange();
+            textInputRange.moveToBookmark(range.getBookmark());
+
+            // Check if the start and end of the selection are at the very end
+            // of the input, since moveStart/moveEnd doesn't return what we want
+            // in those cases
+            endRange = el.createTextRange();
+            endRange.collapse(false);
+
+            if (textInputRange.compareEndPoints('StartToEnd', endRange) > -1) {
+                start = end = len;
+            } else {
+                start = -textInputRange.moveStart('character', -len);
+                start += normalizedValue.slice(0, start).split('\n').length - 1;
+
+                if (textInputRange.compareEndPoints('EndToEnd', endRange) > -1) {
+                    end = len;
+                } else {
+                    end = -textInputRange.moveEnd('character', -len);
+                    end += normalizedValue.slice(0, end).split('\n').length - 1;
+                }
             }
-            var enterCount = element.value.split('\n').length - 1;
-            result -= enterCount;
-            return result;
         }
     }
-    console.log(result);
 
-    return result;
+    return {
+        start: start,
+        end: end
+    };
 }
 
 function getComputedStyle(element, styleName) {
@@ -148,8 +162,9 @@ function cloneStyle(element, target, styleName) {
 }
 
 function toHTML(text) {
-    return text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>')
-                .split(' ').join('<span style="white-space:prev-wrap">&nbsp;</span>');
+    return text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    //return text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>')
+    //            .split(' ').join('<span style="white-space:prev-wrap">&nbsp;</span>');
 }
 
 

@@ -67,7 +67,7 @@ export default class Sample extends React.Component {
                 >
                     <Menu
                         value={this.state.value}
-                        onItemClick={this.handleOnChange}
+                        onItemSelect={this.handleOnChange}
                         show={this.state.open}
                     >
                         {data.map((v, i) => {

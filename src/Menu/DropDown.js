@@ -33,7 +33,7 @@ export default class DropDown extends React.Component {
         super(props);
         this.state = {
             open: false
-        }
+        };
     }
 
     componentDidMount() {
@@ -70,7 +70,7 @@ export default class DropDown extends React.Component {
     };
 
     handleValueClick = (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         if (!this.props.disabled) {
             this.setState({
                 open: !this.state.open,
@@ -118,7 +118,7 @@ export default class DropDown extends React.Component {
                 >
                     <Menu
                         value={value}
-                        onItemClick={this.props.onSelect}
+                        onItemSelect={this.props.onSelect}
                         onChange={this.handleOnChange}
                     >
                         {children}

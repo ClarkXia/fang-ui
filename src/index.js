@@ -45,6 +45,7 @@ import SampleMessage from './example/notification';
 import SampleModal from './example/modal';
 import SampleMention from './example/mention';
 import SampleDropDown from './example/dropdown';
+import SyncMention from './example/mention-sync';
 
 import * as A from './utils/treeUtils'
 
@@ -175,6 +176,7 @@ class TestComponent extends React.Component {
                 <SampleIcon />
                 <SampleInput />
                 <SampleMention />
+                <SyncMention />
                 <SampleContextMenu />
                 <SampleMenu />
                 <SampleDropDown />
