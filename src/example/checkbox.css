@@ -62,3 +62,57 @@
     position: relative;
     vertical-align: middle;
 }
+
+
+.switch{
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 44px;
+    height: 22px;
+    line-height: 20px;
+    vertical-align: middle;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #ccc;
+    cursor: pointer;
+    -webkit-transition: all .3s cubic-bezier(.78,.14,.15,.86);
+    transition: all .3s cubic-bezier(.78,.14,.15,.86);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none;
+}
+
+.switch-inner{
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    left: 24px;
+}
+
+.switch:after {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 2px;
+    top: 1px;
+    border-radius: 18px;
+    background-color: #fff;
+    content: " ";
+    cursor: pointer;
+    -webkit-transition: left .3s cubic-bezier(.78,.14,.15,.86),width .3s cubic-bezier(.78,.14,.15,.86);
+    transition: left .3s cubic-bezier(.78,.14,.15,.86),width .3s cubic-bezier(.78,.14,.15,.86);
+}
+
+.switch-checked {
+    border-color: #2db7f5;
+    background-color: #2db7f5;
+}
+.switch-checked:after {
+    left: 22px;
+}
+.switch-checked .switch-inner {
+    left: 6px;
+}
