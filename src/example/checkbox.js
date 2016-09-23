@@ -1,6 +1,6 @@
 import React from 'react';
 import Checkbox from '../Checkbox';
-import Radio from '../Radio';
+import Radio, {RadioGroup} from '../Radio';
 import Switch from '../Switch';
 import {LabelEnhance} from '../internal/LabelEnhance';
 import css from './checkbox.css';
@@ -33,6 +33,12 @@ export default class Sample extends React.Component {
                 <RadioLable defaultChecked={false} onChange={(event, value) => console.log(value)}>label text</RadioLable>
                 <Switch />
                 <Switch checkedChildren="on" unCheckedChildren="off"/>
+                <RadioGroup>
+                    <Radio value={1}/>
+                    <Radio value={2}/>
+                    <Radio value={3}/>
+                    <RadioLable value={4}>radio</RadioLable>
+                </RadioGroup>
             </div>
         );
     }

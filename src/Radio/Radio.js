@@ -11,3 +11,4 @@ export default class Radio extends React.Component {
         return <Checkbox {...this.props} ref="checkbox" />;
     }
 }
+Radio.componentType = 'radio';
