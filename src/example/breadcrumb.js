@@ -1,5 +1,7 @@
 import React from 'react';
 import Breadcrumb, {BreadcrumbItem} from '../Breadcrumb';
+import Ellipsis from '../Ellipsis';
+
 import css from './breadcrumb.css';
 let index = 1;
 export default class Sample extends React.Component {
@@ -33,7 +35,12 @@ export default class Sample extends React.Component {
                 <a onClick={() => {this.handleChangeRoute()}}>decrease</a>
                 <Breadcrumb separator=">" maxWidth={550} itemMinWidth={50}>
                     {this.state.route.map((item, i) => {
-                        return <BreadcrumbItem key={i}>{item}</BreadcrumbItem>;
+                        return <BreadcrumbItem key={i}><Ellipsis>{item}</Ellipsis></BreadcrumbItem>;
+                    })}
+                </Breadcrumb>
+                <Breadcrumb separator=">" maxWidth={550} itemMinWidth={50} autoEllipsis={false}>
+                    {this.state.route.map((item, i) => {
+                        return <BreadcrumbItem key={i} href="">{item}</BreadcrumbItem>;
                     })}
                 </Breadcrumb>
             </div>

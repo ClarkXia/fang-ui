@@ -16,7 +16,7 @@ const treeData = [
 const TreeLabel = (props) => {
     return (
         <div className="node-label">
-            <b>{props.name}</b>
+            <span>{props.name}</span>
             <em>({props.count})</em>
         </div>
     );
@@ -128,7 +128,7 @@ export default class TreeSample extends React.Component {
                     this.renderTree(treeData,{
                         checkable: true,
                         checkStrictly: true,
-                        checkedKeys: {checked:this.state.checked,halfChecked:[]},
+                        checkedKeys: {checked:this.state.checked, halfChecked:[]},
                         onCheck: this.handleStrictlyCheck,
                         defaultExpandAll: true
                     })

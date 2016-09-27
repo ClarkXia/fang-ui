@@ -49,8 +49,6 @@ export default class Breadcrumb extends React.Component {
     }
 
     componentDidUpdate() {
-        //console.log('did update')
-        //console.log({...this.itemSize});
         this.props.autoEllipsis && this.resizeBreadcrumbLength();
     }
 
@@ -74,7 +72,7 @@ export default class Breadcrumb extends React.Component {
         } else {
             maxWidth = parseInt(maxWidth);
         }
-        console.log(totalWidth, maxWidth);
+
         if (totalWidth > maxWidth) {
             for (let i = keysSorted.length - 1; i >= 0; i--) {
                 const width = this.itemSize[keysSorted[i]];
@@ -96,7 +94,7 @@ export default class Breadcrumb extends React.Component {
             while (totalWidth > maxWidth) {
 
                 index = Math.ceil(childrenKeys.length / 2) - 1;
-                console.log(index);
+
                 if (childrenKeys[index] === undefined) break;
 
                 if (dropdownItems.length === 0) {
@@ -132,15 +130,7 @@ export default class Breadcrumb extends React.Component {
 
         } else {
             this.itemSize = {};
-
         }
-        console.log(totalWidth, maxWidth);
-        console.log(this.dropdownItems);
-        /*console.log(maxWidth);
-        console.log(totalWidth);
-        console.log(this.itemSize);
-        console.log(this.dropdownItems);*/
-
     }
 
     renderDropDown() {
@@ -168,7 +158,6 @@ export default class Breadcrumb extends React.Component {
     };
 
     render() {
-        console.log('---render---', this.reRender);
         const {prefixCls, separator, showLastSeparator, children} = this.props;
         const count = React.Children.count(children);
         const crumbs = React.Children.map(children, (element, index) => {

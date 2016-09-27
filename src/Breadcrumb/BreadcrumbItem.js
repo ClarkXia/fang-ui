@@ -29,9 +29,24 @@ export default class BreadcrumbItem extends React.Component {
         if (setSize) setSize(itemKey, this.refs.link.offsetWidth); //offsetWidth 自动取整
     }
 
+    createChildren() {
+        const {itemSize, children} = this.props;
+        return React.Children.map(children, (child) => {
+            if (typeof child === 'object'){
+                const newProps = {}
+                if (child.type && child.type.isEllipsis) {
+                    newProps.width = itemSize;
+                }
+                return React.cloneElement(child, newProps);
+            } else {
+                return child;
+            }
+
+        })
+    }
+
     render() {
         const {prefixCls, separator, children, setSize, itemKey, itemSize, isLast, showSeparator, ...other} = this.props;
-
         let link;
         const itemProps = {
             className: `${prefixCls}-link`,
@@ -45,9 +60,9 @@ export default class BreadcrumbItem extends React.Component {
             };
         }
         if ('href' in this.props) {
-            link = <a {...itemProps}>{children}</a>;
+            link = <a {...itemProps}>{this.createChildren()}</a>;
         } else {
-            link = <span {...itemProps}>{children}</span>;
+            link = <span {...itemProps}>{this.createChildren()}</span>;
         }
 
         return (

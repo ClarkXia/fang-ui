@@ -21,8 +21,10 @@ const ellipsis = (element, ellipsisText) => {
     }
 
     element.parentNode.appendChild(temp);
+
     let realWidth = temp.scrollWidth;
     if (realWidth <= limitWidth) {
+        element.parentNode.removeChild(temp);
         return false;
     }
 
@@ -43,7 +45,7 @@ const ellipsis = (element, ellipsisText) => {
     if (index !== undefined){
         str.splice(index, 0, ellipsisText);
     }
-    temp.parentNode.removeChild(temp);
+    element.parentNode.removeChild(temp);
 
     return str.join('');
 }
@@ -89,17 +91,16 @@ export default class Ellipsis extends React.Component {
     checkWidth() {
         if (this.checked) return;
         const newStr = ellipsis(ReactDOM.findDOMNode(this.refs.ellipsis), this.props.ellipsisText);
-        console.log(newStr);
+        this.checked = true;
         if (newStr !== false) {
             this.setState({
                 showStr: newStr
             });
         }
-        this.checked = true;
     }
 
     render() {
-        const {containerElement, children, prefixCls, className, style, ...other} = this.props;
+        const {containerElement, children, prefixCls, className, style, width, ...other} = this.props;
         return React.createElement(containerElement, {
             style: Object.assign({}, style, defaultStyle),
             className: classNames({
@@ -112,3 +113,4 @@ export default class Ellipsis extends React.Component {
     }
 }
 
+Ellipsis.isEllipsis = true;
