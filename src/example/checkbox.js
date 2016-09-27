@@ -33,12 +33,14 @@ export default class Sample extends React.Component {
                 <RadioLable defaultChecked={false} onChange={(event, value) => console.log(value)}>label text</RadioLable>
                 <Switch />
                 <Switch checkedChildren="on" unCheckedChildren="off"/>
+                <Switch disabled/>disabled
                 <RadioGroup>
                     <Radio value={1}/>
                     <Radio value={2}/>
                     <Radio value={3}/>
                     <RadioLable value={4}>radio</RadioLable>
                 </RadioGroup>
+
             </div>
         );
     }

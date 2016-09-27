@@ -5,7 +5,7 @@ export default class Sample extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 'Mention'
+            value: 'Mention MentionMentionMention Mention'
         }
     }
 

@@ -47,6 +47,8 @@ import SampleMention from './example/mention';
 import SampleDropDown from './example/dropdown';
 import SyncMention from './example/mention-sync';
 import SampleTextField from './example/text-field';
+import SampleBreadcrumb from './example/breadcrumb';
+import SampleEllipsis from './example/ellipsis';
 
 import * as A from './utils/treeUtils'
 
@@ -61,93 +63,6 @@ const notification = Notification.newInstance({
         right: 0
     }
 })
-
-class AutoCompleteExampleSimple extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            dataSource: [],
-            open: false,
-            checked: []
-        };
-    }
-
-    handleUpdateInput = (e) => {
-        const value = e.currentTarget.value;
-        if (value == '') return;
-        this.setState({
-            dataSource: [
-                value,
-                value + value,
-                value + value + value
-            ],
-            basedEl: e.currentTarget,
-            open: true
-        });
-    };
-
-    handleRequestClose = () => {
-        this.setState({
-            open: false
-        });
-    };
-
-    hanldCheck = (check) => {
-        this.setState({
-            checked: [...check.checked]
-        })
-    }
-
-  render() {
-    return (
-      <div>
-            <input onChange={this.handleUpdateInput} style={{margin: 20}}/>
-            <Popover
-                open={this.state.open}
-                basedEl={this.state.basedEl}
-                onRequestClose={this.handleRequestClose}
-                useLayerForClickAway={false}
-            >
-                <Tabs initIndex={0} onChange={()=> {console.log('onChange')}} className="auto-complete">
-                    <Tab label="人员" onActive={()=> {console.log('active1')}}>
-                        <Menu
-                            disableAutoFocus
-                            onChange={this.handleOnChange}
-                            show={this.state.open}
-                        >
-                            {this.state.dataSource.map((v, i) => {
-                                return <MenuItem key={i} value={i}>{v}</MenuItem>
-                            })}
-                        </Menu>
-                    </Tab>
-                    <Tab label="部门">
-                        <Tree checkable selectable={false} defaultExpandAll checkStrictly onCheck={this.hanldCheck} checkedKeys={{checked:this.state.checked,halfChecked:[]}}>
-                            <TreeNode label="部门1" key={1} >
-                                <TreeNode label="部门-1" isLeaf key={2}></TreeNode>
-                                <TreeNode label="部门-2" isLeaf key={7}>
-                                    <TreeNode label="部门-2-1" isLeaf key={8}></TreeNode>
-                                    <TreeNode label="部门-2-2" isLeaf key={9}>
-                                        <TreeNode label="部门-2-2-1" isLeaf key={10}></TreeNode>
-                                        <TreeNode label="部门-2-2-2" isLeaf key={11}></TreeNode>
-                                    </TreeNode>
-                                </TreeNode>
-                            </TreeNode>
-                            <TreeNode label="部门2" key={3}>
-                                <TreeNode label="部门2-1" key={4}></TreeNode>
-                            </TreeNode>
-                            <TreeNode label="部门c" key={5}>
-
-                            </TreeNode>
-                        </Tree>
-                    </Tab>
-                </Tabs>
-            </Popover>
-      </div>
-    );
-  }
-}
 
 class TestComponent extends React.Component {
     constructor(props) {
@@ -179,6 +94,8 @@ class TestComponent extends React.Component {
                 <SampleMention />
                 <SyncMention />
                 <SampleTextField />
+                <SampleBreadcrumb />
+                <SampleEllipsis />
                 <SampleContextMenu />
                 <SampleMenu />
                 <SampleDropDown />
@@ -191,7 +108,7 @@ class TestComponent extends React.Component {
                 <SampleMessage />
                 <SampleModal />
                 <SampleDialog />
-                <AutoCompleteExampleSimple />
+
 
 
 

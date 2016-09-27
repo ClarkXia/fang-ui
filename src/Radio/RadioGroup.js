@@ -57,7 +57,6 @@ export default class RadioGroup extends React.Component {
 
     handleRadioChange = (e) => {
         if (!('value' in this.props)) {
-            console.log(e.target.value);
             this.setState({
                 value: e.target.value
             });
@@ -70,7 +69,6 @@ export default class RadioGroup extends React.Component {
         const {children, prefixCls, className} = this.props;
         const newChildren = React.Children.map(children, (radio) => {
             //must be radio component or LabelEnhanced radio
-            console.log(radio.props.value, this.state.value)
             if(radio && radio.type && radio.type.componentType === 'radio' && radio.props) {
                 const keyProps = {};
                 if (!('key' in radio) && typeof radio.props.value === 'string') {

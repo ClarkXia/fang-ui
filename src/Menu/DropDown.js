@@ -4,7 +4,7 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 import classNames from 'classnames';
 
-const basedOrigin = {
+const defaultBasedOrigin = {
     vertical: 'top',
     horizontal: 'left'
 };
@@ -19,14 +19,16 @@ export default class DropDown extends React.Component {
         defaultOpen: PropTypes.bool,
         value: PropTypes.any,
         prefixCls: PropTypes.string,
-        valueComponent: PropTypes.func
+        valueComponent: PropTypes.func,
+        basedOrigin: PropTypes.object
     };
 
     static defaultProps = {
         disabled: false,
         defaultOpen: false,
         prefixCls: 'dropdown',
-        onSelect: noop
+        onSelect: noop,
+        basedOrigin: defaultBasedOrigin
     };
 
     constructor(props) {
@@ -48,7 +50,7 @@ export default class DropDown extends React.Component {
     }
 
     handleOnChange = (event, itemValue) => {
-        event.persist();
+        //event.persist();
         //setTimeout to fix "React DOM tree root should always have a node reference" issue
         setTimeout(() => {
             this.setState({
@@ -80,7 +82,7 @@ export default class DropDown extends React.Component {
     };
 
     render() {
-        const {children, className, defaultOpen, value, onChange, onSelect, onClose, prefixCls, valueComponent, ...other} = this.props;
+        const {children, className, defaultOpen, value, onChange, onSelect, onClose, prefixCls, valueComponent, basedOrigin, ...other} = this.props;
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
@@ -120,6 +122,7 @@ export default class DropDown extends React.Component {
                         value={value}
                         onItemSelect={this.props.onSelect}
                         onChange={this.handleOnChange}
+                        prefixCls={prefixCls}
                     >
                         {children}
                     </Menu>

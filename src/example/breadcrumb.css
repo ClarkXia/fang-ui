@@ -1,0 +1,27 @@
+.breadcrumb {
+    overflow: hidden;
+}
+.breadcrumb > span {
+    float: left;
+}
+.breadcrumb>span:last-child .breadcrumb-separator {
+    display: none;
+}
+.breadcrumb-link {
+    overflow: hidden;
+    height: 20px;
+    line-height: 20px;
+    /*text-overflow: ellipsis;*/
+    white-space: nowrap;
+    float: left;
+}
+.breadcrumb-separator {
+    height: 20px;
+    line-height: 20px;
+    float: left;
+    width: 20px;
+    text-align: center;
+}
+.breadcrumb-dropdown-container {
+    background-color: #fff;
+}

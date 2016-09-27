@@ -31,7 +31,6 @@ const Suggestion = (props) => {
     if (data instanceof Array && data.length > 0) {
         const handleSelect = (e, item) => {
             e.stopPropagation();
-            //console.log(e, item);
             addMention(item.props.value);
         };
         return (
@@ -247,7 +246,6 @@ class MentionsInput extends React.Component {
 
     addMention = (suggestion) => {
         //const {value = ''} = this.props;
-        console.log(suggestion);
         const {suggestions: {query, queryStart, queryEnd, inputValue}} = this.state;
         const displayValue = this.props.displayTransform(suggestion, this.props.trigger) || suggestion;
         const newValue = inputValue.substring(0, queryStart) + displayValue + inputValue.substring(queryEnd);
@@ -331,7 +329,6 @@ class MentionsInput extends React.Component {
     };
 
     handleRequestClose = (reason) => {
-        console.log(reason);
         if (this.state.openSuggestion){
             this.setState({
                 openSuggestion: false
@@ -355,7 +352,6 @@ class MentionsInput extends React.Component {
     }
 
     render() {
-        console.log('render', this.state.openSuggestion);
         const position = {
             ...this.state.suggestionPosition,
             collision: 'fit'
