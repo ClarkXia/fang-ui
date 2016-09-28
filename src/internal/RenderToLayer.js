@@ -19,7 +19,8 @@ export default class RenderToLayer extends React.Component {
         componentClickAway: PropTypes.func,
         open: PropTypes.bool.isRequired,
         render: PropTypes.func.isRequired,
-        useLayerForClickAway: PropTypes.bool
+        useLayerForClickAway: PropTypes.bool,
+        destroyPopupOnHide: PropTypes.bool
     };
 
     static defaultProps = {
@@ -35,7 +36,7 @@ export default class RenderToLayer extends React.Component {
     }
 
     componentWillUnmount() {
-        this.unrenderLayer();
+        this.unrenderLayer(true);
     }
 
     onClickAway = (event) => {
@@ -62,45 +63,60 @@ export default class RenderToLayer extends React.Component {
     }
 
     renderLayer() {
-        const {open, render} = this.props;
+        const {open, render, destroyPopupOnHide} = this.props;
         if (open) {
             if (!this.layer) {
                 this.layer = document.createElement('div');
                 document.body.appendChild(this.layer);
-
-                if (this.props.useLayerForClickAway) {
-                    this.layer.addEventListener('touchstart', this.onClickAway);
-                    this.layer.addEventListener('click', this.onClickAway);
-                    this.layer.style.position = 'fixed';
-                    this.layer.style.top = 0;
-                    this.layer.style.bottom = 0;
-                    this.layer.style.left = 0;
-                    this.layer.style.right = 0;
-                    this.layer.style.zIndex = 99999;
-                } else {
-                    setTimeout(() => {
-                        window.addEventListener('touchstart', this.onClickAway);
-                        window.addEventListener('click', this.onClickAway);
-                    }, 0);
-                }
             }
+            !this.bind && this.bindEvent();
 
             const layerElement = render();
             //this.layerElement = ReactDOM.render(layerElement, this.layer);
-
             this.layerElement = unstable_renderSubtreeIntoContainer(this, layerElement, this.layer);
 
+            ReactDOM.findDOMNode(this.layerElement).style.display = '';
         } else {
-            this.unrenderLayer();
+            this.unrenderLayer(destroyPopupOnHide);
         }
     }
 
-    unrenderLayer() {
+    unrenderLayer(destroy) {
         if (!this.layer) {
             return;
         }
+        this.bind && this.unbindEvent(this.props);
+        if (!destroy) {
+            ReactDOM.findDOMNode(this.layerElement).style.display = 'none';
+            return;
+        }
 
+        unmountComponentAtNode(this.layer);
+        document.body.removeChild(this.layer);
+        this.layer = null;
+    }
+
+    bindEvent() {
         if (this.props.useLayerForClickAway) {
+            this.layer.addEventListener('touchstart', this.onClickAway);
+            this.layer.addEventListener('click', this.onClickAway);
+            this.layer.style.position = 'fixed';
+            this.layer.style.top = 0;
+            this.layer.style.bottom = 0;
+            this.layer.style.left = 0;
+            this.layer.style.right = 0;
+            this.layer.style.zIndex = 99999;
+        } else {
+            setTimeout(() => {
+                window.addEventListener('touchstart', this.onClickAway);
+                window.addEventListener('click', this.onClickAway);
+            }, 0);
+        }
+        this.bind = true;
+    }
+
+    unbindEvent(props) {
+        if (props.useLayerForClickAway) {
             this.layer.style.position = 'relative';
             this.layer.removeEventListener('touchstart', this.onClickAway);
             this.layer.removeEventListener('click', this.onClickAway);
@@ -108,10 +124,7 @@ export default class RenderToLayer extends React.Component {
             window.removeEventListener('touchstart', this.onClickAway);
             window.removeEventListener('click', this.onClickAway);
         }
-
-        unmountComponentAtNode(this.layer);
-        document.body.removeChild(this.layer);
-        this.layer = null;
+        this.bind = false;
     }
 
     render() {

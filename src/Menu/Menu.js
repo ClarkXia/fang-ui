@@ -76,7 +76,7 @@ export default class Menu extends React.Component {
         }*/
         this.setScrollPosition()
 
-
+        //TODO
         if (this.props.scrollMenuIntoView && this.refs.menuContainer) {
             const menuContainerRect = this.refs.menuContainer.getBoundingClientRect();
             const winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -216,16 +216,16 @@ export default class Menu extends React.Component {
                 return;
             case 13: //enter
                 //get focused child
-                    let focusedChild, menuItemIndex = 0;
-                    filteredChildren.forEach((child) => {
-                        const childIsDivider = child.type && child.type.isDivider;
-                        const childIsDisabled = child.props.disabled;
-                        if (menuItemIndex == this.state.focusIndex) focusedChild = child;
-                        if (!childIsDivider && !childIsDisabled) menuItemIndex ++;
-                    });
+                let focusedChild, menuItemIndex = 0;
+                filteredChildren.forEach((child) => {
+                    const childIsDivider = child.type && child.type.isDivider;
+                    const childIsDisabled = child.props.disabled;
+                    if (menuItemIndex == this.state.focusIndex) focusedChild = child;
+                    if (!childIsDivider && !childIsDisabled) menuItemIndex ++;
+                });
 
-                    this.handleMenuItemSelect(event, focusedChild, this.state.focusIndex);
-                    if (focusedChild.props.onClick) focusedChild.props.onClick(event);
+                this.handleMenuItemSelect(event, focusedChild, this.state.focusIndex);
+                if (focusedChild.props.onClick) focusedChild.props.onClick(event);
                 break;
             case 27: //escape
                 this.props.onEscKeyDown(event);

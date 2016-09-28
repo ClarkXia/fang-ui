@@ -10,12 +10,12 @@ const defaultBasedOrigin = {
 };
 
 const noop = () => {};
-export default class DropDown extends React.Component {
+export default class DropDownMenu extends React.Component {
     static propTypes = {
         disabled: PropTypes.bool,
-        onClose: PropTypes.func,
-        onSelect: PropTypes.func,
-        onChange: PropTypes.func,
+        onRequestClose: PropTypes.func,
+        onItemSelect: PropTypes.func,
+        onRequestChange: PropTypes.func,
         defaultOpen: PropTypes.bool,
         value: PropTypes.any,
         prefixCls: PropTypes.string,
@@ -27,7 +27,7 @@ export default class DropDown extends React.Component {
         disabled: false,
         defaultOpen: false,
         prefixCls: 'dropdown',
-        onSelect: noop,
+        //onSelect: noop,
         basedOrigin: defaultBasedOrigin
     };
 
@@ -52,7 +52,7 @@ export default class DropDown extends React.Component {
     handleOnChange = (event, itemValue) => {
         //event.persist();
         //setTimeout to fix "React DOM tree root should always have a node reference" issue
-        setTimeout(() => {
+        /*setTimeout(() => {
             this.setState({
                 open: false
             }, () => {
@@ -60,15 +60,33 @@ export default class DropDown extends React.Component {
                     this.props.onChange(event, itemValue);
                 }
             });
-        });
+        });*/
+        if (this.props.onRequestChange) {
+            this.props.onRequestChange(event, itemValue);
+        }
     };
 
-    handleRequestClose = () => {
+    handleOnSelect = (event, item, index) => {
+        setTimeout(() => {
+            this.setState({
+                open: false
+            }, () => {
+                if (this.props.onItemSelect) {
+                    this.props.onItemSelect(event, item, index);
+                }
+            })
+        })
+    }
 
+    handleRequestClose = (reason) => {
+        if (this.props.onRequestClose) {
+            this.props.onRequestClose(reason);
+        }
         this.setState({
             open: false,
             basedEl: null
         })
+
     };
 
     handleValueClick = (event) => {
@@ -82,7 +100,7 @@ export default class DropDown extends React.Component {
     };
 
     render() {
-        const {children, className, defaultOpen, value, onChange, onSelect, onClose, prefixCls, valueComponent, basedOrigin, ...other} = this.props;
+        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, ...other} = this.props;
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
@@ -120,7 +138,7 @@ export default class DropDown extends React.Component {
                 >
                     <Menu
                         value={value}
-                        onItemSelect={this.props.onSelect}
+                        onItemSelect={this.handleOnSelect}
                         onChange={this.handleOnChange}
                         prefixCls={prefixCls}
                     >

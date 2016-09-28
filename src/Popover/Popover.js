@@ -37,8 +37,9 @@ export default class Popover extends React.Component {
             collision: PropTypes.oneOf(['flip', 'fit'])
         }),
         offset: PropTypes.array,
-        container: PropTypes.any
-
+        container: PropTypes.any,
+        destoryPopoverOnHide: PropTypes.bool,
+        inline: PropTypes.bool
     };
 
     static defaultProps = {
@@ -56,6 +57,7 @@ export default class Popover extends React.Component {
         },
         offset: [0, 0],
         useLayerForClickAway: true,
+        destoryPopoverOnHide: true,
         inline: false
     };
 
@@ -149,7 +151,7 @@ export default class Popover extends React.Component {
         if (!this.state.open) {
             return;
         }
-        this.targetEl = this.props.container ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
+        this.targetEl = this.props.inline ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
         const targetEl = this.targetEl;
         //console.log('popover did update', targetEl);
         if (!targetEl) {
@@ -251,8 +253,8 @@ export default class Popover extends React.Component {
         targetPos.top = Math.max(0, targetPos.top);
         targetPos.left = Math.max(0, targetPos.left);
 
-        if (this.props.container) {
-            const containerDOM = ReactDOM.findDOMNode(this.props.container);
+        if (this.props.inline) {
+            const containerDOM = this.refs.popoverContainer.parentNode;
 
             targetPos.top -= containerDOM.offsetTop;
             targetPos.left -= containerDOM.offsetLeft;
@@ -361,18 +363,24 @@ export default class Popover extends React.Component {
     render() {
         const {children, style, className = ''} = this.props;
         if (!children) return null;
-        if (this.props.container) {    
-            const display = this.state.open ? {} : {display: 'none'};
+        if (this.props.inline) {
+            const popoverProps = {
+                style: Object.assign({}, rootStyle, style),
+                className,
+                ref: 'popoverContainer'
+            };
 
-            return (
-                <div
-                    style={Object.assign({}, rootStyle, style, display)}
-                    className={className}
-                    ref="popoverContainer"
-                >
-                    {children}
-                </div>
-            );
+            if (this.state.open) {
+                return <div {...popoverProps}>{children}</div>;
+            } else {
+                if (this.props.destoryPopoverOnHide) {
+                    return null;
+                } else {
+                    popoverProps.style = Object.assign({}, popoverProps.style, {display: 'none'});
+
+                    return <div {...popoverProps}>{children}</div>;
+                }
+            }
         }
         return (
             <div style={invisibleStyle}>
@@ -382,6 +390,7 @@ export default class Popover extends React.Component {
                     componentClickAway={this.componentClickAway}
                     useLayerForClickAway={this.props.useLayerForClickAway}
                     render={this.renderLayer}
+                    destoryPopoverOnHide={this.props.destoryPopoverOnHide}
                 />
             </div>
         );

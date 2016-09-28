@@ -1,10 +1,8 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import {DropDown, MenuItem} from '../Menu';
+import {ItemDropDown, MenuItem} from '../Menu';
 
-const Value = () => {
-    return <span>...</span>
-};
+const ellipsisItem = <div className="ellipsis-item">...</div>;
 const basedOrigin = {
     vertical: 'bottom',
     horizontal: 'left'
@@ -26,7 +24,8 @@ export default class Breadcrumb extends React.Component {
             PropTypes.number
         ]),
         showLastSeparator: PropTypes.bool,
-        autoEllipsis: PropTypes.bool
+        autoEllipsis: PropTypes.bool,
+        ellipsisItem: PropTypes.element
     };
 
     static defaultProps = {
@@ -35,8 +34,8 @@ export default class Breadcrumb extends React.Component {
         showLastSeparator: false,
         autoEllipsis: true,
         itemMinWidth: 100,
-        ellipsisWidth: 30,
-        separatorWidth: 20
+        separatorWidth: 20,
+        ellipsisItem
     };
 
     constructor(props) {
@@ -57,8 +56,10 @@ export default class Breadcrumb extends React.Component {
         //sort object
         const keysSorted = Object.keys(this.itemSize).sort((a, b) => this.itemSize[a] - this.itemSize[b]);
 
-        const {itemMinWidth, ellipsisWidth, separatorWidth, showLastSeparator} = this.props;
-        //const itemMinWidth = 50, ellipsisWidth = 30, separatorWidth = 20;
+        const {itemMinWidth, separatorWidth, showLastSeparator} = this.props;
+        const dropdownElement = ReactDOM.findDOMNode(this.refs.dropdown);
+        const ellipsisWidth = dropdownElement ? dropdownElement.offsetWidth + 1 : 0;
+
         //total width
         let totalWidth = 0;
         childrenKeys.forEach((key) => {
@@ -134,10 +135,11 @@ export default class Breadcrumb extends React.Component {
     }
 
     renderDropDown() {
-        const {prefixCls, separator} = this.props;
+        const {prefixCls, separator, ellipsisItem} = this.props;
         const children = React.Children.toArray(this.props.children);
+
         return (
-            <DropDown basedOrigin={basedOrigin} valueComponent={Value} prefixCls={`${prefixCls}-dropdown`}>
+            <ItemDropDown basedOrigin={basedOrigin} itemElement={ellipsisItem} prefixCls={`${prefixCls}-dropdown`} ref="dropdown">
                 {this.dropdownItems.map((index) => {
                     const childProps = {
                         separator,
@@ -149,7 +151,7 @@ export default class Breadcrumb extends React.Component {
                         </MenuItem>
                     );
                 })}
-            </DropDown>
+            </ItemDropDown>
         );
     }
 

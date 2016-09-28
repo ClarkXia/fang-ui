@@ -1,5 +1,5 @@
 import React from 'react';
-import {DropDown, MenuItem} from '../Menu';
+import {DropDownMenu, ItemDropDown, MenuItem} from '../Menu';
 
 export default class Sample extends React.Component {
     constructor(props) {
@@ -17,10 +17,20 @@ export default class Sample extends React.Component {
 
     render() {
         return (
-            <DropDown onChange={this.handleOnChange} value={this.state.value} defaultOpen={false}>
+            <div>
+            <DropDownMenu onRequestChange={this.handleOnChange} value={this.state.value} defaultOpen={false}>
                 <MenuItem value={1} label="xxx1">xxx</MenuItem>
                 <MenuItem value={2} label="yyy2">yyy</MenuItem>
-            </DropDown>
+            </DropDownMenu>
+
+            <ItemDropDown
+                onItemSelect={() => {console.log('item select')}}
+                itemElement={<div><i>icon</i><em>text</em></div>}
+            >
+                <MenuItem onClick={() => {console.log('action1')}}>action1</MenuItem>
+                <MenuItem onClick={() => {console.log('action2')}}>action2</MenuItem>
+            </ItemDropDown>
+            </div>
         );
     }
 }

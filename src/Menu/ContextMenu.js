@@ -15,7 +15,7 @@ export default class ContextMenu extends React.Component {
     static propTypes = {
         prefixCls: PropTypes.string,
         visible: PropTypes.bool,
-        container: PropTypes.any
+        inline: PropTypes.bool
     };
 
     static defaultProps = {
@@ -98,8 +98,8 @@ export default class ContextMenu extends React.Component {
             },
             style: Object.assign({}, displayStyle)
         };
-        if (this.props.container) {
-            popProps.container = this.props.container;
+        if (this.props.inline) {
+            popProps.inline = true;
         }
         return (
             <Popover {...popProps}>

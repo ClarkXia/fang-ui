@@ -87,6 +87,7 @@ export default class Sample extends React.Component {
                 {/*can container to render inline*/}
                  <ContextMenu
                     x={this.state.x} y={this.state.y} visible={this.state.visible}
+                    inline={true}
                     //container={this}
                 >
                     {
