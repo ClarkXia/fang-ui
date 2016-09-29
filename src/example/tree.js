@@ -13,6 +13,17 @@ const treeData = [
     {typed_id: 'a-2', name: 'a2', count: '1'}
 ];
 
+const newData = [
+    {typed_id: 'a-1', name: 'xxxx', count: '12', children: [
+        {typed_id: 'a-1-1', name: 'aaa11', count: '13', children: [
+            {typed_id: 'a-1-1-1', name: 'xa111', count: '1'},
+            {typed_id: 'a-1-1-2', name: 'xa112', count: '111'}
+        ]},
+        {typed_id: 'a-1-2-1', name: 'xa121', count: '31'}
+    ]},
+    {typed_id: 'a-2', name: 'a2', count: '1'}
+];
+
 const TreeLabel = (props) => {
     return (
         <div className="node-label">
@@ -35,6 +46,7 @@ export default class TreeSample extends React.Component {
         super(props);
         this.state = {
             treeData,
+            data: newData,
             checkedKeys: [],
             expandKeys: [],
             selectedKey: null,
@@ -43,10 +55,19 @@ export default class TreeSample extends React.Component {
     }
 
     renderTreeNode(data) {
-        return data.map((value) =>
-            <TreeNode key={value.typed_id} label={TreeLabel} name={value.name} count={value.count}>
-                {value.children ? this.renderTreeNode(value.children) : null}
-            </TreeNode>
+        return data.map((value) =>{
+            const loadingProp = {};
+            if ('loading' in value) {
+                loadingProp.dataLoading = value.loading;
+            }
+
+            return (
+                <TreeNode key={value.typed_id} label={TreeLabel} name={value.name} count={value.count} {...loadingProp}>
+                    {value.children ? this.renderTreeNode(value.children) : null}
+                </TreeNode>
+            );
+        }
+
         );
     }
 
@@ -101,6 +122,22 @@ export default class TreeSample extends React.Component {
         });
     };
 
+    handleOnClick = () => {
+        newData[0]['loading'] = true;
+        this.setState({
+            data: newData
+        });
+
+        setTimeout(() => {
+            delete newData[0]['loading'];
+            this.setState({
+                expandKeys: [...this.state.expandKeys, 'a-1'],
+                data: newData
+            });
+        }, 1000);
+
+    };
+
     render() {
         return (
             <div>
@@ -133,6 +170,20 @@ export default class TreeSample extends React.Component {
                         defaultExpandAll: true
                     })
                 }
+                {/*<span>trigger expand</span>
+                {
+                    this.renderTree(this.state.data, {
+                        checkable: true,
+                        checkedKeys: this.state.checkedKeys,
+                        expandKeys: this.state.expandKeys,
+                        selectedKey: this.state.selectedKey,
+                        onSelect: this.handleOnSelect,
+                        onCheck: this.handleOnCheck,
+                        onExpand: this.handleOnExpand,
+                        loadData: this.handleLoadData
+                    })
+                }
+                <a href="javascript:;" onClick={this.handleOnClick}>trigger expand</a>*/}
             </div>
         )
     }

@@ -12,14 +12,31 @@ export default class TreeNode extends React.Component {
         label: PropTypes.oneOfType([
             PropTypes.func,
             PropTypes.string
-        ])
+        ]),
+        dataLoading: PropTypes.bool
     };
 
     constructor(props) {
         super(props);
-        this.loaded = false;
         this.state = {
-            dataLoading: false
+            dataLoading: !!this.props.dataLoading,
+            loaded: false
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if ('dataLoading' in nextProps) {
+            if (!!nextProps.dataLoading !== this.state.dataLoading) {
+                this.setState({
+                    dataLoading: nextProps.dataLoading
+                });
+            }
+        } else {
+            if (this.props.dataLoading) {
+                this.setState({
+                    dataLoading: false
+                });
+            }
         }
     }
 
@@ -30,15 +47,25 @@ export default class TreeNode extends React.Component {
     onExpand = (e) => {
         //e.stopPropagation();
         if (this.state.dataLoading || this.props.disabled) return
-        const callbackPromise = this.props.root.onExpand(this, this.loaded);
+
+        const callbackPromise = this.props.root.onExpand(this, this.state.loaded);
         if (callbackPromise && typeof callbackPromise === 'object') {
             const setLoading = (dataLoading) => {
-                this.setState({
-                    dataLoading
-                })
-                if (!dataLoading) this.loaded = true;
+                if (!('dataLoading' in this.props)) {
+                    if (!dataLoading) {
+                        this.setState({
+                            loaded: true,
+                            dataLoading
+                        });
+                    } else {
+                        this.setState({
+                            dataLoading
+                        });
+                    }
+                }
+
             };
-            this.setState({dataLoading: true})
+            setLoading(true);
             callbackPromise.then(() => {
                 setLoading(false);
             }, () => {

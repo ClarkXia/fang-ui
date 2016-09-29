@@ -8,7 +8,7 @@ const ItemClick = (e) => {
 
 const SampleContextMenu = (props) => {
     return (
-        <ContextMenu>
+        <ContextMenu onContextMenu={(e) => {e.stopPropagation();e.preventDefault();}}>
             <MenuItem onClick={ItemClick}>MenuItem{props.text}</MenuItem>
             <MenuItem onClick={ItemClick}>MenuItem</MenuItem>
             {props.menu == 'sub' ?

@@ -1,4 +1,3 @@
-
 export default function getPlacements(position) {
     const posArray = position.split('-');
     let basedOrigin = {
@@ -16,8 +15,6 @@ export default function getPlacements(position) {
         {position: 'left', direction: 'horizontal'},
         {position: 'right', direction: 'horizontal'}
     ];
-
-
 
     for (let i = 0; i < mapArray.length; i++) {
         const item = mapArray[i];

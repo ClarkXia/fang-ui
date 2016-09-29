@@ -10,3 +10,7 @@
     padding: 0 10px;
     line-height: 30px;
 }
+.sub-menu-link{
+    display: block;
+    width: 100%;
+}

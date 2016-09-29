@@ -51,3 +51,6 @@
 .node-label{
     display: inline-block;
 }
+
+.treenode-node-item > b{display: inline-block;width:20px;}
+.treenode-switcher-noop {display: inline-block;width: 10px;}

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import {ItemDropDown, MenuItem} from '../Menu';
 
-const ellipsisItem = <div className="ellipsis-item">...</div>;
+const ellipsisItem = () => <div className="ellipsis-item">...</div>;
 const basedOrigin = {
     vertical: 'bottom',
     horizontal: 'left'
@@ -25,7 +25,10 @@ export default class Breadcrumb extends React.Component {
         ]),
         showLastSeparator: PropTypes.bool,
         autoEllipsis: PropTypes.bool,
-        ellipsisItem: PropTypes.element
+        ellipsisItem: PropTypes.oneOfType([
+            PropTypes.element,
+            PropTypes.func
+        ])
     };
 
     static defaultProps = {
@@ -137,9 +140,10 @@ export default class Breadcrumb extends React.Component {
     renderDropDown() {
         const {prefixCls, separator, ellipsisItem} = this.props;
         const children = React.Children.toArray(this.props.children);
+        const itemElement = typeof ellipsisItem === 'function' ? ellipsisItem(this.props) : ellipsisItem;
 
         return (
-            <ItemDropDown basedOrigin={basedOrigin} itemElement={ellipsisItem} prefixCls={`${prefixCls}-dropdown`} ref="dropdown">
+            <ItemDropDown basedOrigin={basedOrigin} itemElement={itemElement} prefixCls={`${prefixCls}-dropdown`} ref="dropdown">
                 {this.dropdownItems.map((index) => {
                     const childProps = {
                         separator,

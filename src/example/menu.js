@@ -29,7 +29,7 @@ export default class Sample extends React.Component {
             this.setState({
                 open: false,
                 value: item.props.value
-            })
+            });
         });
     };
 

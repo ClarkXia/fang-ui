@@ -27,7 +27,8 @@ export default class Tree extends React.Component {
         onExpand: PropTypes.func,
         onSelect: PropTypes.func,
         onCheck: PropTypes.func,
-        loadData: PropTypes.func
+        loadData: PropTypes.func,
+        forceLoad: PropTypes.bool
     };
 
     static defaultProps = {
