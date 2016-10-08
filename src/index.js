@@ -49,6 +49,7 @@ import SyncMention from './example/mention-sync';
 import SampleTextField from './example/text-field';
 import SampleBreadcrumb from './example/breadcrumb';
 import SampleEllipsis from './example/ellipsis';
+import SampleTags from './example/tags';
 
 import * as A from './utils/treeUtils'
 
@@ -109,7 +110,7 @@ class TestComponent extends React.Component {
                 <SampleModal />
                 <SampleDialog />
 
-
+                <SampleTags />
 
 
                 <Tag onClick={this.handleClick}>

@@ -292,7 +292,7 @@ export default class Select extends React.Component {
         clearValueText: 'clear value',
         delimiter: ',',
         disabled: false,
-        escapeClearsValue: true,
+        escapeClearsValue: false,
         filterOptions: true,
         inputProps: {},
         isLoading: false,
@@ -640,15 +640,7 @@ export default class Select extends React.Component {
             case 36: // home key
                 this.focusStartOption();
             break;
-            // case 188: // ,
-            //  if (this.props.allowCreate && this.props.multi) {
-            //      event.preventDefault();
-            //      event.stopPropagation();
-            //      this.selectFocusedOption();
-            //  } else {
-            //      return;
-            //  }
-            // break;
+
             default: return;
         }
         event.preventDefault();
@@ -722,7 +714,7 @@ export default class Select extends React.Component {
 
     selectValue = (value) => {
         //NOTE: update value in the callback to make sure the input value is empty so that there are no sttyling issues (Chrome had issue otherwise)
-        //checkvlaue
+        //checkvalue
         const valueArray = this.getValueArray(this.props.value);
         if (valueArray && valueArray.indexOf(value) > -1){
             this.removeValue(value);
@@ -975,7 +967,6 @@ export default class Select extends React.Component {
             if (this.props.autosize) {
                 if (this.inputMaxWidth) {
                     inputProps.maxWidth = this.inputMaxWidth;
-                    console.log(this.inputMaxWidth, inputProps);
                 }
                 return (
                     <Input {...inputProps} minWidth="5px" autoSize={true}/>
@@ -1017,12 +1008,7 @@ export default class Select extends React.Component {
         if (typeof this.props.filterOptions === 'function') {
             return this.props.filterOptions.call(this, options, filterValue, excludeOptions);
         } else if (this.props.filterOptions) {
-            /*if (this.props.ignoreAccents) {
-                filterValue = stripDiacritics(filterValue);
-            }
-            if (this.props.ignoreCase) {
-                filterValue = filterValue.toLowerCase();
-            }*/
+
             if (excludeOptions) excludeOptions = excludeOptions.map(i => i[this.props.valueKey]);
             return options.filter(option => {
                 if (excludeOptions && excludeOptions.indexOf(option[this.props.valueKey]) > -1) return false;
@@ -1030,14 +1016,7 @@ export default class Select extends React.Component {
                 if (!filterValue) return true;
                 var valueTest = String(option[this.props.valueKey]);
                 var labelTest = String(option[this.props.labelKey]);
-                /*if (this.props.ignoreAccents) {
-                    if (this.props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
-                    if (this.props.matchProp !== 'value') labelTest = stripDiacritics(labelTest);
-                }
-                if (this.props.ignoreCase) {
-                    if (this.props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
-                    if (this.props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
-                }*/
+
                 return this.props.matchPos === 'start' ? (
                     (this.props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue) ||
                     (this.props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue)
