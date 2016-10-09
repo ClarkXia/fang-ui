@@ -77,7 +77,6 @@ function getCaretPosition(element, inputFlag) {
 
     }*/
 
-
     let spStyle = inputFlag ? inputSpecificStyle : specificStyle;
     spStyle.width = eleWidth + 'px';
     spStyle.height = eleHeight + 'px';

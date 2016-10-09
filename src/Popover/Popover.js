@@ -250,8 +250,12 @@ export default class Popover extends React.Component {
             }
         }
 
-        targetPos.top = Math.max(0, targetPos.top);
-        targetPos.left = Math.max(0, targetPos.left);
+
+        //if (this.props.canAutoPosition) {
+            targetPos.top = Math.max(0, targetPos.top);
+            targetPos.left = Math.max(0, targetPos.left);
+        //}
+
 
         if (this.props.inline) {
             const containerDOM = this.refs.popoverContainer.parentNode;

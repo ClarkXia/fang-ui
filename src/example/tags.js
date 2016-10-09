@@ -14,18 +14,30 @@ class TagManage extends React.Component {
         maxNum: 10,
         labelKey: 'name',
         tags: [],
-        myTags: []
+        myTags: [],
+        onClose: () => {}
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            currentTags: [...this.props.tags],
-            dialogOpen: true
+            //dialogOpen: true,
+            currentTags: [...this.props.tags]
         };
 
         this.addList = [];
         this.removeList = [];
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.open !== nextProps.open && nextProps.open) {
+            //reset
+            this.setState({
+                currentTags: [...nextProps.tags]
+            });
+            this.addList = [];
+            this.removeList = [];
+        }
     }
 
     handleDialogClose = (e) => {
@@ -33,9 +45,10 @@ class TagManage extends React.Component {
             this.props.onClose(e);
         }
 
-        this.setState({
+        this.props.onClose();
+        /*this.setState({
             dialogOpen: false
-        });
+        });*/
     };
 
     handleSaveTags = (e) => {
@@ -52,9 +65,11 @@ class TagManage extends React.Component {
         }
         if (this.props.defaultClose) {
             setTimeout(() => {
-                this.setState({
+                /*this.setState({
                     dialogOpen: false
-                });
+                });*/
+
+                this.props.onClose();
             });
         }
     };
@@ -111,7 +126,7 @@ class TagManage extends React.Component {
     render() {
         return (
             <Dialog
-                open={this.state.dialogOpen}
+                open={this.props.open}
                 modal={true}
                 title={this.props.title}
                 actions={this.renderActions()}
@@ -128,6 +143,7 @@ class TagManage extends React.Component {
                     autosize={true}
                     labelKey="name"
                     onRemove={this.handleRemoveTag}
+                    backspaceRemove={false}
                 />
                 <div className="recent-tags">
                     <dl>
@@ -147,6 +163,25 @@ class TagManage extends React.Component {
 
 //usage
 export default class Sample extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false
+        };
+    }
+
+    handleClick = () => {
+        this.setState({
+            open: true
+        });
+    };
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        });
+    };
+
     render() {
         const tags = [{id: 1, name: 'abc'},
                 {id: 2, name: 'abce'},
@@ -159,10 +194,18 @@ export default class Sample extends React.Component {
                 {id: 9, name: 'vczxz'},
                 {id: 10, name: 'ad'}];
 
-        return <TagManage
+        return (
+            <div>
+                <Button onClick={this.handleClick}>show tags</Button>
+                <TagManage
+                    open={this.state.open}
                     tags={tags}
                     myTags={myTags}
-                />;
+                    onClose={this.handleClose}
+                />
+            </div>
+
+        );
     }
 }
 

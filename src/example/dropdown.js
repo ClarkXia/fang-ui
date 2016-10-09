@@ -1,5 +1,6 @@
 import React from 'react';
 import {DropDownMenu, ItemDropDown, MenuItem} from '../Menu';
+import Tooltip from '../Tooltip';
 
 export default class Sample extends React.Component {
     constructor(props) {
@@ -30,6 +31,14 @@ export default class Sample extends React.Component {
                 <MenuItem onClick={() => {console.log('action1')}}>action1</MenuItem>
                 <MenuItem onClick={() => {console.log('action2')}}>action2</MenuItem>
             </ItemDropDown>
+
+            <ItemDropDown
+            itemElement={<div><Tooltip placement="bottom" content="more" trigger="hover"><i>&bull;&bull;&bull;</i></Tooltip></div>}
+            >
+                <MenuItem onClick={() => {console.log('action1')}}>action1</MenuItem>
+                <MenuItem onClick={() => {console.log('action2')}}>action2</MenuItem>
+            </ItemDropDown>
+
             </div>
         );
     }

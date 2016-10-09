@@ -9,8 +9,10 @@
     height: 30px;
     padding: 0 10px;
     line-height: 30px;
+    background: #fff;
 }
 .sub-menu-link{
     display: block;
     width: 100%;
 }
+.menu-item.keyborad-focused{background: #eee}
