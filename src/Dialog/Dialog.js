@@ -37,7 +37,8 @@ export class DialogInline extends React.Component {
         title: PropTypes.node,
         titleClassName: PropTypes.string,
         titleStyle: PropTypes.object,
-        closable: PropTypes.bool
+        closable: PropTypes.bool,
+        scrollLock: PropTypes.bool
     };
 
     static defaultProps = {
@@ -176,6 +177,7 @@ export class DialogInline extends React.Component {
                     className={overlayClassName}
                     style={overlayStyle}
                     onClick={this.handleClickOverlay}
+                    scrollLock={!!this.props.scrollLock}
                 />
                 {open &&
                     <div className={`${prefixCls}-wrap`} ref="dialogWrap">

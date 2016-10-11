@@ -45,7 +45,7 @@ export default class TreeNode extends React.Component {
     }
 
     onExpand = (e) => {
-        //e.stopPropagation();
+        e.stopPropagation();
         if (this.state.dataLoading || this.props.disabled) return
 
         const callbackPromise = this.props.root.onExpand(this, this.state.loaded);
@@ -75,7 +75,7 @@ export default class TreeNode extends React.Component {
     };
 
     onCheck = (e) => {
-        //e.stopPropagation();
+        e.stopPropagation();
         if (!this.props.disabled && !this.props.disableCheckbox) {
             this.props.root.onCheck(this);
         }
@@ -138,9 +138,13 @@ export default class TreeNode extends React.Component {
 
         const icon = (iconSkin || loadData && this.state.dataLoading) ?
                         <span className={cls}></span> : null;
+        const labelProps = {}
+        if (typeof label === 'string' && label != '') {
+            labelProps.title = label;
+        }
 
         return (
-            <a title={typeof label === 'string' ? label : ''} onClick={this.onSelect}>
+            <a {...labelProps}>
                 {icon}
                 <span className={`${prefixCls}-title`}>{typeof label === 'function' ? label(this.props) : label}</span>
             </a>
@@ -148,13 +152,13 @@ export default class TreeNode extends React.Component {
     }
 
     renderChildren() {
-        const {children} = this.props;
+        const {children, prefixCls} = this.props;
         let newChildren = children;
         if (children &&
             (children.type === TreeNode ||
                 Array.isArray(children) && children.every((item) => item.type === TreeNode))) {
             newChildren = (
-                <ul>
+                <ul className={prefixCls}>
                     {React.Children.map(children, (item, index) => {
                         return this.props.root.renderTreeNode(item, index, this.props.pos);
                     }, this.props.root)}
@@ -187,13 +191,13 @@ export default class TreeNode extends React.Component {
 
         return (
             <li className={cls}>
-                <div className={nodeCls}>
+                <div className={nodeCls} onClick={this.onSelect}>
                     {this.renderLevel()}
                     {this.renderSwitcher(canRenderSwitcher, expandedState)}
                     {checkable ? this.renderCheckbox() : null}
                     {this.renderContent(expandedState)}
-                    {newChildren}
                 </div>
+                {newChildren}
             </li>
         );
     }
