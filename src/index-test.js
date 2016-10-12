@@ -64,6 +64,51 @@ const notification = Notification.newInstance({
     }
 })
 
+let renderArr = [];
+for (let i=0; i < 500; i++) {
+    renderArr.push(i + '');
+}
+
+class List extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            selected: []
+        };
+    }
+
+    handleSelect = (e) => {
+        const value = e.currentTarget.getAttribute('data-index') + '';
+        const index = this.state.selected.indexOf(value);
+        console.log(value);
+        const copyList = [...this.state.selected];
+        if (index > -1) {
+
+            copyList.splice(index, 1);
+
+        } else {
+            copyList.push(value);
+        }
+
+        console.log(copyList);
+
+        this.setState({
+            selected: copyList
+        });
+    }
+
+    render() {
+        return (
+            <ul>
+                {renderArr.map((v) => {
+                    const checked = this.state.selected.indexOf(v) > -1;
+                    return <li key={v} onClick={this.handleSelect} data-index={v}><Checkbox checked={checked} />{v}</li>
+                })}
+            </ul>
+        )
+    }
+}
+
 class TestComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -110,6 +155,7 @@ class TestComponent extends React.Component {
                 <SampleDialog />
 
                 <SampleTags />
+                <List />
             </div>
         )
     }

@@ -134,6 +134,7 @@ export default class Tabs extends React.Component {
             style,
             tabContainerStyle,
             tabTemplate,
+            onChange,
             ...other
         } = this.props;
 

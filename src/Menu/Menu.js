@@ -21,7 +21,8 @@ export default class Menu extends React.Component {
         selectedMenuItemStyle: PropTypes.object,
         style: PropTypes.object,
         disableKeyEvent: PropTypes.bool,
-        value: PropTypes.any
+        value: PropTypes.any,
+        buttonBuffer: PropTypes.number
     };
 
     static defaultProps = {
@@ -33,7 +34,8 @@ export default class Menu extends React.Component {
         //show: false,
         onEscKeyDown: noop,
         onItemSelect: noop,
-        onKeyDown: noop
+        onKeyDown: noop,
+        bottomBuffer: 0
     };
 
     constructor(props) {
@@ -126,7 +128,7 @@ export default class Menu extends React.Component {
             },
             onFocus : this.focusItem,
             index: childIndex,
-            ref: isFocused ? 'focusedMenuItem' : null
+            ref: selected ? 'selectedMenuItem' : (isFocused ? 'focusedMenuItem' : null)
         };
 
         return React.cloneElement(child, props);
@@ -302,20 +304,32 @@ export default class Menu extends React.Component {
     }
 
     setScrollPosition() {
+        const menuDOM = this.refs.menu;
+
+        if (!this._scrollToOption) {
+            if (this.refs.selectedMenuItem) {
+                const seletedDOM = ReactDOM.findDOMNode(this.refs.selectedMenuItem);
+                menuDOM.scrollTop = seletedDOM.offsetTop;
+            }
+            this._scrollToOption = true;
+        }
+
         if (this.refs.focusedMenuItem) {
             const focusedDOM = ReactDOM.findDOMNode(this.refs.focusedMenuItem);
-            const menuDOM = this.refs.menu;
             const focusedRect = focusedDOM.getBoundingClientRect();
             const menuRect = menuDOM.getBoundingClientRect();
-            if (!this._scrollToOption) {
-                menuDOM.scrollTop = focusedDOM.offsetTop;
-                this._scrollToOption = true;
-            }
+
 
             if (this._scrollToFocusedOption) {
                 this._scrollToFocusedOption = false;
-                if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+                /*if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
                     menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+                }*/
+
+                if (focusedRect.bottom > menuRect.bottom) {
+                    menuDOM.scrollTop = focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight + this.props.bottomBuffer;
+                } else if (focusedRect.top < menuRect.top) {
+                    menuDOM.scrollTop = focusedDOM.offsetTop;
                 }
             }
         }
@@ -337,6 +351,7 @@ export default class Menu extends React.Component {
             prefixCls = 'menu',
             className,
             show,
+            bottomBuffer,
             ...other
         } = this.props;
 

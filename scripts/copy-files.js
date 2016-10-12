@@ -53,6 +53,7 @@ function createPackageFile() {
       license,
       bugs,
       homepage,
+      scripts,
       //peerDependencies,
       dependencies,
     } = packageData;
@@ -68,6 +69,7 @@ function createPackageFile() {
       license,
       bugs,
       homepage,
+      scripts,
       //peerDependencies,
       dependencies,
     };

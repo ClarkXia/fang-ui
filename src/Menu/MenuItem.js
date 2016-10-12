@@ -40,7 +40,7 @@ export default class MenuItem extends React.Component {
             [`${prefixCls}-selected`]: selected,
             [focusState]: !!focusState,
             [className]: !!className
-        })
+        });
 
         return (
             <li
@@ -50,7 +50,6 @@ export default class MenuItem extends React.Component {
                 onMouseMove={this.handleMouseMove}
             >
                 {children}
-
             </li>
         );
     }
