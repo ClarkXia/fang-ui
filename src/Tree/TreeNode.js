@@ -122,8 +122,7 @@ export default class TreeNode extends React.Component {
         });
 
         return (
-            //TODO repalce with Checkbox component & add click event
-            <span ref="checkbox" className={cls} onClick={this.onCheck}></span>
+            <span className={cls} onClick={this.onCheck}></span>
         )
     }
 
@@ -144,11 +143,8 @@ export default class TreeNode extends React.Component {
         }
 
         return (
-            <a {...labelProps}>
-                {icon}
-                <span className={`${prefixCls}-title`}>{typeof label === 'function' ? label(this.props) : label}</span>
-            </a>
-        )
+            <span className={`${prefixCls}-title`} {...labelProps}>{icon}{typeof label === 'function' ? label(this.props) : label}</span>
+        );
     }
 
     renderChildren() {

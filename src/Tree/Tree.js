@@ -262,7 +262,7 @@ export default class Tree extends React.Component {
         }
 
         const cloneProps = {
-            ref: `treeNode-${key}`,
+            //ref: `treeNode-${key}`,
             root: this,
             key,
             eventKey: key,
@@ -346,7 +346,7 @@ export default class Tree extends React.Component {
             }
         }
         return (
-            <ul className={cls} ref="tree">
+            <ul className={cls}>
                 {React.Children.map(children, this.renderTreeNode, this)}
             </ul>
         )
