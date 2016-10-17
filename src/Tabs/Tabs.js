@@ -177,8 +177,6 @@ export default class Tabs extends React.Component {
             inkBarContainerWidth = tabContainerStyle ? tabContainerStyle.width : '100%';
         }
 
-
-
         return (
             <div {...other} className={`${className} ${prefixCls}-wrapper`} style={Object.assign({}, style)}>
                 <div className={`${prefixCls}-tab-container`} style={Object.assign({}, tabContainerStyle)}>
