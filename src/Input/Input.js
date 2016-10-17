@@ -160,7 +160,7 @@ function calculateNodeStyle(node, direction = 'vertical') {
     const paddingSize = parseFloat(style.getPropertyValue(direction === 'vertical' ? 'padding-top' : 'padding-left'))
                       + parseFloat(style.getPropertyValue(direction === 'vertical' ? 'padding-bottom' : 'padding-right'));
     const borderSize = parseFloat(style.getPropertyValue(direction === 'vertical' ? 'border-top-width' : 'border-left-width'))
-                     + parseFloat(style.getPropertyValue(direction === 'vertical' ? 'boder-bottom-width' : 'boder-right-width'));
+                     + parseFloat(style.getPropertyValue(direction === 'vertical' ? 'border-bottom-width' : 'border-right-width'));
     const SIZING_STYLE = direction === 'vertical' ? TEXTAREA_SIZING_STYLE : INPUT_SIZING_STYLE;
     const sizingStyle = SIZING_STYLE.map(cssProp => `${cssProp}:${style.getPropertyValue(cssProp)}`).join(';');
 
@@ -192,11 +192,14 @@ function calculateTextareaHeight(node, minRows = null, maxRows = null) {
         //measure height of textarea width single row
         hiddenTextarea.value = '';
         let singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+
         if (minRows !== null) {
             minHeight = singleRowHeight * minRows;
+
             if (boxSizing === 'border-box') {
                 minHeight = minHeight + paddingSize + borderSize;
             }
+
             textareaHeight.minHeight = minHeight;
             height = Math.max(minHeight, height);
         }
