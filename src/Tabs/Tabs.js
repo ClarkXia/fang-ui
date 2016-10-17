@@ -53,7 +53,7 @@ export default class Tabs extends React.Component {
     static defaultProps = {
         prefixCls: 'tabs',
         initIndex: 0,
-        useInkBar: true,
+        useInkBar: false,
         onChange: () => {}
     };
 

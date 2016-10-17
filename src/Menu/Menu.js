@@ -314,8 +314,8 @@ export default class Menu extends React.Component {
             this._scrollToOption = true;
         }
 
-        if (this.refs.focusedMenuItem) {
-            const focusedDOM = ReactDOM.findDOMNode(this.refs.focusedMenuItem);
+        if (this.refs.focusedMenuItem || this.refs.selectedMenuItem) {
+            const focusedDOM = ReactDOM.findDOMNode(this.refs.focusedMenuItem || this.refs.selectedMenuItem);
             const focusedRect = focusedDOM.getBoundingClientRect();
             const menuRect = menuDOM.getBoundingClientRect();
 
