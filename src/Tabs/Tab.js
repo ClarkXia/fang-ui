@@ -42,7 +42,7 @@ export default class Tab extends React.Component {
         //TODO check icon if is valid element
         //TODO add event
         const cls = classNames({
-            [`${prefixCls}-tab-acitve`]: selected,
+            [`${prefixCls}-tab-active`]: selected,
             [`${prefixCls}-tab`]: true,
             [className]: !!className
         });

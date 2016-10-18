@@ -139,6 +139,7 @@ export class DialogInline extends React.Component {
             titleStyle,
             overlayStyle,
             closable,
+            style,
             overlayClassName} = this.props;
 
         const actionsContainer = React.Children.count(actions) > 0 && (
@@ -171,7 +172,7 @@ export class DialogInline extends React.Component {
             )
         }
         return (
-            <div className={className} style={rootStyle(open)}>
+            <div className={className} style={Object.assign({}, rootStyle(open), style)}>
                 <Overlay
                     show={open}
                     className={overlayClassName}
