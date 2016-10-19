@@ -38,7 +38,7 @@ export default class Popover extends React.Component {
         }),
         offset: PropTypes.array,
         container: PropTypes.any,
-        destoryPopoverOnHide: PropTypes.bool,
+        destroyPopupOnHide: PropTypes.bool,
         inline: PropTypes.bool
     };
 
@@ -57,7 +57,7 @@ export default class Popover extends React.Component {
         },
         offset: [0, 0],
         useLayerForClickAway: true,
-        destoryPopoverOnHide: true,
+        destroyPopupOnHide: false,
         inline: false
     };
 
@@ -106,7 +106,7 @@ export default class Popover extends React.Component {
     }
 
     renderLayer = () => {
-        if (!this.state.open) return null;
+        if (!this.state.open && this.props.destroyPopupOnHide) return null;
 
         const {children, style, className = ''} = this.props;
         return (
@@ -377,7 +377,7 @@ export default class Popover extends React.Component {
             if (this.state.open) {
                 return <div {...popoverProps}>{children}</div>;
             } else {
-                if (this.props.destoryPopoverOnHide) {
+                if (this.props.destroyPopupOnHide) {
                     return null;
                 } else {
                     popoverProps.style = Object.assign({}, popoverProps.style, {display: 'none'});
@@ -394,7 +394,7 @@ export default class Popover extends React.Component {
                     componentClickAway={this.componentClickAway}
                     useLayerForClickAway={this.props.useLayerForClickAway}
                     render={this.renderLayer}
-                    destoryPopoverOnHide={this.props.destoryPopoverOnHide}
+                    destroyPopupOnHide={this.props.destroyPopupOnHide}
                 />
             </div>
         );

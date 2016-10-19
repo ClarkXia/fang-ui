@@ -87,6 +87,10 @@ export default class RenderToLayer extends React.Component {
         }
         this.bind && this.unbindEvent(this.props);
         if (!destroy) {
+            //need to trigger component update
+
+            const layerElement = this.props.render();
+            this.layerElement = unstable_renderSubtreeIntoContainer(this, layerElement, this.layer);
             ReactDOM.findDOMNode(this.layerElement).style.display = 'none';
             return;
         }
