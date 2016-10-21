@@ -104,7 +104,6 @@ export default class Pagination extends React.Component {
     }*/
 
     handleChange(p) {
-        console.log(p)
         let page = p;
         if (this.isValid(page)) {
             if (page > this.calcPage()) {
