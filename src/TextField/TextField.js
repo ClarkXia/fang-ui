@@ -20,7 +20,9 @@ export default class TextField extends React.Component {
         autoSize: PropTypes.bool,
         onPressEnter: PropTypes.func,
         onKeyDown: PropTypes.func,
-        clearable: PropTypes.bool
+        clearable: PropTypes.bool,
+        addonBefore: PropTypes.node,
+        addonAfter: PropTypes.node
     };
 
     static defaultProps = {
@@ -120,11 +122,16 @@ export default class TextField extends React.Component {
             [`${prefixCls}-group`]: (clearable || action)
         });
 
+        const addonBefore = this.props.addonBefore ? <span className={`${prefixCls}-addon addon-before`}>{this.props.addonBefore}</span> : null;
+        const addonAfter = this.props.addonAfter ? <span className={`${prefixCls}-addon addon-after`}>{this.props.addonAfter}</span> : null;
+
         return (
             <span className={cls}>
+                {addonBefore}
                 {this.renderInput()}
                 {this.renderClear()}
                 {this.renderButton()}
+                {addonAfter}
             </span>
         );
     }

@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import InkBar from './InkBar';
+import classNames from 'classnames';
 
 class TabTemplate extends React.Component {
     static propTypes = {
@@ -177,8 +178,13 @@ export default class Tabs extends React.Component {
             inkBarContainerWidth = tabContainerStyle ? tabContainerStyle.width : '100%';
         }
 
+        const cls = classNames({
+            [className]: !!className,
+            [`${prefixCls}-wrapper`]: true
+        });
+
         return (
-            <div {...other} className={`${className} ${prefixCls}-wrapper`} style={Object.assign({}, style)}>
+            <div {...other} className={cls} style={Object.assign({}, style)}>
                 <div className={`${prefixCls}-tab-container`} style={Object.assign({}, tabContainerStyle)}>
                     {tabs}
                 </div>
