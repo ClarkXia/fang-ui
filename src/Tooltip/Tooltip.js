@@ -130,7 +130,7 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, prefixCls, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -156,6 +156,7 @@ export default class Tooltip extends React.Component {
                 useLayerForClickAway={false}
                 onRequestClose={this.handleRequestClose}
                 basedEl={this.state.baseElement}
+                className={`${prefixCls}-popover`}
                 open={this.state.baseElement && this.state.show ? true : false}
                 offset={offset}
             >

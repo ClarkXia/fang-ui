@@ -22,5 +22,5 @@
     display: none;
 }
 .tabs-content-item.tabs-content-item-active{
-    display: block
+    display: block;
 }
