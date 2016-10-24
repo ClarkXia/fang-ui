@@ -2,30 +2,18 @@ import React, {PropTypes} from 'react';
 import InkBar from './InkBar';
 import classNames from 'classnames';
 
-class TabTemplate extends React.Component {
-    static propTypes = {
-        children: PropTypes.node,
-        selected: PropTypes.bool
-    };
-
-    render() {
-        const styles = {
-            width: '100%',
-            position: 'relative'
-        }
-
-        if (!this.props.selected) {
-            styles.height = 0;
-            styles.overflow = 'hidden';
-        }
-
-        return (
-            <div style={styles}>
-                {this.props.children}
-            </div>
-        );
-    }
-}
+const TabTemplate = (props) => {
+    const {selected, prefixCls, children} = props;
+    const cls = classNames({
+        [`${prefixCls}-content-item`]: true,
+        [`${prefixCls}-content-item-active`]: selected
+    });
+    return (
+        <div className={cls}>
+            {children}
+        </div>
+    );
+};
 
 export default class Tabs extends React.Component {
     constructor(props, context) {
@@ -147,7 +135,8 @@ export default class Tabs extends React.Component {
             tabContent.push(tab.props.children ?
                 React.createElement(tabTemplate || TabTemplate, {
                     key: index,
-                    selected: selected
+                    selected: selected,
+                    prefixCls
                 }, tab.props.children) : undefined
             );
             if (selected) selectedIndex = index;
@@ -183,6 +172,11 @@ export default class Tabs extends React.Component {
             [`${prefixCls}-wrapper`]: true
         });
 
+        const contentCls = classNames({
+            [contentClassName]: !!contentClassName,
+            [`${prefixCls}-content`]: true
+        });
+
         return (
             <div {...other} className={cls} style={Object.assign({}, style)}>
                 <div className={`${prefixCls}-tab-container`} style={Object.assign({}, tabContainerStyle)}>
@@ -192,7 +186,7 @@ export default class Tabs extends React.Component {
                     <div className={`${prefixCls}-inkbar-container`} style={{width: inkBarContainerWidth}}>
                         {inkBar}
                     </div> : null}
-                <div style={Object.assign({}, contentStyle)} className={`${contentClassName} ${prefixCls}-content`}>
+                <div style={Object.assign({}, contentStyle)} className={contentCls}>
                     {tabContent}
                 </div>
             </div>

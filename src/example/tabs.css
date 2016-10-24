@@ -17,3 +17,10 @@
 .tabs-inkbar-container > div {
     background-color: #000;
 }
+
+.tabs-content-item{
+    display: none;
+}
+.tabs-content-item.tabs-content-item-active{
+    display: block
+}
