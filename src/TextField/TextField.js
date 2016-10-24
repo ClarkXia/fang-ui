@@ -102,7 +102,7 @@ export default class TextField extends React.Component {
     }
 
     renderInput() {
-        const {prefixCls, onPressEnter, action, clearable, defaultValue, value, ...other} = this.props;
+        const {prefixCls, onPressEnter, action, clearable, defaultValue, value, addonAfter, addonBefore, ...other} = this.props;
 
         return (
             <Input

@@ -48,7 +48,7 @@ export default class Popover extends React.Component {
             horizontal: 'left'
         },
         autoCloseWhenOffScreen: false,
-        canAutoPosition: true,
+        canAutoPosition: false,
         onRequestClose: () => {},
         open: false,
         targetOrigin: {
@@ -57,7 +57,7 @@ export default class Popover extends React.Component {
         },
         offset: [0, 0],
         useLayerForClickAway: true,
-        destroyPopupOnHide: false,
+        destroyPopupOnHide: true,
         inline: false
     };
 
@@ -73,7 +73,6 @@ export default class Popover extends React.Component {
         if (nextProps.open !== this.state.open) {
             if (nextProps.open) {
                 this.basedEl = nextProps.basedEl || this.props.basedEl;
-
 
                 this.setState({open: true});
             } else {
