@@ -43,14 +43,13 @@ export default class TextField extends React.Component {
     }
 
     clearValue = (e) => {
-
         if (this.state.inputValue === '' || this.props.value === '') {
             ReactDOM.findDOMNode(this.refs.input).focus();
         }
 
         e.stopPropagation();
         e.preventDefault();
-        const eventMock = {target: { value: '' }, currentTarget: { value: ''}};
+        const eventMock = {target: { value: '' }, currentTarget: { value: ''}, type: 'eventMock'};
         this.handleTextChange(eventMock);
     };
 

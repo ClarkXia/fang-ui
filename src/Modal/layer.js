@@ -47,7 +47,6 @@ export default function layer(config) {
             open={true}
             modal={props.modal}
             title={props.title}
-            prefixCls="dialog"
             okCancel={props.okCancel}
             onOk={(e) => callFn(props.onOk)}
             onCancel={(e) => callFn(props.onCancel)}

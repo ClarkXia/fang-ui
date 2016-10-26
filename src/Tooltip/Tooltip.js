@@ -57,7 +57,8 @@ export default class Tooltip extends React.Component {
         style: PropTypes.object,
         show: PropTypes.bool,
         content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
-        onRequestClose: PropTypes.func
+        onRequestClose: PropTypes.func,
+        offset: PropTypes.arrayOf(PropTypes.number)
     };
 
     static defaultProps = {
@@ -130,7 +131,7 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, prefixCls, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -145,7 +146,7 @@ export default class Tooltip extends React.Component {
         }
 
         const {basedOrigin, targetOrigin, offset} = getPlacements(this.props.placement);
-
+        const popoverOffset = this.props.offset ? this.props.offset : offset;
         return React.cloneElement(child, newChildProps, createChildFragment({
             children: child.props.children,
             layer:
@@ -156,9 +157,9 @@ export default class Tooltip extends React.Component {
                 useLayerForClickAway={false}
                 onRequestClose={this.handleRequestClose}
                 basedEl={this.state.baseElement}
-                className={`${prefixCls}-popover`}
+                className={`${this.props.prefixCls}-popover`}
                 open={this.state.baseElement && this.state.show ? true : false}
-                offset={offset}
+                offset={popoverOffset}
             >
                 <TooltipInline {...other}/>
             </Popover>
