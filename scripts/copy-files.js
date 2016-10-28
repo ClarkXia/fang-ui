@@ -59,7 +59,7 @@ function createPackageFile() {
     } = packageData;
 
     const minimalPackage = {
-      name: 'fangUI',
+      name: 'fang-ui',
       author,
       version,
       description,
