@@ -139,6 +139,7 @@ export class DialogInline extends React.Component {
             titleStyle,
             overlayStyle,
             closable,
+            closeTitle,
             style,
             overlayClassName} = this.props;
 
@@ -162,10 +163,16 @@ export class DialogInline extends React.Component {
         }
         let closer = null;
         if (closable) {
+            const titleProp = {};
+            if (closeTitle) {
+                titleProp.title = closeTitle;
+            }
+
             closer = (
                 <div
                     onClick={this.handleClose}
                     className={`${prefixCls}-close`}
+                    {...titleProp}
                 >
                     <span className={`${prefixCls}-close-x`} dangerouslySetInnerHTML={{ __html: '&times;' }} />
                 </div>
