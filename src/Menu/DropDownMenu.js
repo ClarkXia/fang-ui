@@ -21,7 +21,8 @@ export default class DropDownMenu extends React.Component {
         prefixCls: PropTypes.string,
         valueComponent: PropTypes.func,
         basedOrigin: PropTypes.object,
-        popoverStyle: PropTypes.object
+        popoverStyle: PropTypes.object,
+        useLayerForClickAway: PropTypes.bool
     };
 
     static defaultProps = {
@@ -30,7 +31,8 @@ export default class DropDownMenu extends React.Component {
         prefixCls: 'dropdown',
         //onSelect: noop,
         basedOrigin: defaultBasedOrigin,
-        popoverStyle: {}
+        popoverStyle: {},
+        useLayerForClickAway: false
     };
 
     constructor(props) {
@@ -102,7 +104,7 @@ export default class DropDownMenu extends React.Component {
     };
 
     render() {
-        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, ...other} = this.props;
+        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, useLayerForClickAway, ...other} = this.props;
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
@@ -136,7 +138,7 @@ export default class DropDownMenu extends React.Component {
                     basedEl={this.state.basedEl}
                     open={this.state.open}
                     onRequestClose={this.handleRequestClose}
-                    useLayerForClickAway={false}
+                    useLayerForClickAway={useLayerForClickAway}
                     className={`${prefixCls}-popover`}
                     style={popoverStyle}
                 >

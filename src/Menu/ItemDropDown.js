@@ -15,7 +15,8 @@ export default class ItemDropDown extends React.Component {
         targetOrigin: PropTypes.object,
         onRequestChange: PropTypes.func,
         closeDelay: PropTypes.number,
-        open: PropTypes.bool
+        open: PropTypes.bool,
+        useLayerForClickAway: PropTypes.bool
     };
 
     static defaultProps = {
@@ -32,7 +33,8 @@ export default class ItemDropDown extends React.Component {
         onItemSelect: noop,
         onRequestChange: noop,
         open: null,
-        closeDelay: 200
+        closeDelay: 200,
+        useLayerForClickAway: false
     };
 
     constructor(props) {
@@ -114,7 +116,7 @@ export default class ItemDropDown extends React.Component {
     }
 
     render() {
-        const {children, className, onItemSelect, prefixCls, itemElement, basedOrigin, targetOrigin, style, closeDelay, onRequestChange, ...other} = this.props;
+        const {children, className, onItemSelect, prefixCls, itemElement, basedOrigin, targetOrigin, style, closeDelay, onRequestChange, useLayerForClickAway, ...other} = this.props;
 
         const item = React.cloneElement(itemElement, {
             onClick: (event) => {
@@ -144,7 +146,7 @@ export default class ItemDropDown extends React.Component {
                     basedEl={this.state.basedEl}
                     open={this.state.open}
                     onRequestClose={this.handleRequestClose}
-                    useLayerForClickAway={false}
+                    useLayerForClickAway={useLayerForClickAway}
                 >
                     <Menu
                         {...other}
