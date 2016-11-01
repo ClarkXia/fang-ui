@@ -13,8 +13,8 @@ const HIDDEN_STYLE = {
     whiteSpace: 'pre'
 }
 
-const ellipsis = (element, ellipsisText) => {
-    const limitWidth = element.clientWidth;
+export const ellipsis = (element, ellipsisText, elementWidth) => {
+    const limitWidth = elementWidth || element.clientWidth;
     const temp = element.cloneNode(true);
     for (let key in HIDDEN_STYLE) {
         temp.style[key] = HIDDEN_STYLE[key];
@@ -55,7 +55,8 @@ export default class Ellipsis extends React.Component {
         containerElement: PropTypes.string,
         prefixCls: PropTypes.string,
         children: PropTypes.string,
-        ellipsisText: PropTypes.string
+        ellipsisText: PropTypes.string,
+        replaceText: PropTypes.func
     };
 
     static defaultProps = {
@@ -93,9 +94,17 @@ export default class Ellipsis extends React.Component {
         const newStr = ellipsis(ReactDOM.findDOMNode(this.refs.ellipsis), this.props.ellipsisText);
         this.checked = true;
         if (newStr !== false) {
+            const showStr = this.props.replaceText ? this.props.replaceText(newStr) : newStr;
             this.setState({
-                showStr: newStr
+                showStr
             });
+        } else {
+            let str = this.state.showStr;
+            if (this.props.replaceText) {
+                this.setState({
+                    showStr: this.props.replaceText(str)
+                });
+            }
         }
     }
 

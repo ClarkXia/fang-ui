@@ -350,7 +350,6 @@ export default class Menu extends React.Component {
             disableKeyEvent,
             prefixCls = 'menu',
             className,
-            show,
             bottomBuffer,
             ...other
         } = this.props;

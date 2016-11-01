@@ -44,6 +44,7 @@ export default class Pagination extends React.Component {
         showTotal: PropTypes.func,
         prefixCls: PropTypes.string,
         nextBtn: PropTypes.any,
+        ellipsisComponent: PropTypes.func,
         prevBtn: PropTypes.any
     };
 
@@ -53,6 +54,7 @@ export default class Pagination extends React.Component {
         defaultPageSize: 10,
         onChange: noop,
         prefixCls: 'pagination',
+        ellipsisComponent: Ellipsis,
         btnNext: 'next',
         btnPrev: 'prev'
     };
@@ -141,9 +143,10 @@ export default class Pagination extends React.Component {
     }
 
     render() {
-        const {prefixCls, showTotal, total, className='', btnNext, btnPrev} = this.props;
+        const {prefixCls, showTotal, total, className='', btnNext, btnPrev, ellipsisComponent} = this.props;
         const allPages = this.calcPage();
         const pagerList = [];
+        const EllipsisItem = ellipsisComponent;
         let omission =null;
 
         if (allPages <= 9) {
@@ -184,11 +187,11 @@ export default class Pagination extends React.Component {
             }
 
             if (current - 1 >= 4) {
-                pagerList.unshift(<Ellipsis rootPrefixCls={prefixCls} key="before"/>);
+                pagerList.unshift(<EllipsisItem rootPrefixCls={prefixCls} key="before"/>);
             }
 
             if (allPages - current >=4) {
-                pagerList.push(<Ellipsis rootPrefixCls={prefixCls} key="after"/>);
+                pagerList.push(<EllipsisItem rootPrefixCls={prefixCls} key="after"/>);
             }
 
             if (left !== 1) {
