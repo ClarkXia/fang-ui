@@ -31,13 +31,13 @@ export const ellipsis = (element, ellipsisText, elementWidth) => {
     temp.innerHTML = ellipsisText;
     const ellipsisWidth = temp.scrollWidth;
 
-    let str = element.innerHTML;
+    let str = element.innerText;
     str = str.replace(/\s+/g, ' ').split('');
     let index;
     while (realWidth > limitWidth && str.length > 1) {
         index = parseInt(str.length / 2);
         str.splice(index, 1);
-        temp.innerHTML = str.join('');
+        temp.innerText = str.join('');
 
         realWidth = temp.scrollWidth + ellipsisWidth;
     }
@@ -46,7 +46,6 @@ export const ellipsis = (element, ellipsisText, elementWidth) => {
         str.splice(index, 0, ellipsisText);
     }
     element.parentNode.removeChild(temp);
-
     return str.join('');
 }
 
