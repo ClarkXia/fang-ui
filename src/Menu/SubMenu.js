@@ -182,7 +182,7 @@ export default class SubMenu extends React.Component {
             disabled,
             active: this.state.visible
         });
-
+        //TODO use createElement
         return (
             <li
                 className={cls}

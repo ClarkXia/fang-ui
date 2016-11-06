@@ -215,9 +215,9 @@ export default class Popover extends React.Component {
             }
         } else {
             const basedEl = this.props.basedEl || this.basedEl;
-            if (!this.refs.layer.getLayer()) {
+            /*if (!this.refs.layer.getLayer()) {
                 return;
-            }
+            }*/
 
             const {targetOrigin, basedOrigin} = this.props;
             const basedPos = this.getBasedPosition(basedEl);
@@ -269,7 +269,6 @@ export default class Popover extends React.Component {
         //targetEl.style.maxHeight = `${window.innerHeight}px`;
         //TODO: fix the delay of setPlacement
         targetEl.style.opacity = 1;
-
     };
 
     autoCloseWhenOffScreen(pos) {

@@ -9,7 +9,6 @@ export default class ContextMenu extends React.Component {
             left: 0,
             top: 0
         };
-        this._display = true;
     }
 
     static propTypes = {
@@ -29,17 +28,10 @@ export default class ContextMenu extends React.Component {
         //if (this.props.visible !== nextProps.visible) {
             if (nextProps.visible) {
                 if (this.props.x != nextProps.x || this.props.y != nextProps.y) {
-                    this._display = false;
-                    this.timer = setTimeout(() => {
-                        this.showMenu(nextProps);
-                    })
-                } else {
-                    this._display = true;
+                    this.showMenu(nextProps);
+
                 }
-            } else {
-                this._display = false;
             }
-        //}
     }
 
     componentDidMount() {
@@ -64,7 +56,6 @@ export default class ContextMenu extends React.Component {
     };*/
 
     showMenu = (props) => {
-        this._display = true;
         this.setState(this.getMenuPosition(props.x, props.y));
         /*if (this.menu && this.menu.parentNode) {
             this.menu.parentNode.addEventListener('contextmenu', this.hideMenu);
@@ -83,11 +74,6 @@ export default class ContextMenu extends React.Component {
 
     render() {
         const {visible, children, prefixCls, style} = this.props;
-        const displayStyle = {
-            display: visible ? 'block' : 'none',
-            opacity: this._display ? 1 : 0
-        }
-
         let popProps = {
             open: this.props.visible,
             useLayerForClickAway: false,
@@ -95,9 +81,9 @@ export default class ContextMenu extends React.Component {
             position : {
                 ...this.state,
                 collision: 'flip'
-            },
-            style: Object.assign({}, displayStyle)
+            }
         };
+
         if (this.props.inline) {
             popProps.inline = true;
         }
