@@ -259,8 +259,8 @@ export default class Popover extends React.Component {
         if (this.props.inline) {
             const containerDOM = this.refs.popoverContainer.parentNode;
 
-            targetPos.top -= containerDOM.offsetTop;
-            targetPos.left -= containerDOM.offsetLeft;
+            targetPos.top = targetPos.top - containerDOM.offsetTop + containerDOM.scrollTop;
+            targetPos.left = targetPos.left - containerDOM.offsetLeft + containerDOM.scrollLeft;
         }
 
 

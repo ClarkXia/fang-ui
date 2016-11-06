@@ -184,7 +184,7 @@ export default class SubMenu extends React.Component {
         });
 
         return (
-            <div
+            <li
                 className={cls}
                 style={Object.assign({}, defaultItemStyle, style)}
                 onMouseEnter={this.handleMouseEnter}
@@ -196,7 +196,7 @@ export default class SubMenu extends React.Component {
                 <SubMenuWrapper visible={this.state.visible} prefixCls={prefixCls} >
                     {children}
                 </SubMenuWrapper>
-            </div>
+            </li>
         )
     }
 }

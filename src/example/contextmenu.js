@@ -9,13 +9,15 @@ const ItemClick = (e) => {
 const SampleContextMenu = (props) => {
     return (
         <ContextMenu onContextMenu={(e) => {e.stopPropagation();e.preventDefault();}}>
-            <MenuItem onClick={ItemClick}>MenuItem{props.text}</MenuItem>
-            <MenuItem onClick={ItemClick}>MenuItem</MenuItem>
-            {props.menu == 'sub' ?
-                <SubMenu label="sp">
-                    <MenuItem onClick={ItemClick}>MenuItem2</MenuItem>
-                    <MenuItem onClick={ItemClick}>MenuItem3</MenuItem>
-                </SubMenu> : null}
+            <ul>
+                <li onClick={ItemClick}>MenuItem{props.text}</li>
+                <li onClick={ItemClick}>MenuItem</li>
+                {props.menu == 'sub' ?
+                    <SubMenu label="sp">
+                        <li onClick={ItemClick}>MenuItem2</li>
+                        <li onClick={ItemClick}>MenuItem3</li>
+                    </SubMenu> : null}
+            </ul>
         </ContextMenu>
     );
 };
@@ -90,6 +92,7 @@ export default class Sample extends React.Component {
                     inline={true}
                     //container={this}
                 >
+                    <ul>
                     {
                         this.state.menuList ? this.state.menuList.map((v, i) => {
                             return <MenuItem
@@ -101,6 +104,7 @@ export default class Sample extends React.Component {
                                     </MenuItem>
                         }) : null
                     }
+                    </ul>
                 </ContextMenu>
             </div>
         );

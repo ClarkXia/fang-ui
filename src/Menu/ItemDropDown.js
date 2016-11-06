@@ -13,7 +13,6 @@ export default class ItemDropDown extends React.Component {
         itemElement: PropTypes.element.isRequired,
         basedOrigin: PropTypes.object,
         targetOrigin: PropTypes.object,
-        onRequestChange: PropTypes.func,
         closeDelay: PropTypes.number,
         open: PropTypes.bool,
         useLayerForClickAway: PropTypes.bool

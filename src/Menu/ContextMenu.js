@@ -101,11 +101,12 @@ export default class ContextMenu extends React.Component {
         if (this.props.inline) {
             popProps.inline = true;
         }
+        //TODO use createElement
         return (
             <Popover {...popProps}>
-                <ul ref={(c) => (this.menu = c)} style={Object.assign({}, style)} className={prefixCls} onContextMenu={this.handleContextMenu}>
+                <div ref={(c) => (this.menu = c)} style={Object.assign({}, style)} className={prefixCls} onContextMenu={this.handleContextMenu}>
                     {children}
-                </ul>
+                </div>
             </Popover>
         );
     }
