@@ -101,7 +101,7 @@ export default class TextField extends React.Component {
     }
 
     renderInput() {
-        const {prefixCls, onPressEnter, action, clearable, defaultValue, value, addonAfter, addonBefore, ...other} = this.props;
+        const {prefixCls, onPressEnter, action, clearable, defaultValue, value, addonAfter, addonBefore, className, ...other} = this.props;
 
         return (
             <Input
@@ -115,8 +115,9 @@ export default class TextField extends React.Component {
     }
 
     render() {
-        const {prefixCls, clearable, action} = this.props;
+        const {prefixCls, clearable, action, className} = this.props;
         const cls = classNames({
+            [className]: !!className,
             [`${prefixCls}-wrapper`]: true,
             [`${prefixCls}-group`]: (clearable || action)
         });

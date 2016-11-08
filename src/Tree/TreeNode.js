@@ -6,6 +6,7 @@ export default class TreeNode extends React.Component {
         prefixCls: PropTypes.string,
         disabled: PropTypes.bool,
         disableCheckbox: PropTypes.bool,
+        disableSelect: PropTypes.bool,
         expanded: PropTypes.bool,
         isLeaf: PropTypes.bool,
         root: PropTypes.object,
@@ -83,7 +84,7 @@ export default class TreeNode extends React.Component {
 
     onSelect = (e) => {
         //e.stopPropagation();
-        if (this.props.selectable && !this.props.disabled) {
+        if (this.props.selectable && !this.props.disabled && !this.props.disableSelect) {
             this.props.root.onSelect(this);
         }
     }
@@ -165,7 +166,7 @@ export default class TreeNode extends React.Component {
     }
 
     render() {
-        const { expanded, disabled, selected, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
+        const { expanded, disabled, selected, disableSelect, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
         const expandedState = expanded ? 'open' : 'close';
         const cls = classNames({
             [className]: !!className,
@@ -174,7 +175,8 @@ export default class TreeNode extends React.Component {
         });
         const nodeCls = classNames({
             [`${prefixCls}-node-item`]: true,
-            [`${prefixCls}-node-select`]: selected
+            [`${prefixCls}-node-select`]: selected,
+            [`${prefixCls}-node-disable-select`]: disableSelect
         });
         let newChildren = this.renderChildren();
         let canRenderSwitcher = true;

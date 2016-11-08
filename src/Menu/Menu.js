@@ -11,7 +11,6 @@ export default class Menu extends React.Component {
     static propTypes = {
         children: PropTypes.node,
         disableAutoFocus: PropTypes.bool,
-        initialKeyBoardFocused: PropTypes.bool,
         maxHeight: PropTypes.number,
         multiple: PropTypes.bool,
         onChange: PropTypes.func,
@@ -22,7 +21,7 @@ export default class Menu extends React.Component {
         style: PropTypes.object,
         disableKeyEvent: PropTypes.bool,
         value: PropTypes.any,
-        buttonBuffer: PropTypes.number
+        bottomBuffer: PropTypes.number
     };
 
     static defaultProps = {
