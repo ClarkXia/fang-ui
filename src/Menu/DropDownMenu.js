@@ -22,7 +22,8 @@ export default class DropDownMenu extends React.Component {
         valueComponent: PropTypes.func,
         basedOrigin: PropTypes.object,
         popoverStyle: PropTypes.object,
-        useLayerForClickAway: PropTypes.bool
+        useLayerForClickAway: PropTypes.bool,
+        canAutoPosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -32,7 +33,8 @@ export default class DropDownMenu extends React.Component {
         //onSelect: noop,
         basedOrigin: defaultBasedOrigin,
         popoverStyle: {},
-        useLayerForClickAway: false
+        useLayerForClickAway: false,
+        canAutoPosition: true
     };
 
     constructor(props) {
@@ -47,7 +49,7 @@ export default class DropDownMenu extends React.Component {
             setTimeout(() => {
                 this.setState({
                     open: true,
-                    basedEl: this.refs.root
+                    basedEl: this.refs.based
                 });
             });
         }
@@ -98,13 +100,13 @@ export default class DropDownMenu extends React.Component {
         if (!this.props.disabled) {
             this.setState({
                 open: !this.state.open,
-                basedEl: this.refs.root
+                basedEl: this.refs.based
             });
         }
     };
 
     render() {
-        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, useLayerForClickAway, disableKeyEvent, ...other} = this.props;
+        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, useLayerForClickAway, disableKeyEvent, canAutoPosition, ...other} = this.props;
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
@@ -131,9 +133,8 @@ export default class DropDownMenu extends React.Component {
             <div
                 {...other}
                 className={rootCls}
-                ref="root"
             >
-                <div className={valueCls} onClick={this.handleValueClick}>{displayValue}</div>
+                <div className={valueCls} ref="based" onClick={this.handleValueClick}>{displayValue}</div>
                 <Popover
                     basedOrigin={basedOrigin}
                     basedEl={this.state.basedEl}
@@ -142,6 +143,7 @@ export default class DropDownMenu extends React.Component {
                     useLayerForClickAway={useLayerForClickAway}
                     className={`${prefixCls}-popover`}
                     style={popoverStyle}
+                    canAutoPosition={canAutoPosition}
                 >
                     <Menu
                         value={value}
