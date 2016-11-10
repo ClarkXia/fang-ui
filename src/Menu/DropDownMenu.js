@@ -104,7 +104,7 @@ export default class DropDownMenu extends React.Component {
     };
 
     render() {
-        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, useLayerForClickAway, ...other} = this.props;
+        const {children, className, defaultOpen, value, onRequestChange, onItemSelect, onRequestClose, prefixCls, valueComponent, basedOrigin, popoverStyle, useLayerForClickAway, disableKeyEvent, ...other} = this.props;
         const ValueComponent = valueComponent;
 
         let selectedChild, i = 0;
@@ -119,7 +119,8 @@ export default class DropDownMenu extends React.Component {
 
         const rootCls = classNames({
             [className]: !!className,
-            [`${prefixCls}-root`]: true
+            [`${prefixCls}-root`]: true,
+            [`${prefixCls}-open`]: this.state.open
         });
         const valueCls = classNames({
             [`${prefixCls}-value`]: true,
@@ -147,6 +148,7 @@ export default class DropDownMenu extends React.Component {
                         onItemSelect={this.handleOnSelect}
                         onChange={this.handleOnChange}
                         prefixCls={prefixCls}
+                        disableKeyEvent={disableKeyEvent}
                     >
                         {children}
                     </Menu>

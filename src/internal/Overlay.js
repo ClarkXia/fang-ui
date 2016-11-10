@@ -7,8 +7,7 @@ function getStyles(props){
         width: '100%',
         height: '100%',
         top: 0,
-        left: '-100%',
-        opacity: 0
+        left: '-100%'
         //TODO add transition
     };
 
@@ -40,7 +39,7 @@ class Overlay extends React.Component {
         const defaultStyles = getStyles(this.props);
 
         return (
-            <div {...other} ref="overlay" style={Object.assign(defaultStyles, style)}>
+            <div {...other} ref="overlay" className="overlay" style={Object.assign(defaultStyles, style)}>
                 {scrollLock && <ScrollLock lock={show} />}
             </div>
         );
