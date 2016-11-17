@@ -79,6 +79,12 @@ export default class Popover extends React.Component {
                 this.setState({open: false});
             }
         }
+        //reset targetEl
+        if (this.targetEl) {
+            this.targetEl.style.top = 0;
+            this.targetEl.style.left = 0;
+            this.targetEl.style.opacity = 0;
+        }
     }
 
     componentDidMount() {
@@ -153,6 +159,7 @@ export default class Popover extends React.Component {
         this.targetEl = this.props.inline ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
         const targetEl = this.targetEl;
         //console.log('popover did update', targetEl);
+
         if (!targetEl) {
             return;
         }

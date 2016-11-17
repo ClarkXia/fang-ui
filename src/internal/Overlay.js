@@ -13,9 +13,7 @@ function getStyles(props){
 
     if (props.show) {
         Object.assign(style, {
-            left: 0,
-            opacity: 1
-            //TODO add transition
+            left: 0
         });
     }
 

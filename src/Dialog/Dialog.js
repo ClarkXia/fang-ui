@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
+import classNames from 'classnames';
 import Overlay from '../internal/Overlay';
 import RenderToLayer from '../internal/RenderToLayer';
 
@@ -178,8 +179,14 @@ export class DialogInline extends React.Component {
                 </div>
             )
         }
+
+        const cls = classNames({
+            [prefixCls]: true,
+            [className]: !!className
+        });
+
         return (
-            <div className={className} style={Object.assign({}, rootStyle(open), style)}>
+            <div className={cls} style={Object.assign({}, rootStyle(open), style)}>
                 <Overlay
                     show={open}
                     className={overlayClassName}

@@ -29,7 +29,6 @@ export default class ContextMenu extends React.Component {
             if (nextProps.visible) {
                 if (this.props.x != nextProps.x || this.props.y != nextProps.y) {
                     this.showMenu(nextProps);
-
                 }
             }
     }
