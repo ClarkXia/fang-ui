@@ -68,7 +68,7 @@ export default class sample extends React.Component {
                 <Tooltip placement="top" content="提示文字" trigger="hover">
                     <div style={divStyle} onClick={this.handleOnClick} onMouseOver={this.handleMouseOver}>Tooltip-hover</div>
                 </Tooltip>
-                <Tooltip placement="top" content={content} trigger="click" show={this.state.show} onTrigger={this.handleTrigger}>
+                <Tooltip placement="top" content={content} trigger="click" show={this.state.show} onTrigger={this.handleTrigger} destroyPopupOnHide={false} className="button-tooltip">
                     <div style={divStyle} onClick={this.handleOnClick} onMouseOver={this.handleMouseOver}>Tooltip-content</div>
                 </Tooltip>
                 <a href="javascript:;" onClick={this.closeTooltip}>close</a>

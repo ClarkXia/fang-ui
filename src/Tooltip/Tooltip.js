@@ -58,12 +58,14 @@ export default class Tooltip extends React.Component {
         show: PropTypes.bool,
         content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
         onRequestClose: PropTypes.func,
-        offset: PropTypes.arrayOf(PropTypes.number)
+        offset: PropTypes.arrayOf(PropTypes.number),
+        destroyPopupOnHide: PropTypes.bool
     };
 
     static defaultProps = {
         trigger: 'hover',
-        prefixCls: 'tooltip'
+        prefixCls: 'tooltip',
+        destroyPopupOnHide: true
     };
 
     componentDidMount() {
@@ -131,7 +133,7 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -147,6 +149,12 @@ export default class Tooltip extends React.Component {
 
         const {basedOrigin, targetOrigin, offset} = getPlacements(this.props.placement);
         const popoverOffset = this.props.offset ? this.props.offset : offset;
+
+        const cls = classNames({
+            [`${this.props.prefixCls}-popover`]: true,
+            [className]: !!className
+        });
+
         return React.cloneElement(child, newChildProps, createChildFragment({
             children: child.props.children,
             layer:
@@ -157,9 +165,10 @@ export default class Tooltip extends React.Component {
                 useLayerForClickAway={false}
                 onRequestClose={this.handleRequestClose}
                 basedEl={this.state.baseElement}
-                className={`${this.props.prefixCls}-popover`}
+                className={cls}
                 open={this.state.baseElement && this.state.show ? true : false}
                 offset={popoverOffset}
+                destroyPopupOnHide={destroyPopupOnHide}
             >
                 <TooltipInline {...other}/>
             </Popover>
