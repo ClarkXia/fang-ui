@@ -56,9 +56,11 @@ export default class BreadcrumbItem extends React.Component {
 
         if (itemSize) {
             itemProps.style = {
-                width: itemSize
+                width: itemSize,
+                display: 'inline-block'
             };
         }
+
         if ('href' in this.props) {
             link = <a {...itemProps}>{this.createChildren()}</a>;
         } else {

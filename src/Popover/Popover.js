@@ -79,12 +79,17 @@ export default class Popover extends React.Component {
                 this.setState({open: false});
             }
         }
+
         //reset targetEl
-        if (this.targetEl) {
-            this.targetEl.style.top = 0;
-            this.targetEl.style.left = 0;
-            this.targetEl.style.opacity = 0;
+        if (nextProps.basedEl !== this.props.basedEl ||
+                (this.props.open === nextProps.open && nextProps.position)) {
+            if (this.targetEl) {
+                this.targetEl.style.top = 0;
+                this.targetEl.style.left = 0;
+                this.targetEl.style.opacity = 0;
+            }
         }
+
     }
 
     componentDidMount() {
