@@ -59,13 +59,17 @@ export default class Tooltip extends React.Component {
         content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
         onRequestClose: PropTypes.func,
         offset: PropTypes.arrayOf(PropTypes.number),
-        destroyPopupOnHide: PropTypes.bool
+        destroyPopupOnHide: PropTypes.bool,
+        mouseLeaveDelay: PropTypes.number,
+        mouseEnterDelay: PropTypes.number
     };
 
     static defaultProps = {
         trigger: 'hover',
         prefixCls: 'tooltip',
-        destroyPopupOnHide: true
+        destroyPopupOnHide: true,
+        mouseEnterDelay: 0,
+        mouseLeaveDelay: 500
     };
 
     componentDidMount() {
@@ -102,20 +106,40 @@ export default class Tooltip extends React.Component {
             }
             if ('show' in this.props){
                 if (this.props.onTrigger) {
-                    this.props.onTrigger(flag);
+                    this.mouseDelay(() => this.props.onTrigger(flag), flag);
                 }
             } else {
-                this.setState({
-                    show: flag
-                })
+                this.mouseDelay(() => this.setShowState(flag), flag);
             }
+        }
+    };
 
+    setShowState = (flag) => {
+        if (flag !== this.state.show) {
+            this.setState({show: flag});
+        }
+    };
+
+    mouseDelay = (func, flag) => {
+        const {trigger, mouseLeaveDelay, mouseEnterDelay} = this.props;
+        if (trigger === 'hover') {
+            const time = flag ? mouseEnterDelay : mouseLeaveDelay;
+            clearTimeout(this.mouseTimer);
+            this.mouseTimer = setTimeout(() => func(), time);
+        } else {
+            func();
         }
     };
 
     handleRequestClose = (reason) => {
         if (this.props.onRequestClose) {
             this.props.onRequestClose(reason);
+        }
+
+        if (!('show' in this.props)) {
+            this.setState({
+                show: false
+            });
         }
     }
 
@@ -133,13 +157,17 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, mouseLeaveDelay, mouseEnterDelay, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
+        const tooltipEvent = {};
+
         if (trigger === 'hover') {
             newChildProps.onMouseEnter = this.createTowChains('onMouseEnter', this.toggleDisplay(true));
             newChildProps.onMouseLeave = this.createTowChains('onMouseLeave', this.toggleDisplay(false));
+            tooltipEvent.onMouseEnter = this.toggleDisplay(true);
+            tooltipEvent.onMouseLeave = this.toggleDisplay(false);
         }else if (trigger === 'focus') {
             newChildProps.onFocus = this.createTowChains('onFocus', this.toggleDisplay(true));
             newChildProps.onBlur = this.createTowChains('onBlur', this.toggleDisplay(false));
@@ -170,7 +198,7 @@ export default class Tooltip extends React.Component {
                 offset={popoverOffset}
                 destroyPopupOnHide={destroyPopupOnHide}
             >
-                <TooltipInline {...other}/>
+                <TooltipInline {...other} {...tooltipEvent} />
             </Popover>
         }))
 
