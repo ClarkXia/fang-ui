@@ -12,9 +12,10 @@ function getStyles(props) {
             color: color || '#fff',
             backgroundColor: backgroundColor || '#bcbcbc',
             userSelect: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: 'inline-block',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            lineHeight: size + 'px',
             fontSize: size / 2,
             borderRadius: '50%',
             height: size,
@@ -24,8 +25,8 @@ function getStyles(props) {
             color: color || '#fff',
             width: size * 0.6,
             height: size * 0.6,
-            fontSize: size * 0.6,
-            margin: size * 0.2
+            fontSize: size * 0.6
+            //margin: size * 0.2
         }
     }
 
