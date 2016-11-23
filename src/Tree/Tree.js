@@ -158,13 +158,18 @@ export default class Tree extends React.Component {
         }
 
         if (expanded && this.props.loadData && (this.props.forceLoad || !loaded)) {
-            return this.props.loadData(treeNode).then(() => {
-                if (!controlled) {
-                    this.setState({expandKeys});
-                } else {
-                    this.props.onExpand(expandKeys, {node: treeNode, expanded});
-                }
-            });
+            const callback = this.props.loadData(treeNode);
+            if (typeof callback === 'object' && callback.then) {
+                return callback.then(() => {
+                    if (!controlled) {
+                        this.setState({expandKeys});
+                    } else {
+                        this.props.onExpand(expandKeys, {node: treeNode, expanded});
+                    }
+                })
+            } else {
+                return true;
+            }
         } else {
             if (!controlled) {
                 this.setState({expandKeys});

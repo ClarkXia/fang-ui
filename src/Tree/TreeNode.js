@@ -21,23 +21,28 @@ export default class TreeNode extends React.Component {
         super(props);
         this.state = {
             dataLoading: !!this.props.dataLoading,
-            loaded: false
+            loaded: props.loaded || false
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        const newSt = {};
         if ('dataLoading' in nextProps) {
             if (!!nextProps.dataLoading !== this.state.dataLoading) {
-                this.setState({
-                    dataLoading: nextProps.dataLoading
-                });
+                newSt.dataLoading = nextProps.dataLoading;
             }
         } else {
             if (this.props.dataLoading) {
-                this.setState({
-                    dataLoading: false
-                });
+                newSt.dataLoading = false;
             }
+        }
+
+        if ('loaded' in nextProps) {
+            newSt.loaded = nextProps.loaded;
+        }
+
+        if ('dataLoading' in newSt || 'loaded' in newSt) {
+            this.setState(newSt);
         }
     }
 

@@ -69,7 +69,7 @@ export default class Tooltip extends React.Component {
         prefixCls: 'tooltip',
         destroyPopupOnHide: true,
         mouseEnterDelay: 0,
-        mouseLeaveDelay: 500
+        mouseLeaveDelay: 200
     };
 
     componentDidMount() {
@@ -141,7 +141,7 @@ export default class Tooltip extends React.Component {
                 show: false
             });
         }
-    }
+    };
 
     createTowChains(event, fn) {
         const childProps = this.props.children.props;
