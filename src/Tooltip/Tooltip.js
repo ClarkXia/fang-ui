@@ -99,11 +99,16 @@ export default class Tooltip extends React.Component {
         //this.setTooltipPosition();
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.mouseTimer);
+    }
+
     toggleDisplay = (flag) => {
         return (e) => {
-            if (!flag) {
+            if (typeof flag !== 'boolean') {
                 flag = !this.state.show;
             }
+
             if ('show' in this.props){
                 if (this.props.onTrigger) {
                     this.mouseDelay(() => this.props.onTrigger(flag), flag);
@@ -166,6 +171,7 @@ export default class Tooltip extends React.Component {
         if (trigger === 'hover') {
             newChildProps.onMouseEnter = this.createTowChains('onMouseEnter', this.toggleDisplay(true));
             newChildProps.onMouseLeave = this.createTowChains('onMouseLeave', this.toggleDisplay(false));
+
             tooltipEvent.onMouseEnter = this.toggleDisplay(true);
             tooltipEvent.onMouseLeave = this.toggleDisplay(false);
         }else if (trigger === 'focus') {
