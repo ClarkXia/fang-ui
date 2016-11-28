@@ -28,7 +28,8 @@ export default class Tree extends React.Component {
         onSelect: PropTypes.func,
         onCheck: PropTypes.func,
         loadData: PropTypes.func,
-        forceLoad: PropTypes.bool
+        forceLoad: PropTypes.bool,
+        skipDisabledCheckbox: PropTypes.bool
     };
 
     static defaultProps = {
@@ -40,6 +41,7 @@ export default class Tree extends React.Component {
         checkable: false,
         checkStrictly: false,
         forceLoad: false,
+        skipDisabledCheckbox: false,
         onCheck: noop,
         onExpand: noop,
         onSelect: noop
@@ -308,7 +310,7 @@ export default class Tree extends React.Component {
     }
 
     render() {
-        const {children, checkable, loadData, checkStrictly, className, prefixCls} = this.props;
+        const {children, checkable, loadData, checkStrictly, className, prefixCls, skipDisabledCheckbox} = this.props;
         const cls = classNames({
             [`${prefixCls}`]: true,
             [className]: !!className
@@ -331,6 +333,7 @@ export default class Tree extends React.Component {
                     this.treeNodesStates = {};
                     //init check state
                     loopChildren(children, (item, index, pos, keyOrPos, siblingPosition) => {
+                        if (skipDisabledCheckbox && (item.props.disableCheckbox || item.props.disabled)) return;
                         this.treeNodesStates[pos] = {
                             node: item,
                             key: keyOrPos,

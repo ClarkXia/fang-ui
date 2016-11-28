@@ -100,16 +100,17 @@ export function handleCheck(obj, checkedPositions, checked){
                 }
             });
             const parent = obj[parentPosition];
-
-            if (siblingChecked === 0) {
-                parent.checked = false;
-                parent.halfChecked = false;
-            } else if (siblingChecked === sibling) {
-                parent.checked = true;
-                parent.halfChecked = false;
-            } else {
-                parent.halfChecked = true;
-                parent.checked = false;
+            if (parent) {
+                if (siblingChecked === 0) {
+                    parent.checked = false;
+                    parent.halfChecked = false;
+                } else if (siblingChecked === sibling) {
+                    parent.checked = true;
+                    parent.halfChecked = false;
+                } else {
+                    parent.halfChecked = true;
+                    parent.checked = false;
+                }
             }
 
             loop(parentPosition);

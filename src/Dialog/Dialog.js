@@ -44,6 +44,7 @@ export class DialogInline extends React.Component {
 
     static defaultProps = {
         prefixCls: 'dialog',
+        titleStyle: {},
         closable: true
     };
 

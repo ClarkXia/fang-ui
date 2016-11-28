@@ -6,6 +6,7 @@ export default class TreeNode extends React.Component {
         prefixCls: PropTypes.string,
         disabled: PropTypes.bool,
         disableCheckbox: PropTypes.bool,
+        checkGhost: PropTypes.bool,
         disableSelect: PropTypes.bool,
         expanded: PropTypes.bool,
         isLeaf: PropTypes.bool,
@@ -119,12 +120,13 @@ export default class TreeNode extends React.Component {
     }
 
     renderCheckbox() {
-        const {prefixCls, checked, halfChecked, disabled, disableCheckbox} = this.props;
+        const {prefixCls, checked, halfChecked, disabled, disableCheckbox, checkGhost} = this.props;
         const cls = classNames({
             [`${prefixCls}-checkbox`]: true,
             [`${prefixCls}-checkbox-checked`]: checked && !halfChecked,
-            [`${prefixCls}-checkbox-halfChecked`]: !checked && halfChecked,
-            [`${prefixCls}-checkbox-disabled`]: disabled || disableCheckbox
+            [`${prefixCls}-checkbox-halfchecked`]: !checked && halfChecked,
+            [`${prefixCls}-checkbox-disabled`]: disabled || disableCheckbox,
+            [`${prefixCls}-checkbox-ghost`]: !!checkGhost
         });
 
         return (
