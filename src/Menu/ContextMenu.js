@@ -14,12 +14,15 @@ export default class ContextMenu extends React.Component {
     static propTypes = {
         prefixCls: PropTypes.string,
         visible: PropTypes.bool,
-        inline: PropTypes.bool
+        inline: PropTypes.bool,
+        useLayerForClickAway: PropTypes.bool
     };
 
     static defaultProps = {
         prefixCls: 'context-menu',
+        useLayerForClickAway: false,
         onContextMenu: (e) => {
+            e.stopPropagation();
             e.preventDefault();
         }
     };
@@ -72,10 +75,10 @@ export default class ContextMenu extends React.Component {
     };
 
     render() {
-        const {visible, children, prefixCls, style} = this.props;
+        const {visible, children, prefixCls, style, useLayerForClickAway} = this.props;
         let popProps = {
             open: this.props.visible,
-            useLayerForClickAway: false,
+            useLayerForClickAway,
             canAutoPosition: false,
             position : {
                 ...this.state,

@@ -373,7 +373,7 @@ export default class Menu extends React.Component {
         const cls = classNames({
             [`${prefixCls}-content`]: true,
             [className]: !!className
-        })
+        });
         return (
             <div
                 /*onKeyDown={this.handleKeyDown}*/

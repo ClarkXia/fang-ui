@@ -225,6 +225,12 @@ export default class Popover extends React.Component {
                     }
                 }
             }
+
+            //position fixed
+            if (this.props.useLayerForClickAway) {
+                targetPos.top -= docST;
+                targetPos.left -= docSL;
+            }
         } else {
             const basedEl = this.props.basedEl || this.basedEl;
             /*if (!this.refs.layer.getLayer()) {
@@ -254,12 +260,15 @@ export default class Popover extends React.Component {
             if (this.props.canAutoPosition) {
                 targetPos = this.autoPosition(basedPos, initPos, targetOrigin, basedOrigin, targetPos);
             }
+
             //position:absolute
             if (!this.props.useLayerForClickAway) {
                 targetPos.top += docST;
                 targetPos.left += docSL;
             }
         }
+
+
 
 
         //if (this.props.canAutoPosition) {

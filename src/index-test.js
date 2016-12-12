@@ -155,7 +155,6 @@ class TestComponent extends React.Component {
                 <SampleDialog />
 
                 <SampleTags />
-                <List />
             </div>
         )
     }

@@ -170,7 +170,8 @@ export default class Breadcrumb extends React.Component {
     }
 
     handleMountSize = (key, width) => {
-        this.itemSize[key] = width;
+        //fix float type
+        this.itemSize[key] = width + 1;
     };
 
     render() {
