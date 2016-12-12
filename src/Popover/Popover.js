@@ -100,9 +100,9 @@ export default class Popover extends React.Component {
     componentDidUpdate() {
         //wait for RenderToLayer did update
         if (this.state.open) {
-            this.timer = setTimeout(() => {
+            //this.timer = setTimeout(() => {
                 this.setPlacement();
-            });
+            //});
         }
     }
 
