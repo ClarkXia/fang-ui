@@ -146,6 +146,7 @@ export default class ItemDropDown extends React.Component {
                     open={this.state.open}
                     onRequestClose={this.handleRequestClose}
                     useLayerForClickAway={useLayerForClickAway}
+                    className={`${prefixCls}-popover`}
                 >
                     <Menu
                         {...other}

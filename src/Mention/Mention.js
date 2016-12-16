@@ -135,9 +135,10 @@ class MentionsInput extends React.Component {
         const el = ReactDOM.findDOMNode(this.refs.input);
 
         const caretPosition = getCaretPosition(el, this.props.type === 'input');
+        const elPosition = el.getBoundingClientRect();
         const position = {
-            left: caretPosition.left + el.offsetLeft,
-            top: caretPosition.top + el.offsetTop
+            left: caretPosition.left + elPosition.left,
+            top: caretPosition.top + elPosition.top
         };
 
         if (suggestionPosition.left === position.left && suggestionPosition.top === position.top) {
@@ -399,6 +400,7 @@ class MentionsInput extends React.Component {
                     onRequestClose={this.handleRequestClose}
                     position={position}
                     useLayerForClickAway={false}
+                    className={`${prefixCls}-popover`}
                 >
                     {this.renderSuggestions()}
                 </Popover>

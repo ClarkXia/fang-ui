@@ -172,8 +172,8 @@ export default class Popover extends React.Component {
         let targetPos;
         const docST = document.body.scrollTop || document.documentElement.scrollTop,
               docSL = document.body.scrollLeft || document.documentElement.scrollLeft,
-              docH = document.body.scrollHeight,
-              docW = document.body.scrollWidth,
+              docH = document.body.scrollHeight || document.documentElement.scrollHeight,
+              docW = document.body.scrollWidth || document.documentElement.scrollWidth,
               winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
               winW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
@@ -267,9 +267,6 @@ export default class Popover extends React.Component {
                 targetPos.left += docSL;
             }
         }
-
-
-
 
         //if (this.props.canAutoPosition) {
             targetPos.top = Math.max(0, targetPos.top);
