@@ -20,11 +20,13 @@ export default class RenderToLayer extends React.Component {
         open: PropTypes.bool.isRequired,
         render: PropTypes.func.isRequired,
         useLayerForClickAway: PropTypes.bool,
-        destroyPopupOnHide: PropTypes.bool
+        destroyPopupOnHide: PropTypes.bool,
+        zIndex: PropTypes.bool
     };
 
     static defaultProps = {
-        useLayerForClickAway: true
+        useLayerForClickAway: true,
+        zIndex: 9999
     };
 
     componentDidMount() {
@@ -109,7 +111,7 @@ export default class RenderToLayer extends React.Component {
             this.layer.style.bottom = 0;
             this.layer.style.left = 0;
             this.layer.style.right = 0;
-            this.layer.style.zIndex = 99999;
+            this.layer.style.zIndex = this.props.zIndex;
         } else {
             setTimeout(() => {
                 window.addEventListener('touchstart', this.onClickAway);

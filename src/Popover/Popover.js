@@ -39,7 +39,8 @@ export default class Popover extends React.Component {
         offset: PropTypes.array,
         container: PropTypes.any,
         destroyPopupOnHide: PropTypes.bool,
-        inline: PropTypes.bool
+        inline: PropTypes.bool,
+        layerZIndex: PropTypes.bool
     };
 
     static defaultProps = {
@@ -58,7 +59,8 @@ export default class Popover extends React.Component {
         offset: [0, 0],
         useLayerForClickAway: true,
         destroyPopupOnHide: true,
-        inline: false
+        inline: false,
+        layerZIndex: 1000
     };
 
     constructor(props) {
@@ -381,7 +383,7 @@ export default class Popover extends React.Component {
     }
 
     render() {
-        const {children, style, className = ''} = this.props;
+        const {children, style, layerZIndex,className = ''} = this.props;
         if (!children) return null;
         if (this.props.inline) {
             const popoverProps = {
@@ -407,6 +409,7 @@ export default class Popover extends React.Component {
                 <RenderToLayer
                     ref="layer"
                     open={this.state.open}
+                    zIndex={layerZIndex}
                     componentClickAway={this.componentClickAway}
                     useLayerForClickAway={this.props.useLayerForClickAway}
                     render={this.renderLayer}

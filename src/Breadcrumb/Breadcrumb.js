@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 import {ItemDropDown, MenuItem} from '../Menu';
 
 const ellipsisItem = () => <div className="ellipsis-item">...</div>;
@@ -175,7 +176,7 @@ export default class Breadcrumb extends React.Component {
     };
 
     render() {
-        const {prefixCls, separator, showLastSeparator, children} = this.props;
+        const {prefixCls, separator, showLastSeparator, children, className} = this.props;
         const count = React.Children.count(children);
         const crumbs = React.Children.map(children, (element, index) => {
             const childProps = {
@@ -213,8 +214,13 @@ export default class Breadcrumb extends React.Component {
             this.dropdownItems = [];
         }
 
+        const cls = classNames({
+            [className]: !!className,
+            [prefixCls]: true
+        });
+
         return (
-            <div className={prefixCls} ref="breadcrumb">
+            <div className={cls} ref="breadcrumb">
                 {crumbs}
             </div>
         );
