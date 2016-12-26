@@ -45,6 +45,7 @@ class Suggestion extends React.Component {
         } else {
             this.props.addMention(item.props.value);
         }
+        this.props.onAdd(item);
     };
 
     handleTabChange = (value) => {
@@ -171,7 +172,7 @@ export default class Sample extends React.Component {
         return (
             <Mention
                 data={this.requestData}
-                suggestionComponent={Suggestion}
+                suggestionComponent={<Suggestion onAdd={(item) => {console.log(item)}}/>}
                 value={this.state.value}
                 onChange={this.hanleChange}
                 displayTransform={this.displayTransform}

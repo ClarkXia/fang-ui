@@ -69,7 +69,7 @@ class MentionsInput extends React.Component {
             PropTypes.func,
             PropTypes.array
         ]),
-        suggestionComponent: PropTypes.func,
+        suggestionComponent: PropTypes.element,
         className: PropTypes.string,
         suggestionClass: PropTypes.string,
         prefixCls: PropTypes.string
@@ -94,7 +94,7 @@ class MentionsInput extends React.Component {
         onKeyDown: noop,
         onSelect: noop,
         onBlur: noop,
-        suggestionComponent: Suggestion,
+        suggestionComponent: <Suggestion />,
         prefixCls: 'mention'
     };
 
@@ -340,16 +340,14 @@ class MentionsInput extends React.Component {
     renderSuggestions() {
         const suggestions = this.state.suggestions;
         const {searchLable, prefixCls} = this.props;
-        const SuggestionComponent = this.props.suggestionComponent;
+        const suggestionComponent = this.props.suggestionComponent;
 
-        return (
-            <SuggestionComponent
-                addMention={this.addMention}
-                searchLable={searchLable}
-                suggestions={suggestions}
-                prefixCls={prefixCls}
-            />
-        );
+        return React.cloneElement(suggestionComponent, {
+            addMention: this.addMention,
+            searchLable: searchLable,
+            suggestions,
+            prefixCls
+        });
     }
 
     render() {
