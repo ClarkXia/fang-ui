@@ -40,7 +40,7 @@ export default class Popover extends React.Component {
         container: PropTypes.any,
         destroyPopupOnHide: PropTypes.bool,
         inline: PropTypes.bool,
-        layerZIndex: PropTypes.bool
+        layerZIndex: PropTypes.number
     };
 
     static defaultProps = {

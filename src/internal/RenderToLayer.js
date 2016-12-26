@@ -21,7 +21,7 @@ export default class RenderToLayer extends React.Component {
         render: PropTypes.func.isRequired,
         useLayerForClickAway: PropTypes.bool,
         destroyPopupOnHide: PropTypes.bool,
-        zIndex: PropTypes.bool
+        zIndex: PropTypes.number
     };
 
     static defaultProps = {
