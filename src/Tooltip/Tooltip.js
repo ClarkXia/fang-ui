@@ -61,7 +61,8 @@ export default class Tooltip extends React.Component {
         offset: PropTypes.arrayOf(PropTypes.number),
         destroyPopupOnHide: PropTypes.bool,
         mouseLeaveDelay: PropTypes.number,
-        mouseEnterDelay: PropTypes.number
+        mouseEnterDelay: PropTypes.number,
+        borderLimit: PropTypes.bool
     };
 
     static defaultProps = {
@@ -69,7 +70,8 @@ export default class Tooltip extends React.Component {
         prefixCls: 'tooltip',
         destroyPopupOnHide: true,
         mouseEnterDelay: 0,
-        mouseLeaveDelay: 200
+        mouseLeaveDelay: 200,
+        borderLimit: false
     };
 
     componentDidMount() {
@@ -162,7 +164,8 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, mouseLeaveDelay, mouseEnterDelay, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className,
+               mouseLeaveDelay, mouseEnterDelay, borderLimit, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -203,6 +206,7 @@ export default class Tooltip extends React.Component {
                 open={this.state.baseElement && this.state.show ? true : false}
                 offset={popoverOffset}
                 destroyPopupOnHide={destroyPopupOnHide}
+                borderLimit={borderLimit}
             >
                 <TooltipInline {...other} {...tooltipEvent} />
             </Popover>

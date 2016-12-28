@@ -264,10 +264,9 @@ class MentionsInput extends React.Component {
 
             this.props.onChange(eventMock, newValue);
         }
-
-        setTimeout(() => {
-            this.clearSuggestions();
-        })
+        //setTimeout(() => {
+        this.clearSuggestions();
+        //});
 
     };
 

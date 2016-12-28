@@ -40,7 +40,8 @@ export default class Popover extends React.Component {
         container: PropTypes.any,
         destroyPopupOnHide: PropTypes.bool,
         inline: PropTypes.bool,
-        layerZIndex: PropTypes.number
+        layerZIndex: PropTypes.number,
+        borderLimit: PropTypes.bool
     };
 
     static defaultProps = {
@@ -60,7 +61,8 @@ export default class Popover extends React.Component {
         useLayerForClickAway: true,
         destroyPopupOnHide: true,
         inline: false,
-        layerZIndex: 1000
+        layerZIndex: 1000,
+        borderLimit: true
     };
 
     constructor(props) {
@@ -270,10 +272,10 @@ export default class Popover extends React.Component {
             }
         }
 
-        //if (this.props.canAutoPosition) {
+        if (this.props.borderLimit) {
             targetPos.top = Math.max(0, targetPos.top);
             targetPos.left = Math.max(0, targetPos.left);
-        //}
+        }
 
 
         if (this.props.inline) {

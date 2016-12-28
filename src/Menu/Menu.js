@@ -116,7 +116,7 @@ export default class Menu extends React.Component {
         let focusState = '';
         if (isFocused) {
             focusState = this.state.isKeyboardFocused ?
-                'keyborad-focused': 'focused';
+                'keyboard-focused': 'focused';
         }
         const props = {
             focusState,
@@ -135,7 +135,7 @@ export default class Menu extends React.Component {
 
     focusItem = (index, event) => {
         if (!this.hoverLock) {
-            this.setFocusIndex(index, true);
+            this.setFocusIndex(index, false);
         }
     };
 
