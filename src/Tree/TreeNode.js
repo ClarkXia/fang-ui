@@ -173,7 +173,7 @@ export default class TreeNode extends React.Component {
     }
 
     render() {
-        const { expanded, disabled, selected, disableSelect, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
+        const { expanded, disabled, selected, disableSelect, checked, halfChecked, checkable, children, loadData, isLeaf, prefixCls, className } = this.props;
         const expandedState = expanded ? 'open' : 'close';
         const cls = classNames({
             [className]: !!className,
@@ -184,7 +184,9 @@ export default class TreeNode extends React.Component {
             [`${prefixCls}-node-item`]: true,
             [`${prefixCls}-node-select`]: selected,
             [`${prefixCls}-node-disable-select`]: disableSelect,
-            [`${prefixCls}-node-loading`]: this.state.dataLoading
+            [`${prefixCls}-node-loading`]: this.state.dataLoading,
+            [`${prefixCls}-node-halfchecked`]: !checked && halfChecked,
+            [`${prefixCls}-node-checked`]: checked && !halfChecked
         });
         let newChildren = this.renderChildren();
         let canRenderSwitcher = true;
