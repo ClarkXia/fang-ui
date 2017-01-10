@@ -183,7 +183,8 @@ export default class TreeNode extends React.Component {
         const nodeCls = classNames({
             [`${prefixCls}-node-item`]: true,
             [`${prefixCls}-node-select`]: selected,
-            [`${prefixCls}-node-disable-select`]: disableSelect
+            [`${prefixCls}-node-disable-select`]: disableSelect,
+            [`${prefixCls}-node-loading`]: this.state.dataLoading
         });
         let newChildren = this.renderChildren();
         let canRenderSwitcher = true;
