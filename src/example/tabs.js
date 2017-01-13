@@ -15,6 +15,20 @@ const TabTpl = (props) => {
             </div>);
 }
 
+class TestTab extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+
+    componentWillMount() {
+        console.log('..tab..mount')
+    }
+
+    render() {
+        return <div>test</div>;
+    }
+}
+
 export default class Sample extends React.Component {
     constructor(props) {
         super(props);
@@ -55,11 +69,12 @@ export default class Sample extends React.Component {
 
                 <span>controlled & useInkBar</span>
                 <Tabs value={this.state.value} onChange={this.handleOnChange}>
-                    <Tab label="tab1" onActive={this.handleOnActive} value="tab1">
+                    <Tab label="tab1" onActive={this.handleOnActive} value="tab1" key="v1">
                         <div>tab1里面的内容</div>
                     </Tab>
-                    <Tab label="tab2" value="tab2">
+                    <Tab label="tab2" value="tab2" key="v2">
                         <div>tab2的内容！！！！</div>
+                        <TestTab />
                     </Tab>
                 </Tabs>
 

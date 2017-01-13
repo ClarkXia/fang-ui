@@ -29,6 +29,10 @@ export default class Breadcrumb extends React.Component {
         ellipsisItem: PropTypes.oneOfType([
             PropTypes.element,
             PropTypes.func
+        ]),
+        EllipsisPop: PropTypes.oneOfType([
+            PropTypes.element,
+            PropTypes.func
         ])
     };
 
@@ -39,12 +43,14 @@ export default class Breadcrumb extends React.Component {
         autoEllipsis: true,
         itemMinWidth: 100,
         separatorWidth: 20,
-        ellipsisItem
+        ellipsisItem,
+        EllipsisPop: null
     };
 
     constructor(props) {
         super(props);
         this.itemSize = {};
+        this.lastItemSize = {};
         this.resized = false;
     }
 
@@ -59,11 +65,13 @@ export default class Breadcrumb extends React.Component {
     componentWillReceiveProps() {
         //reset
         this.itemSize = {};
+        this.lastItemSize = {};
         this.resized = false;
     }
 
     resizeBreadcrumbLength() {
         if (this.resized) return;
+
         let childrenKeys = Object.keys(this.itemSize);
         //sort object
         const keysSorted = Object.keys(this.itemSize).sort((a, b) => this.itemSize[a] - this.itemSize[b]);
@@ -138,7 +146,6 @@ export default class Breadcrumb extends React.Component {
             //this.showKeys = childrenKeys;
             this.resizeFlag = false;
             this.reRender = true;
-
             this.forceUpdate();
 
         } else {
@@ -146,12 +153,22 @@ export default class Breadcrumb extends React.Component {
         }
 
         this.resized = true;
+
     }
 
     renderDropDown() {
-        const {prefixCls, separator, ellipsisItem} = this.props;
+        const {prefixCls, separator, ellipsisItem, EllipsisPop} = this.props;
         const children = React.Children.toArray(this.props.children);
         const itemElement = typeof ellipsisItem === 'function' ? ellipsisItem(this.props) : ellipsisItem;
+        if (EllipsisPop) {
+            const childrenElement = {};
+
+            this.dropdownItems.map(index => {
+                childrenElement[index] = React.cloneElement(children[index]);
+            });
+
+            return <EllipsisPop dropdownItems={this.dropdownItems} ellipsisItem={itemElement} childrenElement={childrenElement}/>
+        }
 
         return (
             <ItemDropDown basedOrigin={basedOrigin} itemElement={itemElement} prefixCls={`${prefixCls}-dropdown`} ref="dropdown">
@@ -173,11 +190,13 @@ export default class Breadcrumb extends React.Component {
     handleMountSize = (key, width) => {
         //fix float type
         this.itemSize[key] = width + 1;
+        this.lastItemSize[key] = width + 1;
     };
 
     render() {
-        const {prefixCls, separator, showLastSeparator, children, className} = this.props;
+        const {prefixCls, separator, showLastSeparator, children, className, autoEllipsis} = this.props;
         const count = React.Children.count(children);
+
         const crumbs = React.Children.map(children, (element, index) => {
             const childProps = {
                 separator,
@@ -203,6 +222,7 @@ export default class Breadcrumb extends React.Component {
             childProps.setSize = this.handleMountSize;
             if (this.itemSize[index]) {
                 childProps.itemSize = this.itemSize[index];
+                childProps.lastItemSize = this.lastItemSize[index];
             }
             return React.cloneElement(element, childProps);
         });
@@ -225,6 +245,4 @@ export default class Breadcrumb extends React.Component {
             </div>
         );
     }
-
-
 }

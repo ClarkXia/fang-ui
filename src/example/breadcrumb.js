@@ -1,9 +1,19 @@
 import React from 'react';
 import Breadcrumb, {BreadcrumbItem} from '../Breadcrumb';
 import Ellipsis from '../Ellipsis';
+import Tooltip from '../Tooltip';
 
 import css from './breadcrumb.css';
 let index = 1;
+
+const EllipsisPop = (props) => {
+    const {dropdownItems, ellipsisItem, childrenElement} = props;
+
+    console.log(dropdownItems, childrenElement);
+
+    return <Tooltip content={'asdsdsafad'}><span>{ellipsisItem}</span></Tooltip>;
+}
+
 export default class Sample extends React.Component {
     constructor(props) {
         super(props);
@@ -33,16 +43,16 @@ export default class Sample extends React.Component {
             <div>
                 <a onClick={() => {this.handleChangeRoute(true)}}>add</a><br/>
                 <a onClick={() => {this.handleChangeRoute()}}>decrease</a>
-                <Breadcrumb separator=">" maxWidth={550} itemMinWidth={50}>
+                <Breadcrumb separator=">" maxWidth={550} itemMinWidth={50} EllipsisPop={EllipsisPop}>
                     {this.state.route.map((item, i) => {
-                        return <BreadcrumbItem key={i}><Ellipsis>{item}</Ellipsis></BreadcrumbItem>;
+                        return <BreadcrumbItem key={i}>{item}</BreadcrumbItem>;
                     })}
                 </Breadcrumb>
-                <Breadcrumb separator=">" maxWidth={550} itemMinWidth={50} autoEllipsis={false}>
+                {/*<Breadcrumb separator=">" maxWidth={550} itemMinWidth={50} autoEllipsis={false}>
                     {this.state.route.map((item, i) => {
                         return <BreadcrumbItem key={i} href="">{item}</BreadcrumbItem>;
                     })}
-                </Breadcrumb>
+                </Breadcrumb>*/}
             </div>
         );
     }

@@ -46,15 +46,15 @@ export default class BreadcrumbItem extends React.Component {
     }
 
     render() {
-        const {prefixCls, separator, children, setSize, itemKey, itemSize, isLast, showSeparator, ...other} = this.props;
+        const {prefixCls, separator, children, setSize, itemKey, itemSize, isLast, showSeparator, lastItemSize, ...other} = this.props;
         let link;
         const itemProps = {
             className: `${prefixCls}-link`,
-             ref: 'link',
+            ref: 'link',
             ...other
         };
 
-        if (itemSize) {
+        if (itemSize && itemSize !== lastItemSize) {
             itemProps.style = {
                 width: itemSize,
                 display: 'inline-block'

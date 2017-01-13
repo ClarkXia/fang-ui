@@ -131,17 +131,19 @@ export default class Tabs extends React.Component {
         const width = 100 / this.getTabCount();
         let selectedIndex = this.state.selectedIndex;
         const tabs = this.getTabs().map((tab, index) => {
+
             const selected = this.checkSelected(tab, index);
             tabContent.push(tab.props.children ?
                 React.createElement(tabTemplate || TabTemplate, {
-                    key: index,
+                    key: tab.key || index,
                     selected: selected,
                     prefixCls
                 }, tab.props.children) : undefined
             );
             if (selected) selectedIndex = index;
+
             let tabProps = {
-                key: index,
+                key: tab.key || index,
                 index: index,
                 selected: selected,
                 onClick: this.handleClick,
@@ -152,7 +154,8 @@ export default class Tabs extends React.Component {
                 tabProps.width = `${width}%`;
             }
             return React.cloneElement(tab, tabProps);
-        })
+        });
+
         let inkBar;
         let inkBarContainerWidth;
         if (useInkBar) {
