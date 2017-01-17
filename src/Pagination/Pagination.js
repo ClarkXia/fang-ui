@@ -31,7 +31,7 @@ export default class Pagination extends React.Component {
         this.state = {
             current: props.current ? props.current : props.defaultCurrent,
             pageSize: props.pageSize ? props.pageSize : props.defaultPageSize
-        }
+        };
     }
 
     static propTypes = {
@@ -51,8 +51,8 @@ export default class Pagination extends React.Component {
     static defaultProps = {
         defaultCurrent: 1,
         total: 0,
-        defaultPageSize: 10,
         onChange: noop,
+        defaultPageSize: 10,
         prefixCls: 'pagination',
         ellipsisComponent: Ellipsis,
         btnNext: 'next',
@@ -78,6 +78,7 @@ export default class Pagination extends React.Component {
     }
 
     calcPage(p) {
+        if (this.props.pageCount) return this.props.pageCount;
         let pageSize = p;
         if (typeof pageSize === 'undefined') {
             pageSize = this.state.pageSize;
@@ -203,7 +204,7 @@ export default class Pagination extends React.Component {
                         page={1}
                         active={false}
                     />
-                )
+                );
             }
 
             if (right !== allPages) {
