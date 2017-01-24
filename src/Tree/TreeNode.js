@@ -138,13 +138,11 @@ export default class TreeNode extends React.Component {
         const {prefixCls, iconSkin, loadData, label} = this.props;
         const cls = classNames({
             [`${prefixCls}-icon`]: true,
-            [`${prefixCls}-icon-loading`]: this.state.dataLoading,
-            [`${prefixCls}-icon-${iconSkin}`]: !!iconSkin && !this.state.dataLoading,
+            [`${prefixCls}-icon-${iconSkin}`]: !!iconSkin,
             [`${prefixCls}-icon-${expandedState}`]: !this.state.dataLoading
-        })
+        });
 
-        const icon = (iconSkin || loadData && this.state.dataLoading) ?
-                        <span className={cls}></span> : null;
+        const icon = iconSkin ? <span className={cls}></span> : null;
         const labelProps = {}
         if (typeof label === 'string' && label != '') {
             labelProps.title = label;
@@ -153,6 +151,14 @@ export default class TreeNode extends React.Component {
         return (
             <span className={`${prefixCls}-title`} {...labelProps}>{icon}{typeof label === 'function' ? label(this.props) : label}</span>
         );
+    }
+
+    renderLoading() {
+        const {prefixCls, loadData} = this.props;
+
+        if (loadData && this.state.dataLoading) {
+            return <span className={`${prefixCls}-icon-loading`}></span>;
+        }
     }
 
     renderChildren() {
@@ -202,6 +208,7 @@ export default class TreeNode extends React.Component {
                 <div className={nodeCls} onClick={this.onSelect}>
                     {this.renderLevel()}
                     {this.renderSwitcher(canRenderSwitcher, expandedState)}
+                    {this.renderLoading()}
                     {checkable ? this.renderCheckbox() : null}
                     {this.renderContent(expandedState)}
                 </div>
