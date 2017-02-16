@@ -231,7 +231,7 @@ export default class Popover extends React.Component {
             }
 
             //position fixed
-            if (this.props.useLayerForClickAway) {
+            if (this.props.useLayerForClickAway || this.props.inline) {
                 targetPos.top -= docST;
                 targetPos.left -= docSL;
             }
@@ -266,7 +266,7 @@ export default class Popover extends React.Component {
             }
 
             //position:absolute
-            if (!this.props.useLayerForClickAway) {
+            if (!this.props.useLayerForClickAway && !this.props.inline) {
                 targetPos.top += docST;
                 targetPos.left += docSL;
             }
@@ -280,9 +280,10 @@ export default class Popover extends React.Component {
 
         if (this.props.inline) {
             const containerDOM = this.refs.popoverContainer.parentNode;
+            const containerRect = containerDOM.getBoundingClientRect();
 
-            targetPos.top = targetPos.top - containerDOM.offsetTop + containerDOM.scrollTop;
-            targetPos.left = targetPos.left - containerDOM.offsetLeft + containerDOM.scrollLeft;
+            targetPos.top = targetPos.top - containerRect.top + containerDOM.scrollTop;
+            targetPos.left = targetPos.left - containerRect.left + containerDOM.scrollLeft;
         }
 
 
