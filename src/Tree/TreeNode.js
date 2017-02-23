@@ -6,6 +6,7 @@ export default class TreeNode extends React.Component {
         prefixCls: PropTypes.string,
         disabled: PropTypes.bool,
         disableCheckbox: PropTypes.bool,
+        disableExpand: PropTypes.bool,
         checkGhost: PropTypes.bool,
         disableSelect: PropTypes.bool,
         expanded: PropTypes.bool,
@@ -52,32 +53,34 @@ export default class TreeNode extends React.Component {
     }
 
     onExpand = (e) => {
-        e.stopPropagation();
-        if (this.state.dataLoading || this.props.disabled) return
-
-        const callbackPromise = this.props.root.onExpand(this, this.state.loaded);
-        if (callbackPromise && typeof callbackPromise === 'object') {
-            const setLoading = (dataLoading) => {
-                if (!('dataLoading' in this.props)) {
-                    if (!dataLoading) {
-                        this.setState({
-                            loaded: true,
-                            dataLoading
-                        });
-                    } else {
-                        this.setState({
-                            dataLoading
-                        });
+        if (this.state.dataLoading || this.props.disabled || this.props.disableExpand) {
+            return;
+        } else {
+            e.stopPropagation();
+            const callbackPromise = this.props.root.onExpand(this, this.state.loaded);
+            if (callbackPromise && typeof callbackPromise === 'object') {
+                const setLoading = (dataLoading) => {
+                    if (!('dataLoading' in this.props)) {
+                        if (!dataLoading) {
+                            this.setState({
+                                loaded: true,
+                                dataLoading
+                            });
+                        } else {
+                            this.setState({
+                                dataLoading
+                            });
+                        }
                     }
-                }
 
-            };
-            setLoading(true);
-            callbackPromise.then(() => {
-                setLoading(false);
-            }, () => {
-                setLoading(false);
-            });
+                };
+                setLoading(true);
+                callbackPromise.then(() => {
+                    setLoading(false);
+                }, () => {
+                    setLoading(false);
+                });
+            }
         }
     };
 
@@ -105,15 +108,16 @@ export default class TreeNode extends React.Component {
     }
 
     renderSwitcher(canRenderSwitcher, expandedState) {
-        const {prefixCls, disabled} = this.props;
+        const {prefixCls, disabled, disableExpand, hideSwitcher} = this.props;
         if (!canRenderSwitcher) {
             return <span className={`${prefixCls}-switcher-noop`}></span>;
         } else {
             const cls = classNames({
                 [`${prefixCls}-switcher`]: true,
                 [`${prefixCls}-switcher-${expandedState}`]: true,
-                [`${prefixCls}-switcher-disabled`]: disabled
-            })
+                [`${prefixCls}-switcher-disabled`]: disabled || disableExpand,
+                [`${prefixCls}-switcher-hidden`]: hideSwitcher
+            });
 
             return <span className={cls} onClick={this.onExpand}></span>;
         }
