@@ -39,13 +39,17 @@ export class DialogInline extends React.Component {
         titleClassName: PropTypes.string,
         titleStyle: PropTypes.object,
         closable: PropTypes.bool,
-        scrollLock: PropTypes.bool
+        scrollLock: PropTypes.bool,
+        offsetTop: PropTypes.number,
+        minPaddingTop: PropTypes.number
     };
 
     static defaultProps = {
         prefixCls: 'dialog',
         titleStyle: {},
-        closable: true
+        closable: true,
+        offsetTop: 20,
+        minPaddingTop: 10
     };
 
     componentDidMount() {
@@ -77,7 +81,9 @@ export class DialogInline extends React.Component {
             repositionOnUpdate,
             open,
             actions,
-            title
+            title,
+            offsetTop,
+            minPaddingTop
         } = this.props;
 
         if (!open) return;
@@ -88,11 +94,9 @@ export class DialogInline extends React.Component {
         const dialogBody = findDOMNode(this.refs.dialogBody);
         const dialogWrapHeight = dialogWrap.offsetHeight;
 
-        const minPaddingTop = 16;
-
         //rest style
         dialogBody.style.height = '';
-        let paddingTop = ((clientHeight - dialogWrapHeight) / 2) - 64;
+        let paddingTop = ((clientHeight - dialogWrapHeight) / 2) - offsetTop;
         if (paddingTop < minPaddingTop) paddingTop = minPaddingTop;
 
         if (repositionOnUpdate || !container.style.paddingTop) {
@@ -101,7 +105,7 @@ export class DialogInline extends React.Component {
 
         // Force a height if the dialog is taller than clientHeight
         if (autoDetectWindowHeight || autoScrollBodyContent) {
-            let maxDialogContentHeight = clientHeight - 2 * 64;
+            let maxDialogContentHeight = clientHeight - 2 * offsetTop;
 
             if (title) maxDialogContentHeight -= dialogBody.previousSibling.offsetHeight;
 
