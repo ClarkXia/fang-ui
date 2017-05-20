@@ -177,7 +177,7 @@ function calculateTextareaHeight(node, minRows = null, maxRows = null) {
 
     let {paddingSize, borderSize, boxSizing, sizingStyle} = calculateNodeStyle(node);
     hiddenTextarea.setAttribute('style', `${sizingStyle};${HIDDEN_TEXTAREA_STYLE}`);
-    hiddenTextarea.value = node.value || node.placeholder || '';
+    hiddenTextarea.value = node.value || node.placeholder || ' ';
 
     let textareaHeight = {};
     let minHeight,maxHeight;
@@ -190,7 +190,8 @@ function calculateTextareaHeight(node, minRows = null, maxRows = null) {
 
     if (minRows !== null || maxRows !== null) {
         //measure height of textarea width single row
-        hiddenTextarea.value = '';
+        //to keep IE textarea height
+        hiddenTextarea.value = ' ';
         let singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
 
         if (minRows !== null) {
