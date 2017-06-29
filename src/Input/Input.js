@@ -58,7 +58,7 @@ export default class Input extends React.Component {
     };*/
 
     handleTextChange = (e) => {
-        this.resizeInput();
+        if (!('value' in this.props)) this.resizeInput();
         if (this.props.onChange) {
             this.props.onChange(e);
         }
@@ -182,6 +182,7 @@ function calculateTextareaHeight(node, minRows = null, maxRows = null) {
     let textareaHeight = {};
     let minHeight,maxHeight;
     let height = hiddenTextarea.scrollHeight;
+
     if (boxSizing === 'border-box') {
         height = height + borderSize;
     } else if (boxSizing === 'content-box') {
@@ -214,6 +215,7 @@ function calculateTextareaHeight(node, minRows = null, maxRows = null) {
             height = Math.min(maxHeight, height);
         }
     }
+
     textareaHeight.height = height;
 
     return textareaHeight;
