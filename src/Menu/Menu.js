@@ -146,7 +146,7 @@ export default class Menu extends React.Component {
 
         index--;
         if (index < 0) {
-            index = this.prop.loopList ? (this.getMenuItemCount(filteredChildren) - 1) : 0;
+            index = this.props.loopList ? (this.getMenuItemCount(filteredChildren) - 1) : 0;
         }
         this.setFocusIndex(index, true);
     }
@@ -158,7 +158,7 @@ export default class Menu extends React.Component {
         index++;
 
         if (index > maxIndex) {
-            index = this.prop.loopList ? 0 : maxIndex;
+            index = this.props.loopList ? 0 : maxIndex;
         }
         this.setFocusIndex(index, true);
     }
