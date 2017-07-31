@@ -41,7 +41,8 @@ export default class Popover extends React.Component {
         destroyPopupOnHide: PropTypes.bool,
         inline: PropTypes.bool,
         layerZIndex: PropTypes.number,
-        borderLimit: PropTypes.bool
+        borderLimit: PropTypes.bool,
+        upldateOriginProps: PropTypes.bool
     };
 
     static defaultProps = {
@@ -62,7 +63,8 @@ export default class Popover extends React.Component {
         destroyPopupOnHide: true,
         inline: false,
         layerZIndex: 1000,
-        borderLimit: true
+        borderLimit: true,
+        upldateOriginProps: false
     };
 
     constructor(props) {
@@ -125,7 +127,7 @@ export default class Popover extends React.Component {
         const {children, style, className = ''} = this.props;
         return (
             <div style={Object.assign({}, rootStyle, style)} className={className}>
-                {children}
+                {this.getCloneChildren()}
             </div>
         );
     };
@@ -262,6 +264,9 @@ export default class Popover extends React.Component {
             }
 
             if (this.props.canAutoPosition) {
+                this.lastTargetOrigin = Object.assign({}, targetOrigin);
+                this.lastBasedOrigin = Object.assign({}, basedOrigin);
+
                 targetPos = this.autoPosition(basedPos, initPos, targetOrigin, basedOrigin, targetPos);
             }
 
@@ -303,7 +308,7 @@ export default class Popover extends React.Component {
         }
     }
 
-    autoPosition(based, target, basedOrigin, targetOrigin, targetPos) {
+    autoPosition(based, target, targetOrigin, basedOrigin, targetPos) {
         const {positions, basedPos} = this.getPositions(basedOrigin, targetOrigin);
 
         const winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
@@ -311,10 +316,14 @@ export default class Popover extends React.Component {
 
         if (targetPos.top < 0 || targetPos.top + target.bottom > winH) {
             let top = based[basedPos.vertical] - target[positions.y[0]];
+
+            this.lastBasedOrigin.vertical = basedPos.vertical;
+            this.lastTargetOrigin.vertical = positions.y[0];
             if (top + target.bottom <= winH) {
                 targetPos.top = Math.max(0, top);
             } else {
                 top = based[basedPos.vertical] - target[positions.y[1]];
+                this.lastTargetOrigin.vertical = positions.y[1];
                 if (top + target.bottom <= winH) {
                     targetPos.top = Math.max(0, top);
                 } else {
@@ -330,10 +339,14 @@ export default class Popover extends React.Component {
 
         if (targetPos.left < 0 || targetPos.left + target.right > winW) {
             let left = based[basedPos.horizontal] - target[positions.x[0]];
+
+            this.lastBasedOrigin.horizontal = basedPos.horizontal;
+            this.lastTargetOrigin.horizontal = positions.x[0];
             if (left + target.right <= winW) {
                 targetPos.left = Math.max(0, left);
             } else {
                 left = based[basedPos.horizontal] - target[positions.x[1]];
+                this.lastTargetOrigin.horizontal = positions.x[1];
                 if (left + target.right <= winW) {
                     targetPos.left = Math.max(0, left);
                 } else {
@@ -385,8 +398,20 @@ export default class Popover extends React.Component {
         };
     }
 
+    getCloneChildren() {
+        const { children, upldateOriginProps } = this.props;
+        if (upldateOriginProps && this.lastBasedOrigin && this.lastTargetOrigin) {
+            return React.cloneElement(children, {
+                basedOrigin: this.lastBasedOrigin,
+                targetOrigin: this.lastTargetOrigin
+            });
+        } else {
+            return children;
+        }
+    }
+
     render() {
-        const {children, style, layerZIndex,className = ''} = this.props;
+        const { children, style, layerZIndex, className = ''} = this.props;
         if (!children) return null;
         if (this.props.inline) {
             const popoverProps = {
@@ -394,16 +419,17 @@ export default class Popover extends React.Component {
                 className,
                 ref: 'popoverContainer'
             };
+            const newChildren = this.getCloneChildren();
 
             if (this.state.open) {
-                return <div {...popoverProps}>{children}</div>;
+                return <div {...popoverProps}>{newChildren}</div>;
             } else {
                 if (this.props.destroyPopupOnHide) {
                     return null;
                 } else {
                     popoverProps.style = Object.assign({}, popoverProps.style, {display: 'none'});
 
-                    return <div {...popoverProps}>{children}</div>;
+                    return <div {...popoverProps}>{newChildren}</div>;
                 }
             }
         }

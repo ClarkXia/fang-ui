@@ -40,6 +40,25 @@ export default function getPlacements(position) {
     return false;
 }
 
+export function getTooltipPlacement(basedOrigin, targetOrigin) {
+    const { vertical: basedVertical, horizontal: basedHorizontal } = basedOrigin;
+    const { vertical: targetVertical, horizontal: targetHorizontal } = targetOrigin;
+    let placement = '';
+
+    ['vertical', 'horizontal'].forEach(key => {
+        if (basedOrigin[key] !== targetOrigin[key]) {
+            placement = basedOrigin[key];
+
+            const oppositeKey = getOpposite(key);
+            if (basedOrigin[oppositeKey] === targetOrigin[oppositeKey] && basedOrigin[oppositeKey] !== getCenter(oppositeKey)) {
+                placement += `-${basedOrigin[oppositeKey]}`;
+            }
+        }
+    });
+
+    return placement;
+}
+
 
 function getOpposite(direction, position) {
     return typeof position === 'string' ?

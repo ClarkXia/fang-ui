@@ -3,7 +3,7 @@ import {findDOMNode} from 'react-dom';
 import classNames from 'classnames';
 import {createChildFragment} from '../utils/childUtils';
 import RenderToLayer from '../internal/RenderToLayer';
-import getPlacements from './placements';
+import getPlacements, {getTooltipPlacement} from './placements';
 import Popover from '../Popover';
 
 class TooltipInline extends React.Component {
@@ -16,17 +16,24 @@ class TooltipInline extends React.Component {
             className = '',
             trigger,
             content,
+            basedOrigin,
+            targetOrigin,
             ...other
         } = this.props;
+
+        let newPlacement = '';
+        if (basedOrigin && targetOrigin) {
+            newPlacement = getTooltipPlacement(basedOrigin, targetOrigin);
+        }
 
         const cls = classNames({
             [`${prefixCls}-container`]: true,
             [className]: !!className
-        })
+        });
 
         return (
             <div {...other} className={cls} ref="tooltip">
-                <div className={`${prefixCls}-arrow ${prefixCls}-arrow-${placement}`}></div>
+                <div className={`${prefixCls}-arrow ${prefixCls}-arrow-${newPlacement ? newPlacement : placement}`}></div>
                 <div className={`${prefixCls}-content`}>
                 {typeof content === 'string' ? <span>{content}</span> : React.cloneElement(content)}
                 </div>
@@ -63,7 +70,10 @@ export default class Tooltip extends React.Component {
         mouseLeaveDelay: PropTypes.number,
         mouseEnterDelay: PropTypes.number,
         borderLimit: PropTypes.bool,
-        inline: PropTypes.bool
+        inline: PropTypes.bool,
+        canAutoPosition: PropTypes.bool,
+        upldateOriginProps: PropTypes.bool,
+        addDisplayEventToTooltip: PropTypes.bool
     };
 
     static defaultProps = {
@@ -74,7 +84,10 @@ export default class Tooltip extends React.Component {
         mouseLeaveDelay: 200,
         borderLimit: false,
         inline: false,
-        placement: 'bottom'
+        placement: 'bottom',
+        canAutoPosition: false,
+        upldateOriginProps: false,
+        addDisplayEventToTooltip: true
     };
 
     componentDidMount() {
@@ -167,8 +180,8 @@ export default class Tooltip extends React.Component {
     }
 
     render() {
-        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className,
-               mouseLeaveDelay, mouseEnterDelay, borderLimit, inline, ...other} = this.props;
+        const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, upldateOriginProps, addDisplayEventToTooltip,
+               mouseLeaveDelay, mouseEnterDelay, borderLimit, inline, canAutoPosition, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -178,10 +191,11 @@ export default class Tooltip extends React.Component {
             newChildProps.onMouseEnter = this.createTowChains('onMouseEnter', this.toggleDisplay(true));
             newChildProps.onMouseMove = this.createTowChains('onMouseMove', this.toggleDisplay(true));
             newChildProps.onMouseLeave = this.createTowChains('onMouseLeave', this.toggleDisplay(false));
-
-            tooltipEvent.onMouseEnter = this.toggleDisplay(true);
-            tooltipEvent.onMouseMove = this.toggleDisplay(true);
-            tooltipEvent.onMouseLeave = this.toggleDisplay(false);
+            if (addDisplayEventToTooltip) {
+                tooltipEvent.onMouseEnter = this.toggleDisplay(true);
+                tooltipEvent.onMouseMove = this.toggleDisplay(true);
+                tooltipEvent.onMouseLeave = this.toggleDisplay(false);
+            }
         }else if (trigger === 'focus') {
             newChildProps.onFocus = this.createTowChains('onFocus', this.toggleDisplay(true));
             newChildProps.onBlur = this.createTowChains('onBlur', this.toggleDisplay(false));
@@ -201,7 +215,7 @@ export default class Tooltip extends React.Component {
             children: child.props.children,
             layer:
             <Popover
-                canAutoPosition={false}
+                canAutoPosition={canAutoPosition}
                 basedOrigin={basedOrigin}
                 targetOrigin={targetOrigin}
                 useLayerForClickAway={false}
@@ -213,6 +227,7 @@ export default class Tooltip extends React.Component {
                 destroyPopupOnHide={destroyPopupOnHide}
                 borderLimit={borderLimit}
                 inline={inline}
+                upldateOriginProps={upldateOriginProps}
             >
                 <TooltipInline {...other} {...tooltipEvent} />
             </Popover>

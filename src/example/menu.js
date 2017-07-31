@@ -10,7 +10,8 @@ const divStyle = {
     height: 30,
     border: '1px solid #000',
     textAlign: 'center',
-    lineHeight: '30px'
+    lineHeight: '30px',
+    marginLeft: '300px'
 }
 
 export default class Sample extends React.Component {
@@ -52,7 +53,7 @@ export default class Sample extends React.Component {
 
     render() {
         const basedOrigin = {
-            vertical: 'top',
+            vertical: 'bottom',
             horizontal: 'left'
         };
         return (
@@ -64,8 +65,10 @@ export default class Sample extends React.Component {
                     onRequestClose={this.handleRequestClose}
                     useLayerForClickAway={false}
                     basedOrigin={basedOrigin}
+                    canAutoPosition={true}
+                    offset={[20, 20]}
                 >
-                    <Menu
+                    {/*<Menu
                         value={this.state.value}
                         onItemSelect={this.handleOnChange}
                         show={this.state.open}
@@ -77,7 +80,8 @@ export default class Sample extends React.Component {
                             }
                             return <MenuItem key={i} value={i + 1} disabled={disabled}>{v}</MenuItem>
                         })}
-                    </Menu>
+                    </Menu>*/}
+                    <div style={{backgroundColor: '#000', width: 200, height: 200}} />
                 </Popover>
             </div>
         );

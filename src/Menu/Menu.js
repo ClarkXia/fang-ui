@@ -21,7 +21,8 @@ export default class Menu extends React.Component {
         style: PropTypes.object,
         disableKeyEvent: PropTypes.bool,
         value: PropTypes.any,
-        bottomBuffer: PropTypes.number
+        bottomBuffer: PropTypes.number,
+        loopList: PropTypes.bool
     };
 
     static defaultProps = {
@@ -34,7 +35,8 @@ export default class Menu extends React.Component {
         onEscKeyDown: noop,
         onItemSelect: noop,
         onKeyDown: noop,
-        bottomBuffer: 0
+        bottomBuffer: 0,
+        loopList: false
     };
 
     constructor(props) {
@@ -139,11 +141,13 @@ export default class Menu extends React.Component {
         }
     };
 
-    decrementFocusIndex() {
+    decrementFocusIndex(filteredChildren) {
         let index = this.state.focusIndex;
 
         index--;
-        if (index < 0) index = 0;
+        if (index < 0) {
+            index = this.prop.loopList ? (this.getMenuItemCount(filteredChildren) - 1) : 0;
+        }
         this.setFocusIndex(index, true);
     }
 
@@ -153,7 +157,9 @@ export default class Menu extends React.Component {
 
         index++;
 
-        if (index > maxIndex) index = maxIndex;
+        if (index > maxIndex) {
+            index = this.prop.loopList ? 0 : maxIndex;
+        }
         this.setFocusIndex(index, true);
     }
 
@@ -210,7 +216,7 @@ export default class Menu extends React.Component {
             case 9: //tab
                 event.preventDefault();
                 if (event.shiftKey) {
-                    this.decrementFocusIndex();
+                    this.decrementFocusIndex(filteredChildren);
                 } else {
                     this.incrementFocusIndex(filteredChildren);
                 }
@@ -233,7 +239,7 @@ export default class Menu extends React.Component {
                 break;
             case 38: //up
                 event.preventDefault();
-                this.decrementFocusIndex();
+                this.decrementFocusIndex(filteredChildren);
                 break;
             case 40: //down
                 event.preventDefault();
