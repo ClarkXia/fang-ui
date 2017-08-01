@@ -1,3 +1,6 @@
+# v0.0.25
+* [bug fix]remove loopList from the element
+
 # v0.0.24
 * [bug fix]Menu props error
 

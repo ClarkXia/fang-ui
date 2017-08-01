@@ -356,6 +356,7 @@ export default class Menu extends React.Component {
             prefixCls = 'menu',
             className,
             bottomBuffer,
+            loopList,
             ...other
         } = this.props;
 
