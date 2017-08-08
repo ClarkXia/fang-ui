@@ -43,13 +43,9 @@ export default class Input extends React.Component {
         this.resizeInput();
     }
 
-    /*componentDidUpdate(preProps, prevState) {
-
-    }*/
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.value !== nextProps.value) {
-            setTimeout(() => {this.resizeInput()});
+    componentDidUpdate(preProps, prevState) {
+        if (this.props.value !== preProps.value) {
+            this.resizeInput();
         }
     }
 

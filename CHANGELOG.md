@@ -1,3 +1,6 @@
+# v0.0.26
+* [bug fix]resize input in componentDidUpdate
+
 # v0.0.25
 * [bug fix]remove loopList from the element
 
