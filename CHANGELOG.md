@@ -1,3 +1,6 @@
+# v0.0.27
+* [feature] Breadcrumb itemMinWidth support type array
+
 # v0.0.26
 * [bug fix]resize input in componentDidUpdate
 
