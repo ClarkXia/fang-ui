@@ -22,7 +22,8 @@ export default class Breadcrumb extends React.Component {
         ]),
         itemMinWidth: PropTypes.oneOfType([
             PropTypes.string,
-            PropTypes.number
+            PropTypes.number,
+            PropTypes.array
         ]),
         showLastSeparator: PropTypes.bool,
         autoEllipsis: PropTypes.bool,
@@ -89,19 +90,22 @@ export default class Breadcrumb extends React.Component {
 
         let maxWidth = this.props.maxWidth || '100%';
         if (maxWidth.toString().indexOf('%') > -1) {
-            maxWidth = this.refs.breadcrumb.parentNode.offsetWidth * parseInt(maxWidth) / 100;
+            maxWidth = parseInt(this.refs.breadcrumb.parentNode.offsetWidth * parseInt(maxWidth) / 100) - 1;
         } else {
             maxWidth = parseInt(maxWidth);
         }
+
         if (totalWidth > maxWidth) {
             for (let i = keysSorted.length - 1; i >= 0; i--) {
                 const width = this.itemSize[keysSorted[i]];
 
-                if (width > itemMinWidth) {
+                //50 is default minWith
+                const minWidth = typeof itemMinWidth === 'object' ? (itemMinWidth[keysSorted[i]] ? itemMinWidth[keysSorted[i]] : 50) : itemMinWidth;
+                if (width > minWidth) {
 
-                    if (totalWidth - width + itemMinWidth > maxWidth) {
-                        totalWidth = totalWidth - width + itemMinWidth;
-                        this.itemSize[keysSorted[i]] = itemMinWidth;
+                    if (totalWidth - width + minWidth > maxWidth) {
+                        totalWidth = totalWidth - width + minWidth;
+                        this.itemSize[keysSorted[i]] = minWidth;
                     } else {
                         this.itemSize[keysSorted[i]] = width - (totalWidth - maxWidth);
                         totalWidth = maxWidth;
