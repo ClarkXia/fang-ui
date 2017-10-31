@@ -277,6 +277,9 @@ export default class Popover extends React.Component {
             }
         }
 
+        //fix text calculate
+        targetPos.left--;
+
         if (this.props.borderLimit) {
             targetPos.top = Math.max(0, targetPos.top);
             targetPos.left = Math.max(0, targetPos.left);
@@ -290,7 +293,6 @@ export default class Popover extends React.Component {
             targetPos.top = targetPos.top - containerRect.top + containerDOM.scrollTop;
             targetPos.left = targetPos.left - containerRect.left + containerDOM.scrollLeft;
         }
-
 
         targetEl.style.top = `${targetPos.top}px`;
         targetEl.style.left = `${targetPos.left}px`;
