@@ -42,7 +42,8 @@ export default class Popover extends React.Component {
         inline: PropTypes.bool,
         layerZIndex: PropTypes.number,
         borderLimit: PropTypes.bool,
-        upldateOriginProps: PropTypes.bool
+        upldateOriginProps: PropTypes.bool,
+        setOffsetwidth: PropTypes.bool
     };
 
     static defaultProps = {
@@ -64,7 +65,8 @@ export default class Popover extends React.Component {
         inline: false,
         layerZIndex: 1000,
         borderLimit: true,
-        upldateOriginProps: false
+        upldateOriginProps: false,
+        setOffsetwidth: false
     };
 
     constructor(props) {
@@ -170,7 +172,7 @@ export default class Popover extends React.Component {
         this.targetEl = this.props.inline ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
         const targetEl = this.targetEl;
         //console.log('popover did update', targetEl);
-
+        const targetWidth = targetEl.offsetWidth;
         if (!targetEl) {
             return;
         }
@@ -296,6 +298,7 @@ export default class Popover extends React.Component {
 
         targetEl.style.top = `${targetPos.top}px`;
         targetEl.style.left = `${targetPos.left}px`;
+        if (this.props.setOffsetwidth) targetEl.style.width = `${targetWidth}px`;
         //targetEl.style.maxHeight = `${window.innerHeight}px`;
         //TODO: fix the delay of setPlacement
         targetEl.style.opacity = 1;

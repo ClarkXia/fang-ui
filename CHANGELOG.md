@@ -1,5 +1,8 @@
+# v0.0.29
+* [bug fix] 解决宽度在渲染后的计算问题
+
 # v0.0.28
-* [bug] Popover fix calculate bug
+* [bug fix] Popover fix calculate bug
 
 # v0.0.27
 * [feature] Breadcrumb itemMinWidth support type array

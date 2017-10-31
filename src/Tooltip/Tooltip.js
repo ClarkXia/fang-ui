@@ -73,7 +73,8 @@ export default class Tooltip extends React.Component {
         inline: PropTypes.bool,
         canAutoPosition: PropTypes.bool,
         upldateOriginProps: PropTypes.bool,
-        addDisplayEventToTooltip: PropTypes.bool
+        addDisplayEventToTooltip: PropTypes.bool,
+        setOffsetwidth:  PropTypes.bool
     };
 
     static defaultProps = {
@@ -87,7 +88,8 @@ export default class Tooltip extends React.Component {
         placement: 'bottom',
         canAutoPosition: false,
         upldateOriginProps: false,
-        addDisplayEventToTooltip: true
+        addDisplayEventToTooltip: true,
+        setOffsetwidth: false
     };
 
     componentDidMount() {
@@ -181,7 +183,7 @@ export default class Tooltip extends React.Component {
 
     render() {
         const {trigger, onTrigger, onRequestClose, destroyPopupOnHide, className, upldateOriginProps, addDisplayEventToTooltip,
-               mouseLeaveDelay, mouseEnterDelay, borderLimit, inline, canAutoPosition, ...other} = this.props;
+               mouseLeaveDelay, mouseEnterDelay, borderLimit, inline, canAutoPosition, setOffsetwidth, ...other} = this.props;
 
         const child = React.Children.only(this.props.children);
         const newChildProps = {ref: 'baseElement'};
@@ -228,6 +230,7 @@ export default class Tooltip extends React.Component {
                 borderLimit={borderLimit}
                 inline={inline}
                 upldateOriginProps={upldateOriginProps}
+                setOffsetwidth={setOffsetwidth}
             >
                 <TooltipInline {...other} {...tooltipEvent} />
             </Popover>
