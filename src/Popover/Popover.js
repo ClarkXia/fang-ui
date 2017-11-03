@@ -298,7 +298,7 @@ export default class Popover extends React.Component {
 
         targetEl.style.top = `${targetPos.top}px`;
         targetEl.style.left = `${targetPos.left}px`;
-        if (this.props.setOffsetwidth) targetEl.style.width = `${targetWidth}px`;
+        if (this.props.setOffsetwidth) targetEl.style.width = `${targetWidth + 1}px`;  // + 1 fix float width
         //targetEl.style.maxHeight = `${window.innerHeight}px`;
         //TODO: fix the delay of setPlacement
         targetEl.style.opacity = 1;
