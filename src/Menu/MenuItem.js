@@ -32,7 +32,7 @@ export default class MenuItem extends React.Component {
     }
 
     render() {
-        const {disabled, children, className, prefixCls, focusState, selected, index, onFocus, ...other} = this.props;
+        const {disabled, children, className, prefixCls, focusState, selected, index, onFocus, label, ...other} = this.props;
 
         const cls = classNames({
             [`${prefixCls}`]: true,
