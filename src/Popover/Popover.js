@@ -171,12 +171,16 @@ export default class Popover extends React.Component {
         }
         this.targetEl = this.props.inline ? this.refs.popoverContainer : (this.refs.layer ? this.refs.layer.getLayer().children[0] : null);
         const targetEl = this.targetEl;
-        //console.log('popover did update', targetEl);
-        if (this.props.setOffsetwidth) targetEl.style.width = 'auto';
-        const targetWidth = targetEl.offsetWidth;
         if (!targetEl) {
             return;
         }
+
+        if (this.props.setOffsetwidth) {
+            targetEl.style.width = 'auto';
+            targetEl.style.top = 0;
+            targetEl.style.left = 0;
+        }
+        const targetWidth = targetEl.offsetWidth;
 
         let targetPos;
         const docST = document.body.scrollTop || document.documentElement.scrollTop,
