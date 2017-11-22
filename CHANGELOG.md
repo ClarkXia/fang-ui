@@ -1,3 +1,6 @@
+# v0.0.31
+* [bug fix] reset target width and postion when trigger setPlacement
+
 # v0.0.29
 * [bug fix] 解决宽度在渲染后的计算问题
 
