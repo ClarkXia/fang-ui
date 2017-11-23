@@ -136,9 +136,12 @@ class MentionsInput extends React.Component {
 
         const caretPosition = getCaretPosition(el, this.props.type === 'input');
         const elPosition = el.getBoundingClientRect();
+        const docST = document.body.scrollTop || document.documentElement.scrollTop,
+              docSL = document.body.scrollLeft || document.documentElement.scrollLeft;
+
         const position = {
-            left: caretPosition.left + elPosition.left,
-            top: caretPosition.top + elPosition.top
+            left: caretPosition.left + elPosition.left + docSL,
+            top: caretPosition.top + elPosition.top + docST
         };
 
         if (suggestionPosition.left === position.left && suggestionPosition.top === position.top) {
