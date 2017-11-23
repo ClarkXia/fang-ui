@@ -1,3 +1,6 @@
+# v0.0.33
+* [bug fix] fix Mention popover
+
 # v0.0.31
 * [bug fix] reset target width and postion when trigger setPlacement
 
