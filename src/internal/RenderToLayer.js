@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM, {unstable_renderSubtreeIntoContainer, unmountComponentAtNode} from 'react-dom';
 
 function isDescendant(parent, child) {
@@ -76,8 +77,10 @@ export default class RenderToLayer extends React.Component {
             const layerElement = render();
             //this.layerElement = ReactDOM.render(layerElement, this.layer);
             this.layerElement = unstable_renderSubtreeIntoContainer(this, layerElement, this.layer);
-
-            ReactDOM.findDOMNode(this.layerElement).style.display = '';
+            const dom = ReactDOM.findDOMNode(this.layerElement);
+            if (dom) {
+                dom.style.display = '';
+            }
         } else {
             this.unrenderLayer(destroyPopupOnHide);
         }

@@ -76,7 +76,7 @@ export default class sample extends React.Component {
                     <div style={divStyle} onClick={this.handleOnClick} onMouseOver={this.handleMouseOver}>Tooltip-click</div>
                 </Tooltip>
                 <a href="javascript:;" onClick={this.addContent}>add content</a>
-                <Tooltip placement="left" content="提示" canAutoPosition={true} originProps={true} destroyPopupOnHide={false} addDisplayEventToTooltip={false}>
+                <Tooltip placement="left" content="提示" canAutoPosition={true} destroyPopupOnHide={false} addDisplayEventToTooltip={false}>
                     <div style={divStyle}>trigger</div>
                 </Tooltip>
             </div>

@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import RenderToLayer from '../internal/RenderToLayer';
@@ -108,9 +109,10 @@ export default class Popover extends React.Component {
     componentDidUpdate() {
         //wait for RenderToLayer did update
         if (this.state.open) {
-            //this.timer = setTimeout(() => {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
                 this.setPlacement();
-            //});
+            }, 0);
         }
     }
 
@@ -124,6 +126,7 @@ export default class Popover extends React.Component {
     }
 
     renderLayer = () => {
+        console.log(this.state.open, this.props.destroyPopupOnHide)
         if (!this.state.open && this.props.destroyPopupOnHide) return null;
 
         const {children, style, className = ''} = this.props;

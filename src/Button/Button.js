@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-import {createChildFragment} from '../utils/childUtils';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { findDOMNode } from 'react-dom';
 
@@ -48,10 +48,7 @@ export default class ButtonArea extends React.Component {
         const {icon, loading, children} = this.props
         const iconType = loading ? 'loading' : icon;
 
-        return createChildFragment({
-            icon: iconType ? <Icon type={iconType} /> : null,
-            children: children ? <span>{children}</span> : null
-        })
+        return (<React.Fragment>{iconType && <Icon type={iconType} />}{children}</React.Fragment>);
     }
 
     render() {
