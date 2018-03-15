@@ -170,8 +170,8 @@ export default class TreeNode extends React.Component {
         const {children, prefixCls} = this.props;
         let newChildren = children;
         if (children &&
-            (children.type === TreeNode ||
-                Array.isArray(children) && children.every((item) => item.type === TreeNode))) {
+            (children.type && children.type.isTreeNode ||
+                Array.isArray(children) && children.every((item) => item.type && item.type.isTreeNode))) {
             newChildren = (
                 <ul className={prefixCls}>
                     {React.Children.map(children, (item, index) => {

@@ -126,7 +126,6 @@ export default class Popover extends React.Component {
     }
 
     renderLayer = () => {
-        console.log(this.state.open, this.props.destroyPopupOnHide)
         if (!this.state.open && this.props.destroyPopupOnHide) return null;
 
         const {children, style, className = ''} = this.props;

@@ -1,7 +1,7 @@
 {
   "name": "fang-ui",
   "private": false,
-  "version": "0.0.33",
+  "version": "1.0.0",
   "description": "fangUI",
   "main": "",
   "scripts": {
@@ -51,8 +51,6 @@
     "postcss-loader": "^0.8.0",
     "core-js": "^2.0.0",
     "recursive-readdir-sync": "^1.0.6",
-    "redux-logger": "^2.6.1",
-    "redux-thunk": "^2.1.0",
     "rimraf": "^2.4.3",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",

@@ -1,3 +1,6 @@
+# v1.0.0
+* adapt to React 16
+
 # v0.0.33
 * [bug fix] fix Mention popover
 
