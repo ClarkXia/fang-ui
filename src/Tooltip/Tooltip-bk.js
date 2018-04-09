@@ -1,6 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
-import {createChildFragment} from '../utils/childUtils';
 import RenderToLayer from '../internal/RenderToLayer';
 
 const defaultStyle = {
@@ -169,9 +169,11 @@ export default class Tooltip extends React.Component {
             newChildProps.onClick = this.createTowChains('onClick', this.toggleDisplay());
         }
 
-        return React.cloneElement(child, newChildProps, createChildFragment({
-            children: child.props.children,
-            layer: <RenderToLayer render={this.renderLayer} open={true} useLayerForClickAway={false} ref="layer"/>
-        }));
+        return React.cloneElement(child, newChildProps,
+            <React.Fragment>
+                {child.props.children}
+                <RenderToLayer render={this.renderLayer} open={true} useLayerForClickAway={false} ref="layer"/>
+            </React.Fragment>
+        );
     }
 }

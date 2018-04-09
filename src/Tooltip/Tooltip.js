@@ -1,7 +1,7 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 import classNames from 'classnames';
-import {createChildFragment} from '../utils/childUtils';
 import RenderToLayer from '../internal/RenderToLayer';
 import getPlacements, {getTooltipPlacement} from './placements';
 import Popover from '../Popover';
@@ -213,28 +213,28 @@ export default class Tooltip extends React.Component {
             [className]: !!className
         });
 
-        return React.cloneElement(child, newChildProps, createChildFragment({
-            children: child.props.children,
-            layer:
-            <Popover
-                canAutoPosition={canAutoPosition}
-                basedOrigin={basedOrigin}
-                targetOrigin={targetOrigin}
-                useLayerForClickAway={false}
-                onRequestClose={this.handleRequestClose}
-                basedEl={this.state.baseElement}
-                className={cls}
-                open={this.state.baseElement && this.state.show ? true : false}
-                offset={popoverOffset}
-                destroyPopupOnHide={destroyPopupOnHide}
-                borderLimit={borderLimit}
-                inline={inline}
-                upldateOriginProps={upldateOriginProps}
-                setOffsetwidth={setOffsetwidth}
-            >
-                <TooltipInline {...other} {...tooltipEvent} />
-            </Popover>
-        }))
-
+        return React.cloneElement(child, newChildProps,
+            <React.Fragment>
+                {child.props.children}
+                <Popover
+                    canAutoPosition={canAutoPosition}
+                    basedOrigin={basedOrigin}
+                    targetOrigin={targetOrigin}
+                    useLayerForClickAway={false}
+                    onRequestClose={this.handleRequestClose}
+                    basedEl={this.state.baseElement}
+                    className={cls}
+                    open={this.state.baseElement && this.state.show ? true : false}
+                    offset={popoverOffset}
+                    destroyPopupOnHide={destroyPopupOnHide}
+                    borderLimit={borderLimit}
+                    inline={inline}
+                    upldateOriginProps={upldateOriginProps}
+                    setOffsetwidth={setOffsetwidth}
+                >
+                    <TooltipInline {...other} {...tooltipEvent} />
+                </Popover>
+            </React.Fragment>
+        )
     }
 }

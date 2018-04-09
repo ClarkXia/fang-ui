@@ -1,11 +1,12 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import Input from '../Input';
 import classNames from 'classnames';
 
-const stringOrNode = React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
+const stringOrNode = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
 ]);
 
 function stringifyValue (value) {
@@ -119,17 +120,17 @@ class Value extends React.Component {
 
 class Option extends React.Component {
     static propTypes = {
-        children: React.PropTypes.node,
-        className: React.PropTypes.string,
-        instancePrefix: React.PropTypes.string.isRequired,
-        isDisabled: React.PropTypes.bool,
-        isFocused: React.PropTypes.bool,
-        isSelected: React.PropTypes.bool,
-        onFocus: React.PropTypes.func,
-        onSelect: React.PropTypes.func,
-        onUnfocus: React.PropTypes.func,
-        option: React.PropTypes.object.isRequired,
-        optionIndex: React.PropTypes.number
+        children: PropTypes.node,
+        className: PropTypes.string,
+        instancePrefix: PropTypes.string.isRequired,
+        isDisabled: PropTypes.bool,
+        isFocused: PropTypes.bool,
+        isSelected: PropTypes.bool,
+        onFocus: PropTypes.func,
+        onSelect: PropTypes.func,
+        onUnfocus: PropTypes.func,
+        option: PropTypes.object.isRequired,
+        optionIndex: PropTypes.number
     };
 
     blockEvent (event) {

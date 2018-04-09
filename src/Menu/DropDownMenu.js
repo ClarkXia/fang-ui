@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Popover from '../Popover';
 import Menu from './Menu';
 import MenuItem from './MenuItem';

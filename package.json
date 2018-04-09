@@ -1,7 +1,7 @@
 {
   "name": "fang-ui",
   "private": false,
-  "version": "0.0.33",
+  "version": "1.0.0",
   "description": "fangUI",
   "main": "",
   "scripts": {
@@ -13,8 +13,8 @@
     "build:babel": "NODE_ENV=release babel ./src --out-dir ./build --ignore spec.js",
     "build:copy-files": "babel-node ./scripts/copy-files.js",
     "clean": "rimraf build",
-    "release:major": "npm version major && npm publish",
-    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major",
+    "release:minor": "npm version minor",
     "release:patch": "npm version patch",
     "serve": "node server.js --env=dev",
     "serve:dist": "node server.js --env=dist",
@@ -49,24 +49,19 @@
     "null-loader": "^0.1.1",
     "postcss": "^5.0.11",
     "postcss-loader": "^0.8.0",
-    "react-addons-test-utils": "^15.0.0",
-    "react-hot-loader": "^1.2.9",
-    "react-router": "^2.4.1",
+    "core-js": "^2.0.0",
     "recursive-readdir-sync": "^1.0.6",
-    "redux-logger": "^2.6.1",
-    "redux-thunk": "^2.1.0",
     "rimraf": "^2.4.3",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.0",
-    "webpack-dev-server": "^1.12.0"
+    "webpack-dev-server": "^1.12.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "core-js": "^2.0.0",
-    "react": "^15.3.1",
-    "react-addons-create-fragment": "^15.3.1",
-    "react-addons-pure-render-mixin": "^15.3.1",
-    "react-dom": "^15.3.1"
+    "prop-types": "^15.6.1",
+    "react-hot-loader": "^4.0.0"
   }
 }

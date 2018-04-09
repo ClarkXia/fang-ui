@@ -1,4 +1,5 @@
-import React, {PropType} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Checkbox from '../Checkbox';
 
 export default class Radio extends React.Component {

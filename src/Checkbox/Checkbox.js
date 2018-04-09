@@ -1,6 +1,7 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import shouldPureComponentUpdate from '../utils/shouldPureComponentUpdate';
 
 const noop = () => {};
 
@@ -45,7 +46,7 @@ export default class Checkbox extends React.Component {
     }
 
     shouldComponentUpdate(...args) {
-        return PureRenderMixin.shouldComponentUpdate.apply(this, args);
+        return shouldPureComponentUpdate(...args);
     }
 
     handleChange = (e) => {

@@ -1,11 +1,12 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import Input from '../Input';
 
-const stringOrNode = React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
+const stringOrNode = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
 ]);
 
 function getStyle (el, prop) {
